@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Neuro Quiz</title>
+  <desc id="desc">Pastel neuroanatomy quiz app icon</desc>
+  <defs>
+    <linearGradient id="bg" x1="56" y1="28" x2="456" y2="484" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f9d4e7"/>
+      <stop offset="0.52" stop-color="#d8ccff"/>
+      <stop offset="1" stop-color="#b9ddfb"/>
+    </linearGradient>
+    <linearGradient id="line" x1="140" y1="128" x2="372" y2="384" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8b6fd8"/>
+      <stop offset="1" stop-color="#ef9ec5"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <circle cx="386" cy="128" r="54" fill="#ffffff" opacity="0.52"/>
+  <circle cx="114" cy="390" r="70" fill="#ffffff" opacity="0.34"/>
+  <path d="M175 204c-28 0-51 23-51 51 0 22 14 41 34 48-6 40 25 76 66 76 22 0 42-11 54-29 13 14 31 22 51 22 38 0 69-31 69-69 0-24-13-46-32-58 9-43-24-83-68-83-20 0-38 8-51 22-17-23-44-38-72-38Z" fill="#fff" opacity="0.92"/>
+  <path d="M187 219c-22 16-28 47-12 70m55-100c-14 18-15 42-3 61m84-63c-25 4-44 25-45 51m-75 72c18 20 49 22 70 5m56-46c24 6 39 30 33 54" fill="none" stroke="url(#line)" stroke-width="20" stroke-linecap="round"/>
+  <path d="M178 352h156" stroke="#5d45a6" stroke-width="26" stroke-linecap="round" opacity="0.95"/>
+  <path d="M256 312v80" stroke="#5d45a6" stroke-width="26" stroke-linecap="round" opacity="0.95"/>
+</svg>

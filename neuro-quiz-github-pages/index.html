@@ -1,0 +1,2785 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#8b6fd8" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Neuro Quiz" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+  <link rel="apple-touch-icon" href="./icons/icon.svg" />
+  <title>בנק שאלות נוירואנטומיה</title>
+  <style>
+    :root {
+      --bg: #f7f3ff;
+      --surface: #ffffff;
+      --surface-soft: #fbf8ff;
+      --text: #2d2440;
+      --muted: #716883;
+      --line: #e7dcf7;
+      --primary: #8b6fd8;
+      --primary-dark: #5d45a6;
+      --primary-soft: #eee8ff;
+      --accent: #ef9ec5;
+      --accent-soft: #fff0f7;
+      --blue: #9cccf4;
+      --blue-soft: #edf7ff;
+      --success: #5f82d8;
+      --success-soft: #eef5ff;
+      --danger: #c65b89;
+      --danger-soft: #fff0f7;
+      --warning: #8362c7;
+      --warning-soft: #f5f0ff;
+      --shadow: 0 18px 50px rgba(65, 48, 105, 0.13);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(239, 158, 197, 0.33), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(156, 204, 244, 0.30), transparent 35%),
+        linear-gradient(135deg, rgba(139, 111, 216, 0.18), transparent 42%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container { max-width: 1040px; margin: 34px auto; padding: 20px; }
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.25;
+      letter-spacing: 0;
+      color: var(--text);
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-size: 2.15rem;
+      font-weight: 800;
+    }
+    h2 { font-size: 1.55rem; margin-bottom: 4px; }
+    h3 { margin-bottom: 12px; font-size: 1.14rem; }
+    .subtitle {
+      max-width: 780px;
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+    .small-muted { color: var(--muted); font-size: 0.95rem; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 14px; }
+    .menu-card {
+      position: relative;
+      width: 100%;
+      min-height: 126px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 20px 18px;
+      background: linear-gradient(180deg, var(--surface), var(--surface-soft));
+      cursor: pointer;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font: inherit;
+      color: inherit;
+    }
+    .menu-card::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      width: 9px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--accent);
+      opacity: 0.55;
+    }
+    .menu-card:hover, .menu-card:focus-visible {
+      border-color: rgba(139, 111, 216, 0.48);
+      background: #ffffff;
+      box-shadow: 0 14px 30px rgba(65, 48, 105, 0.12);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .lesson-label { font-size: 1.18rem; font-weight: 800; color: var(--primary-dark); }
+    .top-bar, .controls, .result-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .top-bar {
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .badge {
+      display: inline-block;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      padding: 8px 13px;
+      border: 1px solid rgba(139, 111, 216, 0.18);
+      border-radius: 999px;
+      font-size: 0.93rem;
+      font-weight: 700;
+    }
+    .progress-track {
+      width: 100%;
+      height: 11px;
+      background: #eadff8;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 22px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--blue));
+      transition: width 0.25s ease;
+    }
+    .question {
+      font-size: 1.28rem;
+      font-weight: 800;
+      line-height: 1.55;
+      margin: 18px 0 22px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+    }
+    .options { display: grid; gap: 11px; margin-bottom: 20px; }
+    .option {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 15px 16px;
+      cursor: pointer;
+      transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+      background: #fff;
+      text-align: right;
+      font: inherit;
+      font-size: 1rem;
+      width: 100%;
+    }
+    .option:hover {
+      border-color: rgba(139, 111, 216, 0.40);
+      background: #fdfbff;
+      box-shadow: 0 8px 20px rgba(65, 48, 105, 0.08);
+      transform: translateY(-1px);
+    }
+    .option.selected {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      box-shadow: inset 4px 0 0 var(--primary);
+    }
+    .option.correct {
+      border-color: rgba(95, 130, 216, 0.55);
+      background: var(--success-soft);
+      color: #314d98;
+    }
+    .option.wrong {
+      border-color: rgba(198, 91, 137, 0.55);
+      background: var(--danger-soft);
+      color: #84385b;
+    }
+    button {
+      border: none;
+      border-radius: 11px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    .primary { background: var(--primary); color: white; box-shadow: 0 10px 22px rgba(139, 111, 216, 0.24); }
+    .primary:hover { background: var(--primary-dark); }
+    .secondary { background: #f0eafd; color: var(--text); }
+    .secondary:hover { background: #e5dcf7; }
+    .dark { background: #4b3b76; color: white; }
+    .dark:hover { background: #332653; }
+    .feedback {
+      margin-top: 18px;
+      padding: 17px 18px;
+      border-radius: 13px;
+      display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.correct { background: var(--success-soft); color: #314d98; border: 1px solid rgba(95, 130, 216, 0.25); }
+    .feedback.wrong { background: var(--danger-soft); color: #84385b; border: 1px solid rgba(198, 91, 137, 0.24); }
+    .feedback.warning { display: block; background: var(--warning-soft); color: var(--warning); border: 1px solid rgba(131, 98, 199, 0.25); }
+    .score-text { font-size: 1.32rem; font-weight: 800; margin-bottom: 10px; color: var(--primary-dark); }
+    .stats-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 18px 0; }
+    .stat { background: var(--surface-soft); border: 1px solid var(--line); border-radius: 13px; padding: 15px; }
+    .session-box { margin-bottom: 18px; }
+    .list { padding-right: 18px; }
+    .list li { margin-bottom: 8px; }
+    .creator-credit {
+      margin: 20px auto 0;
+      padding: 15px 18px;
+      color: #6c5d86;
+      text-align: center;
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+    .creator-credit span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 18px;
+      border: 1px solid rgba(139, 111, 216, 0.20);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.62);
+      box-shadow: 0 8px 24px rgba(65, 48, 105, 0.08);
+      backdrop-filter: blur(8px);
+    }
+    .creator-credit .credit-source {
+      color: #766894;
+    }
+    .creator-credit .credit-divider {
+      color: #b7a6d9;
+    }
+    .creator-credit .credit-name {
+      direction: ltr;
+      unicode-bidi: isolate;
+      white-space: nowrap;
+    }
+    .creator-credit strong {
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 640px) {
+      .container { margin: 16px auto; padding: 12px; }
+      .card { padding: 20px; border-radius: 16px; }
+      h1 { font-size: 1.65rem; }
+      h2 { font-size: 1.28rem; }
+      .subtitle { font-size: 0.98rem; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .menu-card { min-height: 112px; padding: 18px; }
+      .top-bar { align-items: flex-start; }
+      .controls, .result-actions { width: 100%; }
+      .controls button, .result-actions button { flex: 1 1 100%; }
+      .badge { font-size: 0.88rem; }
+      .question { font-size: 1.08rem; padding: 16px; }
+      .option { font-size: 0.98rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- מסך תפריט -->
+  <div class="card" id="menuScreen">
+    <h1>בנק שאלות נוירואנטומיה</h1>
+    <p class="subtitle">שישה שאלונים לפי שיעורים, 30 שאלות בכל שיעור, עם ערבוב שאלות ותשובות, מצב חזרה על טעויות, שמירת תוצאה אחרונה ופירוט ציון לפי נושא.</p>
+
+    <div id="lastSessionBox" class="stat hidden session-box">
+      <strong>תוצאה אחרונה</strong>
+      <div id="lastSessionContent" class="small-muted"></div>
+    </div>
+
+    <div id="startupError" class="feedback warning hidden"></div>
+
+    <div class="menu-grid">
+      <button type="button" class="menu-card" data-lesson="lesson1"><span class="lesson-label">שיעור 1</span><span class="small-muted">מבוא, טרמינולוגיה, הדמיה, תאים וגליה</span></button>
+      <button type="button" class="menu-card" data-lesson="lesson2"><span class="lesson-label">שיעור 2</span><span class="small-muted">שכבות קורטקס, ברודמן, חומר לבן וקונקטום</span></button>
+      <button type="button" class="menu-card" data-lesson="lesson3"><span class="lesson-label">שיעור 3</span><span class="small-muted">PFC, תפקודים ניהוליים, OFC, vmPFC ו-ACC</span></button>
+      <button type="button" class="menu-card" data-lesson="lesson4"><span class="lesson-label">שיעור 4</span><span class="small-muted">מערכת לימבית, אמיגדלה, BNST, אינסולה וויסות רגשי</span></button>
+      <button type="button" class="menu-card" data-lesson="lesson5"><span class="lesson-label">שיעור 5</span><span class="small-muted">היפוקמפוס, מערכת הזיכרון, MTL ורקונסולידציה</span></button>
+      <button type="button" class="menu-card" data-lesson="lesson6"><span class="lesson-label">שיעור 6</span><span class="small-muted">בזאל גנגליה, דופמין, תגמול, תלמוס וקליניקה</span></button>
+    </div>
+  </div>
+
+  <!-- מסך שאלון -->
+  <div class="card hidden" id="quizScreen">
+    <div class="top-bar">
+      <div>
+        <h2 id="lessonTitle">שיעור</h2>
+        <div class="small-muted" id="sessionBadge">תרגול מלא</div>
+      </div>
+      <div class="controls">
+        <span class="badge" id="topicBadge">נושא</span>
+        <span class="badge" id="progressText">שאלה 1 מתוך 30</span>
+      </div>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionsContainer"></div>
+
+    <div class="controls">
+      <button class="primary" id="checkBtn" type="button">בדיקת תשובה</button>
+      <button class="secondary hidden" id="nextBtn" type="button">השאלה הבאה</button>
+      <button class="secondary" id="backBtn" type="button">חזרה לתפריט</button>
+    </div>
+
+    <div class="feedback" id="feedbackBox"></div>
+  </div>
+
+  <!-- מסך תוצאות -->
+  <div class="card hidden" id="resultScreen">
+    <h2>סיימת את השאלון 🎉</h2>
+    <div id="scoreText" class="score-text"></div>
+    <p id="summaryText"></p>
+
+    <div class="stats-box" id="statsBox"></div>
+
+    <h3>ציון לפי נושא</h3>
+    <div class="stats-box" id="topicStatsBox"></div>
+
+    <h3>שאלות שטעית בהן</h3>
+    <ul class="list" id="wrongList"></ul>
+
+    <div class="result-actions">
+      <button class="primary hidden" id="retryWrongBtn" type="button">תרגול רק על הטעויות</button>
+      <button class="dark" id="menuFromResultsBtn" type="button">חזרה לתפריט הראשי</button>
+    </div>
+  </div>
+
+  <footer class="creator-credit">
+    <span>
+      <span class="credit-source">השאלות נלקחו מהסיכום המאוחד של איריס ויעל</span>
+      <span class="credit-divider">|</span>
+      <span class="credit-name">Designed and created by <strong>Iris Tesler</strong></span>
+    </span>
+  </footer>
+
+</div>
+
+<script>
+// שאלות מבוססות על הקובץ "איציק". בכל שיעור יש 30 שאלות.
+const questionBank = {
+  "lesson1": [
+    {
+      "topic": "מבוא והיסטוריה",
+      "question": "מה הייתה התרומה המרכזית של גל לחשיבה על המוח?",
+      "options": [
+        "הוא הראה שכל המוח פועל ללא התמחות",
+        "הוא קידם את הרעיון שאזורים שונים במוח עושים דברים שונים",
+        "הוא גילה את מחסום דם-מוח",
+        "הוא פיתח את DTI"
+      ],
+      "correctAnswer": 1,
+      "explanation": "במסמך גל מוצג כמי שקידם חשיבה מודולרית, למרות שהפרנולוגיה עצמה אינה תקפה.",
+      "id": 1
+    },
+    {
+      "topic": "מבוא והיסטוריה",
+      "question": "מה הדגש שוורניקה הוסיף אחרי ברוקה?",
+      "options": [
+        "רק גודל הגולגולת חשוב",
+        "קשרים בין אזורים חשובים ולא רק מוקד יחיד",
+        "אין קשר בין פגיעה מוחית להתנהגות",
+        "כל הזיכרון נמצא בצרבלום"
+      ],
+      "correctAnswer": 1,
+      "explanation": "וורניקה הדגיש שמעגלים וקשרים בין אזורים משפיעים על התפקוד.",
+      "id": 2
+    },
+    {
+      "topic": "מבוא והיסטוריה",
+      "question": "מה מאפיין את הגישה העכשווית של networks?",
+      "options": [
+        "פונקציה נתפסת כרשת של כמה אזורים",
+        "כל פונקציה נמצאת בנקודה אחת בלבד",
+        "אין משמעות לאנטומיה",
+        "רק גזע המוח חשוב"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מדגיש דרך ביניים: אזורים שונים פועלים יחד כרשת התומכת בפונקציה.",
+      "id": 3
+    },
+    {
+      "topic": "חתכים וכיוונים",
+      "question": "איזה חתך מתאים במיוחד לראות מבנים פנימיים כמו קורפוס קלוסום, תלמוס וגזע המוח?",
+      "options": [
+        "קורונלי",
+        "אקסיאלי",
+        "סגיטלי",
+        "אופקי בלבד"
+      ],
+      "correctAnswer": 2,
+      "explanation": "החתך הסגיטלי טוב לצפייה במבנים פנימיים לאורך קו האמצע.",
+      "id": 4
+    },
+    {
+      "topic": "חתכים וכיוונים",
+      "question": "איזה חתך מתאים במיוחד לאזורים צדדיים כמו הגרעינים הבאזליים?",
+      "options": [
+        "קורונלי",
+        "סגיטלי",
+        "חתך מיקרוסקופי בלבד",
+        "אין חתך מתאים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך נאמר שהחתך הקורונלי טוב לאזורים צדדיים כמו הבאזל גנגליה.",
+      "id": 5
+    },
+    {
+      "topic": "חתכים וכיוונים",
+      "question": "מה נכון לגבי דורסלי מעל המידבריין לעומת בגזע המוח?",
+      "options": [
+        "בשניהם דורסלי הוא תמיד קדימה",
+        "מעל המידבריין דורסלי לכיוון הגולגולת, ובגזע המוח לכיוון האחורי",
+        "בשניהם דורסלי הוא תמיד למטה",
+        "אין משמעות לכיוון דורסלי"
+      ],
+      "correctAnswer": 1,
+      "explanation": "בגלל כיפוף הציר, משמעות הכיוונים משתנה בין המוח הקדמי לגזע המוח.",
+      "id": 6
+    },
+    {
+      "topic": "טרמינולוגיה",
+      "question": "מה מחלק הסנטרל סולקוס?",
+      "options": [
+        "בין שתי ההמיספרות",
+        "בין פרונטלי לפריאטלי",
+        "בין טמפורלי לאוקסיפיטלי",
+        "בין היפוקמפוס לאמיגדלה"
+      ],
+      "correctAnswer": 1,
+      "explanation": "החריץ המרכזי מפריד בין האונה הפרונטלית לאונה הפריאטלית.",
+      "id": 7
+    },
+    {
+      "topic": "טרמינולוגיה",
+      "question": "היכן נמצא הפריסנטרל גיירוס ומה תפקידו?",
+      "options": [
+        "אחורי לסנטרל סולקוס וקשור לראייה",
+        "קדמי לסנטרל סולקוס וקשור למוטוריקה",
+        "בתוך ההיפוקמפוס וקשור לזיכרון",
+        "בגזע המוח וקשור לנשימה"
+      ],
+      "correctAnswer": 1,
+      "explanation": "הגיירוס הקדם-מרכזי נמצא לפני הסנטרל סולקוס והוא האזור המוטורי.",
+      "id": 8
+    },
+    {
+      "topic": "טרמינולוגיה",
+      "question": "מה עושה הפיזורה הלטרלית/סילביאנית?",
+      "options": [
+        "מפרידה בין טמפורלי למבנים פרונטליים/פריאטליים מעליה",
+        "מחלקת את השדה הראייתי",
+        "מפרידה בין שתי ההמיספרות",
+        "מחברת בין תלמוס לקורטקס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הפיזורה הסילביאנית מפרידה בין האונה הטמפורלית שמתחת לבין אזורים שמעליה.",
+      "id": 9
+    },
+    {
+      "topic": "טרמינולוגיה",
+      "question": "איזה חריץ הוא הבולט בין שתי ההמיספרות?",
+      "options": [
+        "החריץ המרכזי",
+        "החריץ הקלקריני",
+        "הפיזורה הלונגיטודינלית",
+        "הסולקוס הסינגולרי"
+      ],
+      "correctAnswer": 2,
+      "explanation": "הפיזורה הלונגיטודינלית היא החריץ שבין שתי ההמיספרות.",
+      "id": 10
+    },
+    {
+      "topic": "טרמינולוגיה",
+      "question": "מה נמצא מעל ומתחת לחריץ הקלקריני?",
+      "options": [
+        "אזורי ראייה ראשוניים",
+        "הגרעינים הבאזליים",
+        "אזורי שפה בלבד",
+        "הקורטקס המוטורי"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך מצוין שמעל ומתחת לחריץ הקלקריני נמצאים אזורי ראייה ראשוניים.",
+      "id": 11
+    },
+    {
+      "topic": "היסטולוגיה",
+      "question": "איזו צביעה מדגישה גופי תאים ושכבות קורטיקליות?",
+      "options": [
+        "גולג׳י",
+        "ניסל",
+        "DTI",
+        "CT"
+      ],
+      "correctAnswer": 1,
+      "explanation": "צביעת ניסל צובעת בעיקר גופי תאים ולכן טובה לזיהוי שכבות.",
+      "id": 12
+    },
+    {
+      "topic": "היסטולוגיה",
+      "question": "מה היתרון של שיטת גולג׳י?",
+      "options": [
+        "רואים נוירונים שלמים אך רק תאים בודדים",
+        "רואים רק כלי דם",
+        "רואים רק מיאלין",
+        "רואים פעילות בזמן אמת"
+      ],
+      "correctAnswer": 0,
+      "explanation": "גולג׳י מדגישה גוף תא, דנדריטים ואקסונים במספר קטן של תאים.",
+      "id": 13
+    },
+    {
+      "topic": "היסטולוגיה",
+      "question": "מה צובעת שיטת ווריט?",
+      "options": [
+        "חלבוני דם",
+        "מיאלין סביב אקסונים",
+        "רצפטורים לדופמין",
+        "גופי תאים בלבד"
+      ],
+      "correctAnswer": 1,
+      "explanation": "ווריט מדגישה מיאלין ולכן עוזרת לראות מסלולים וקשרים.",
+      "id": 14
+    },
+    {
+      "topic": "מחקר ופגיעות",
+      "question": "מה מאפשר tract tracing?",
+      "options": [
+        "לראות לאן חומרים שהוזרקו לנוירון או אקסון מגיעים",
+        "למדוד IQ",
+        "למחוק זיכרון",
+        "לראות רק עצמות גולגולת"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מתאר הזרקת חומר כדי לעקוב אחרי קשרים בין תאים ומעגלים.",
+      "id": 15
+    },
+    {
+      "topic": "מחקר ופגיעות",
+      "question": "מהי מגבלה חשובה של מחקרי לזיות?",
+      "options": [
+        "כל פגיעה זהה לחלוטין",
+        "פגיעות שונות בגודל, באזור ובזמן ולכן קשה להסיק ישירות",
+        "אין להן קשר להתנהגות",
+        "הן מודדות רק מיאלין"
+      ],
+      "correctAnswer": 1,
+      "explanation": "פגיעות מוח משתנות בין אנשים ובין שלב אקוטי לכרוני.",
+      "id": 16
+    },
+    {
+      "topic": "מחקר ופגיעות",
+      "question": "מה עושה TMS בהקשר של לזיה?",
+      "options": [
+        "יוצר פגיעה זמנית או שיתוק קצר של אזור",
+        "צובע תאים בסגול",
+        "מזריק חומר ניגוד",
+        "מגדיל מיאלין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "TMS יכול לשבש פעילות באזור מסוים לזמן קצר וכך לדמות פגיעה זמנית.",
+      "id": 17
+    },
+    {
+      "topic": "הדמיה",
+      "question": "מה היתרון המרכזי של MRI מבני לפי המסמך?",
+      "options": [
+        "רזולוציה גבוהה והבחנה טובה בין חומר אפור ללבן",
+        "הוא מודד רק פחד",
+        "הוא מצלם רק עצמות",
+        "הוא מחליף צביעת ניסל"
+      ],
+      "correctAnswer": 0,
+      "explanation": "MRI מתאים למחקרי נפח, עובי קורטקס והבחנה בין חומר אפור ללבן.",
+      "id": 18
+    },
+    {
+      "topic": "הדמיה",
+      "question": "מה מאפשר DTI?",
+      "options": [
+        "מדידת סיבים וכיווני תנועה של מים/מולקולות",
+        "הפעלת שריר ישירה",
+        "זיהוי גופי תאים בלבד",
+        "הדמיית עצם בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "DTI הוא שימוש ב-MRI שמעריך סיבי חומר לבן לפי כיווני דיפוזיה.",
+      "id": 19
+    },
+    {
+      "topic": "הדמיה",
+      "question": "למה CT נפוץ בקליניקה?",
+      "options": [
+        "כי הוא פשוט יחסית ויכול להראות דם/כלי דם עם חומר ניגוד",
+        "כי הוא רואה דנדריטים",
+        "כי הוא מודד נוירוגנזה",
+        "כי הוא מזהה CS ו-US"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין CT ככלי קליני שימושי, למשל לשטף דם וכלי דם.",
+      "id": 20
+    },
+    {
+      "topic": "נוירונים",
+      "question": "איזה סוג נוירון הוא הנפוץ ביותר בקליפת המוח?",
+      "options": [
+        "פורקינייה",
+        "פירמידלי",
+        "אוליגודנדרוציט",
+        "מיקרוגליה"
+      ],
+      "correctAnswer": 1,
+      "explanation": "כשלושה רבעים מתאי קליפת המוח הם תאים פירמידליים.",
+      "id": 21
+    },
+    {
+      "topic": "נוירונים",
+      "question": "עם איזה נוירוטרנסמיטר עובדים בדרך כלל תאים פירמידליים?",
+      "options": [
+        "גלוטמט",
+        "דופמין בלבד",
+        "סרוטונין בלבד",
+        "אצטילכולין בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך מצוין שתאים פירמידליים הם גלוטמטרגיים ומעוררים.",
+      "id": 22
+    },
+    {
+      "topic": "נוירונים",
+      "question": "מה מאפיין תאים אסטרלטיים/גרנולריים?",
+      "options": [
+        "שלוחות בצורת כוכב ויכולת להיות גלוטמטרגיים או GABA-ארגיים",
+        "הם תמיד רק בגזע המוח",
+        "הם מייצרים מיאלין",
+        "אין להם גוף תא"
+      ],
+      "correctAnswer": 0,
+      "explanation": "התאים הכוכביים מגוונים ויכולים להיות מעוררים או מעכבים.",
+      "id": 23
+    },
+    {
+      "topic": "נוירונים",
+      "question": "היכן נמצאים תאי פורקינייה?",
+      "options": [
+        "בצרבלום",
+        "בבלוטת יותרת המוח",
+        "בקורפוס קלוסום",
+        "בקרנית העין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "פורקינייה מוזכרים כסוג תא שנמצא בצרבלום.",
+      "id": 24
+    },
+    {
+      "topic": "גליה",
+      "question": "מה עושה אסטרוציט מעבר לתמיכה מבנית?",
+      "options": [
+        "מווסת סינפסות וזרימת דם ומעביר חומרים",
+        "מייצר רק עצם",
+        "משמש רק תא חיסון",
+        "אין לו תפקיד פעיל"
+      ],
+      "correctAnswer": 0,
+      "explanation": "האסטרוציטים מעורבים בתקשורת סינפטית, מעבר חומרים וויסות זרימת דם.",
+      "id": 25
+    },
+    {
+      "topic": "גליה",
+      "question": "איזה תא מייצר מיאלין במערכת העצבים המרכזית?",
+      "options": [
+        "מיקרוגליה",
+        "אוליגודנדרוציט",
+        "תא גרנולרי",
+        "אסטרוציט בלבד"
+      ],
+      "correctAnswer": 1,
+      "explanation": "אוליגודנדרוציטים עוטפים אקסונים במיאלין ומזרזים הולכה.",
+      "id": 26
+    },
+    {
+      "topic": "גליה",
+      "question": "מה תפקיד חשוב של מיקרוגליה?",
+      "options": [
+        "חלק חיסוני של המוח וגיזום סינפסות",
+        "קידוד ראייה ראשונית",
+        "יצירת קורפוס קלוסום",
+        "החלפת התלמוס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "מיקרוגליה נעה במרחב, משתתפת בהגנה חיסונית וב-pruning של סינפסות.",
+      "id": 27
+    },
+    {
+      "topic": "אסטרוציטים",
+      "question": "מהי הסינפסה התלת-חיבורית?",
+      "options": [
+        "אקסון, דנדריט ואסטרוציט סביב הסינפסה",
+        "שלושה תאי שריר",
+        "שלושה חדרי מוח",
+        "שלוש שכבות של גולגולת"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מתאר סינפסה שבה גם האסטרוציט משתתף בוויסות מעבר המידע.",
+      "id": 28
+    },
+    {
+      "topic": "אסטרוציטים",
+      "question": "איך אסטרוציטים קשורים לאות BOLD ב-fMRI?",
+      "options": [
+        "הם יכולים לווסת זרימת דם מקומית לפי פעילות עצבית",
+        "הם מצלמים את המוח",
+        "הם מחליפים את ההמוגלובין",
+        "אין קשר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "פעילות סינפטית יכולה להפעיל אסטרוציטים שמרחיבים כלי דם ומביאים יותר דם לאזור.",
+      "id": 29
+    },
+    {
+      "topic": "מחסום דם-מוח",
+      "question": "למה אי אפשר פשוט לתת דופמין בפרקינסון?",
+      "options": [
+        "דופמין אינו עובר היטב את מחסום הדם-מוח ולכן נותנים L-DOPA",
+        "דופמין הוא תא גליה",
+        "דופמין קיים רק בעין",
+        "אין דופמין בפרקינסון"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך מובאת הדוגמה ש-L-DOPA עוברת את המחסום טוב יותר מדופמין.",
+      "id": 30
+    }
+  ],
+  "lesson2": [
+    {
+      "topic": "ציטוארכיטקטוניקה",
+      "question": "מה פירוש ציטוארכיטקטוניקה?",
+      "options": [
+        "עיצוב אזורים לפי הרכב וארגון תאי",
+        "מדידת דופק",
+        "צילום רנטגן של עצם",
+        "הערכת אישיות"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מגדיר זאת כהבדלים בארגון התאי בין אזורי מוח.",
+      "id": 1
+    },
+    {
+      "topic": "רשתות",
+      "question": "מהם Nodes במעגל מוחי לפי השיעור?",
+      "options": [
+        "האזורים הקורטיקליים",
+        "רק כלי דם",
+        "רק נוירוטרנסמיטורים",
+        "רק חדרי המוח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הצמתים הם האזורים, וה-connections הם הסיבים ביניהם.",
+      "id": 2
+    },
+    {
+      "topic": "שכבות קורטקס",
+      "question": "כמה שכבות יש לנאוקורטקס?",
+      "options": [
+        "3",
+        "4",
+        "6",
+        "12"
+      ],
+      "correctAnswer": 2,
+      "explanation": "הנאוקורטקס מאופיין בשש שכבות.",
+      "id": 3
+    },
+    {
+      "topic": "שכבות קורטקס",
+      "question": "איזו שכבה היא שכבת הקלט העיקרית מהתלמוס?",
+      "options": [
+        "1",
+        "2",
+        "4",
+        "6"
+      ],
+      "correctAnswer": 2,
+      "explanation": "שכבה 4 מקבלת את עיקר המידע התלמו-קורטיקלי.",
+      "id": 4
+    },
+    {
+      "topic": "שכבות קורטקס",
+      "question": "אילו שכבות קשורות בעיקר לתקשורת תוך-קורטיקלית?",
+      "options": [
+        "2-3",
+        "4 בלבד",
+        "5-6 בלבד",
+        "1 בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "שכבות 2-3 מעבירות מידע בין אזורי קורטקס.",
+      "id": 5
+    },
+    {
+      "topic": "שכבות קורטקס",
+      "question": "לאן שכבה 5 שולחת בעיקר מידע?",
+      "options": [
+        "לאזורים תת-קורטיקליים",
+        "לעין בלבד",
+        "לשכבה 1 בלבד",
+        "למיאלין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "שכבה 5 היא שכבת פלט לאזורים תת-קורטיקליים.",
+      "id": 6
+    },
+    {
+      "topic": "שכבות קורטקס",
+      "question": "מה עושה שכבה 6?",
+      "options": [
+        "שולחת משוב לתלמוס",
+        "מייצרת פחד",
+        "יוצרת דם",
+        "מקודדת ריח בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "שכבה 6 מחזירה פידבק לתלמוס.",
+      "id": 7
+    },
+    {
+      "topic": "שכבות קורטקס",
+      "question": "מה מאפיין שכבה 1?",
+      "options": [
+        "מקבלת מידע top-down מאזורים גבוהים",
+        "היא היחידה ששולחת לגוף",
+        "אין בה סיבים",
+        "היא רק מיאלין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "השכבה המולקולרית מקבלת מידע מלמעלה למטה.",
+      "id": 8
+    },
+    {
+      "topic": "דוגמה תפקודית",
+      "question": "מה ההבדל בין אזור סומטוסנסורי לאזור מוטורי ליד הסנטרל סולקוס?",
+      "options": [
+        "במוטורי שכבה 4 קטנה יותר כי הוא אזור פלט",
+        "בסומטוסנסורי אין תאים",
+        "שניהם זהים לגמרי",
+        "המוטורי מקבל רק ריח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "מבנה השכבות משקף את ההבדל בין קלט חושי לפלט מוטורי.",
+      "id": 9
+    },
+    {
+      "topic": "ברודמן",
+      "question": "מה העיקרון של מפת ברודמן?",
+      "options": [
+        "אזורים שנראים שונה במיקרוסקופ כנראה עושים דברים שונים",
+        "כל אזור זהה",
+        "רק צבעי MRI חשובים",
+        "אין קשר בין מבנה לפונקציה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ברודמן חילק אזורים לפי מראה מיקרוסקופי וארגון תאי.",
+      "id": 10
+    },
+    {
+      "topic": "ברודמן",
+      "question": "כמה אזורים צבע ברודמן במפה הקלאסית לפי המסמך?",
+      "options": [
+        "12",
+        "24",
+        "52",
+        "100"
+      ],
+      "correctAnswer": 2,
+      "explanation": "המסמך מציין שברודמן צבע 52 אזורים.",
+      "id": 11
+    },
+    {
+      "topic": "מיפוי מודרני",
+      "question": "מה נוסף היום מעבר לציטוארכיטקטוניקה?",
+      "options": [
+        "מיאלוארכיטקטורה, חיבוריות ו-fMRI",
+        "רק מדידת גולגולת",
+        "רק תצפית בהתנהגות",
+        "אין שיטות נוספות"
+      ],
+      "correctAnswer": 0,
+      "explanation": "מפות מודרניות משלבות מבנה תאים, מיאלין, חיבוריות ופעילות.",
+      "id": 12
+    },
+    {
+      "topic": "סוגי קורטקס",
+      "question": "מה מאפיין אזורים גרנולריים?",
+      "options": [
+        "שכבה 4 גדולה ובולטת",
+        "אין שכבה 4",
+        "רק שלוש שכבות",
+        "אין קלט מהתלמוס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אזורים גרנולריים, בעיקר חישה ראשונית, מקבלים קלט תלמי חזק.",
+      "id": 13
+    },
+    {
+      "topic": "סוגי קורטקס",
+      "question": "איזה אזורים נוטים להיות אגרנולריים?",
+      "options": [
+        "אזורים מוטוריים",
+        "אזורי ראייה ראשוניים",
+        "רק היפוקמפוס",
+        "רק קורפוס קלוסום"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אזורים מוטוריים הם פלט ולכן שכבה 4 בהם קטנה או חסרה.",
+      "id": 14
+    },
+    {
+      "topic": "סוגי קורטקס",
+      "question": "מה הם אזורים יולמינייט/איזוקורטקס?",
+      "options": [
+        "כל השכבות דומות יחסית בגודל",
+        "רק שכבה אחת",
+        "רק חומר לבן",
+        "רק גרעינים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך הם מתוארים כאזורים עם איזון יחסי בין קלט לפלט.",
+      "id": 15
+    },
+    {
+      "topic": "סוגי קורטקס",
+      "question": "מה מאפיין אזורים דיסגרנולריים?",
+      "options": [
+        "ביניים, עם שכבה 4 דקה, בעיקר לימביים",
+        "שכבה 4 ענקית",
+        "אין קורטקס",
+        "רק עצב ראייה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הם אזורי מעבר בין נאוקורטקס לקורטקס ישן יותר.",
+      "id": 16
+    },
+    {
+      "topic": "קורטקס אבולוציוני",
+      "question": "מה נכון לגבי נאוקורטקס?",
+      "options": [
+        "כ-95% מהקורטקס ויש לו 6 שכבות",
+        "יש לו רק 2 שכבות",
+        "הוא נמצא רק בהיפוקמפוס",
+        "הוא חסר תאים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין שנאוקורטקס הוא רוב הקורטקס ובעל שש שכבות.",
+      "id": 17
+    },
+    {
+      "topic": "קורטקס אבולוציוני",
+      "question": "איזה קורטקס ישן קשור לריח ויש לו פחות שכבות?",
+      "options": [
+        "פליוקורטקס",
+        "נאוקורטקס",
+        "קורטקס מוטורי ראשוני",
+        "קורפוס קלוסום"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הפליוקורטקס מתואר כקשור לריח ובעל כשלוש שכבות.",
+      "id": 18
+    },
+    {
+      "topic": "קורטקס אבולוציוני",
+      "question": "מה נכון לגבי ההיפוקמפוס?",
+      "options": [
+        "אזור ישן גנטית עם 3-4 שכבות",
+        "נאוקורטקס קלאסי עם 6 שכבות בלבד",
+        "חומר לבן בלבד",
+        "אזור מוטורי ראשוני"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ההיפוקמפוס מתואר כחלק ישן יותר בעל פחות שכבות.",
+      "id": 19
+    },
+    {
+      "topic": "היררכיה",
+      "question": "מהם אזורים ראשוניים?",
+      "options": [
+        "אזורי חישה או מוטוריקה עם input/output בסיסי",
+        "אזורים שעושים אינטגרציה מכל החושים",
+        "רק אזורי DMN",
+        "רק אזורי רגש"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אזורים ראשוניים מתעסקים במודאליות או פלט בסיסי.",
+      "id": 20
+    },
+    {
+      "topic": "היררכיה",
+      "question": "מהו אזור אסוציאטיבי יונימודלי?",
+      "options": [
+        "מעבד מודאליות אחת ברמה גבוהה יותר",
+        "מקבל את כל המודאליות יחד",
+        "אינו מקבל מידע",
+        "רק גרעין תלמי"
+      ],
+      "correctAnswer": 0,
+      "explanation": "לדוגמה אזורי V2/V4 בראייה מקבלים מ-V1 ומעבדים ראייה ברמה גבוהה.",
+      "id": 21
+    },
+    {
+      "topic": "היררכיה",
+      "question": "מהו אזור הטרומודלי?",
+      "options": [
+        "מקבל מידע מכמה מודאליות ועושה אינטגרציה",
+        "מקבל רק ריח",
+        "רק שולח לגוף",
+        "רק שכבה 4"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אזורים פרה-פרונטליים, פריאטליים וטמפורליים קדמיים משלבים מידע מגוון.",
+      "id": 22
+    },
+    {
+      "topic": "נתיבים מקבילים",
+      "question": "מה עושה הנתיב הוויזואלי הדורסלי?",
+      "options": [
+        "עיבוד איפה/איך ומיקום/פעולה",
+        "זיהוי מה בלבד",
+        "שמיעה בלבד",
+        "ויסות דופמין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הנתיב הדורסלי עובר מאוקסיפיטלי לפריאטלי ופרונטלי וקשור למקום/פעולה.",
+      "id": 23
+    },
+    {
+      "topic": "נתיבים מקבילים",
+      "question": "מה עושה הנתיב הוויזואלי הוונטרלי?",
+      "options": [
+        "זיהוי מה",
+        "שליטה בשרירים",
+        "חישוב כאב",
+        "שינה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הנתיב הוונטרלי עובר לאזורים טמפורליים וקשור לזיהוי.",
+      "id": 24
+    },
+    {
+      "topic": "חומר לבן",
+      "question": "מהם סיבים קומיסורליים?",
+      "options": [
+        "סיבים בין ההמיספרות",
+        "סיבים מהקורטקס לגוף",
+        "סיבים בתוך אותה שכבה בלבד",
+        "רק סיבי ריח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "קומיסורות כמו קורפוס קלוסום מחברות בין ימין לשמאל.",
+      "id": 25
+    },
+    {
+      "topic": "חומר לבן",
+      "question": "מהם association fibers?",
+      "options": [
+        "מחברים אזורים בתוך אותה המיספרה",
+        "מחברים רק עין לקורטקס",
+        "מחברים מוח לשריר",
+        "רק פלט תלמי"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אלו סיבים בין אזורים סמוכים או רחוקים באותה המיספרה.",
+      "id": 26
+    },
+    {
+      "topic": "חומר לבן",
+      "question": "מהם projection fibers?",
+      "options": [
+        "סיבים מהקורטקס לאזורים תת-קורטיקליים או גוף",
+        "סיבים רק בין שתי ההמיספרות",
+        "סיבי אסטרוציטים",
+        "סיבי ריח בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הם מעבירים מידע מהקורטקס למבנים תת-קורטיקליים ולהפך.",
+      "id": 27
+    },
+    {
+      "topic": "מסלולים",
+      "question": "איזה מסלול מחבר בין ורניקה לברוקה?",
+      "options": [
+        "arcuate fasciculus",
+        "cingulum",
+        "uncinate",
+        "internal capsule"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-arcuate fasciculus חשוב לשפה ולחזרה על מילים.",
+      "id": 28
+    },
+    {
+      "topic": "מסלולים",
+      "question": "פגיעה ב-arcuate fasciculus עלולה לגרום ל...",
+      "options": [
+        "conduction aphasia",
+        "עיוורון מלא",
+        "פרקינסון",
+        "חוסר כאב"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך מתואר קושי לחזור על מה שנאמר למרות הבנה ודיבור יחסית שמורים.",
+      "id": 29
+    },
+    {
+      "topic": "קונקטום",
+      "question": "מה פירוש small world network?",
+      "options": [
+        "אפשר להגיע בין אזורים במעט צעדים דרך מודולות והאבים",
+        "כל אזור מנותק",
+        "אין מודולות",
+        "רק אזור אחד פועל"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הקונקטום יעיל: מודולות מקומיות והאבים מקשרים ביניהן.",
+      "id": 30
+    }
+  ],
+  "lesson3": [
+    {
+      "topic": "PFC כללי",
+      "question": "מה נכון לגבי ה-PFC אצל בני אדם?",
+      "options": [
+        "זה אזור אחרון יחסית להבשלה",
+        "הוא מבשיל רק ברחם",
+        "אין בו קשר לניהול",
+        "הוא קטן יותר מכל חיה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין שה-PFC מגיע לבשלות בשנות העשרים.",
+      "id": 1
+    },
+    {
+      "topic": "PFC כללי",
+      "question": "למה פגיעה פרה-פרונטלית מעניינת פסיכולוגית?",
+      "options": [
+        "יכולה ליצור קשיים מורכבים בחיי יום יום למרות IQ ושפה תקינים",
+        "תמיד גורמת לעיוורון",
+        "תמיד מוחקת שמיעה",
+        "אין לה ביטוי"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המקרים בשיעור מראים תפקוד בסיסי שמור לצד בעיות ניהול/החלטה.",
+      "id": 2
+    },
+    {
+      "topic": "מקרים",
+      "question": "מה אפיין את האדריכל עם פגיעה ב-dlPFC?",
+      "options": [
+        "ידע מה צריך לעשות אך התקשה לתכנן ולבצע סדר פעולות",
+        "לא הבין מילים",
+        "איבד ראייה",
+        "לא הרגיש כאב"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הוא התקשה במשימות יום-יומיות כמו קניות ותכנון למרות הבנה.",
+      "id": 3
+    },
+    {
+      "topic": "מקרים",
+      "question": "מה אפיין את רואה החשבון עם פגיעה vmPFC?",
+      "options": [
+        "קבלת החלטות שגויה ושינוי חיים למרות דיבור והבנה תקינים",
+        "שיתוק מלא",
+        "אובדן ראייה ראשונית",
+        "חוסר יכולת לשמוע"
+      ],
+      "correctAnswer": 0,
+      "explanation": "פגיעה ונטרומדיאלית מתוארת כקושי בהחלטות ובחיים החברתיים/רגשיים.",
+      "id": 4
+    },
+    {
+      "topic": "אנטומיה PFC",
+      "question": "אילו שלושה אזורים פרה-פרונטליים מרכזיים מופיעים בשיעור?",
+      "options": [
+        "dlPFC, vmPFC, OFC",
+        "V1, M1, LGN",
+        "היפוקמפוס, תלמוס, צרבלום",
+        "פוטמן, קאודט, SN"
+      ],
+      "correctAnswer": 0,
+      "explanation": "השיעור מחלק את ה-PFC לדורסולטרלי, ונטרומדיאלי ואורביטופרונטלי.",
+      "id": 5
+    },
+    {
+      "topic": "אנטומיה PFC",
+      "question": "מה נכון לגבי הגבול בין vmPFC ל-OFC?",
+      "options": [
+        "אין תמיד גבול ברור ביניהם",
+        "הם באונות שונות לגמרי",
+        "OFC נמצא בצרבלום",
+        "vmPFC נמצא בעין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין שלעתים משתמשים במונחים קרובים כי האזורים סמוכים.",
+      "id": 6
+    },
+    {
+      "topic": "שכבות PFC",
+      "question": "מה מאפיין אזורים לטרליים קדמיים ב-PFC?",
+      "options": [
+        "יותר גרנולריים עם שש שכבות ושכבה 4",
+        "רק שלוש שכבות",
+        "חומר לבן בלבד",
+        "אין קלט"
+      ],
+      "correctAnswer": 0,
+      "explanation": "האזורים הלטרליים קשורים יותר לקוגניטיב קונטרול וממוקדי חוץ.",
+      "id": 7
+    },
+    {
+      "topic": "שכבות PFC",
+      "question": "מה מאפיין אזורים מדיאליים ואורביטליים?",
+      "options": [
+        "יותר אגרנולריים/דיסגרנולריים ולימביים",
+        "שכבה 4 עצומה כמו V1",
+        "חסרי קשר לרגש",
+        "רק מוטוריים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הם קרובים לקורטקס לימבי, מקבלים מידע פנימי ורגשי.",
+      "id": 8
+    },
+    {
+      "topic": "dlPFC",
+      "question": "אילו אזורי ברודמן משויכים ל-dlPFC לפי המסמך?",
+      "options": [
+        "בעיקר 9 ו-46",
+        "17 ו-18",
+        "1 ו-2",
+        "41 ו-42"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-dlPFC כולל בעיקר BA 9 ו-46 וחלקים נוספים.",
+      "id": 9
+    },
+    {
+      "topic": "dlPFC",
+      "question": "עם איזה מבנים ה-dlPFC מקושר?",
+      "options": [
+        "פריאטלי, בזאל גנגליה, היפוקמפוס ואזורים פרה-פרונטליים",
+        "רק עור",
+        "רק עין",
+        "רק ריח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מפרט חיבורים לפריאטלי, קאודט/בזאל גנגליה, היפוקמפוס ועוד.",
+      "id": 10
+    },
+    {
+      "topic": "dlPFC",
+      "question": "מה אחד התפקידים המרכזיים של dlPFC?",
+      "options": [
+        "זיכרון עבודה",
+        "רפלקס נשימה",
+        "ייצור מיאלין",
+        "סינון דם"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במטלות החזקת מידע, אזור זה פעיל גם כשהגירוי כבר איננו.",
+      "id": 11
+    },
+    {
+      "topic": "dlPFC",
+      "question": "מהו cognitive control בהקשר של dlPFC?",
+      "options": [
+        "תכנון, מעבר בין משימות וארגון התנהגות",
+        "רק זיהוי ריח",
+        "רק התכווצות שריר",
+        "רק טעם"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מתאר תכנון משימות ומעבר בין משימות כקוגניטיב קונטרול.",
+      "id": 12
+    },
+    {
+      "topic": "dlPFC",
+      "question": "מה מייצג השיפוע הקדמי-אחורי ב-dlPFC?",
+      "options": [
+        "אחורי קונקרטי יותר, קדמי אבסטרקטי יותר",
+        "אחורי רגשי וקדמי ראייתי",
+        "אין הבדל",
+        "קדמי תמיד מוטורי בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אזורים אחוריים יותר קשורים למידע קונקרטי, קדמיים יותר לאבסטרקציה.",
+      "id": 13
+    },
+    {
+      "topic": "dlPFC קליני",
+      "question": "מה קרה למרקוס אחרי פגיעה דורסולטרלית?",
+      "options": [
+        "התקשה להכין שיעור ולחזור למטלה אחרי הפרעה",
+        "איבד שפה לגמרי",
+        "לא זיהה פחד",
+        "התעוור"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המקרה מדגים תסמונת דיסאקסקיוטיבית בחיי יום יום.",
+      "id": 14
+    },
+    {
+      "topic": "מבחנים",
+      "question": "מה בודקת משימת ויסקונסין?",
+      "options": [
+        "גמישות קוגניטיבית והחלפת כלל לפי משוב",
+        "חדות ראייה",
+        "מיאלין",
+        "ריח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אנשים עם פגיעה פרונטלית מתקשים לעזוב כלל קודם גם אחרי משוב.",
+      "id": 15
+    },
+    {
+      "topic": "לטרליזציה",
+      "question": "פגיעה שמאלית ב-dlPFC נקשרה יותר ל...",
+      "options": [
+        "דיכאון ומצב רוח שלילי",
+        "שמחה קיצונית תמיד",
+        "עיוורון",
+        "שיתוק רגל"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין קשר בין פגיעה שמאלית לבין דיכאון/withdrawal.",
+      "id": 16
+    },
+    {
+      "topic": "לטרליזציה",
+      "question": "פגיעה ימנית ב-dlPFC נקשרה יותר ל...",
+      "options": [
+        "אפתיה ופחות אכפתיות",
+        "אפזיה תמיד",
+        "ראייה משופרת",
+        "תיאבון מוגבר בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך מתואר הבדל רגשי בין פגיעות ימין ושמאל.",
+      "id": 17
+    },
+    {
+      "topic": "vmPFC",
+      "question": "מה נכון לגבי vmPFC לאחר פגיעה?",
+      "options": [
+        "IQ, שפה וזיכרון בסיסי יכולים להישמר אך החלטות נפגעות",
+        "תמיד אין נשימה",
+        "תמיד אין ראייה",
+        "אין שינוי בהתנהגות"
+      ],
+      "correctAnswer": 0,
+      "explanation": "פגיעה vmPFC יכולה להשאיר יכולות קוגניטיביות בסיסיות אך לפגוע בהחלטה ורגש.",
+      "id": 18
+    },
+    {
+      "topic": "vmPFC",
+      "question": "אילו אזורי ברודמן נכללים בעיקר ב-vmPFC לפי המסמך?",
+      "options": [
+        "10, 14, 25 וחלק מ-32",
+        "17 ו-18",
+        "4 ו-6",
+        "1,2,3"
+      ],
+      "correctAnswer": 0,
+      "explanation": "השיעור מפרט אזורים מדיאליים ונמוכים אלה.",
+      "id": 19
+    },
+    {
+      "topic": "vmPFC קישוריות",
+      "question": "עם אילו מבנים vmPFC מקושר במיוחד?",
+      "options": [
+        "אמיגדלה, היפוקמפוס, ונטרל סטריאטום, היפותלמוס וגזע מוח",
+        "רק שריר",
+        "רק עור",
+        "רק קורפוס קלוסום"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הקישוריות שלו מתאימה לעיבוד רגשי, ערך ותגובות גופניות.",
+      "id": 20
+    },
+    {
+      "topic": "vmPFC",
+      "question": "מהו somatic marker לפי ההקשר בשיעור?",
+      "options": [
+        "אות גופני/רגשי שעוזר בקבלת החלטות",
+        "סוג של מיאלין",
+        "גרעין בתלמוס",
+        "שכבת קורטקס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "לפי דמאסיו, ה-vmPFC משלב סמנים גופניים בהחלטות.",
+      "id": 21
+    },
+    {
+      "topic": "vmPFC",
+      "question": "מה תפקיד vmPFC בהכחדת פחד?",
+      "options": [
+        "עושה אינהיביציה לאמיגדלה ועוזר לווסת פחד",
+        "מייצר פחד תמיד",
+        "מקבל רק ראייה",
+        "אין קשר לפחד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-vmPFC חשוב להפחתת תגובת פחד ולוויסות רגשי.",
+      "id": 22
+    },
+    {
+      "topic": "vmPFC",
+      "question": "למה vmPFC קשור ל-Default Mode Network?",
+      "options": [
+        "לעיבוד עצמי, חשיבה פנימית ומשמעות אישית",
+        "לראייה ראשונית",
+        "לכיווץ שרירים",
+        "לשמיעה בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מחבר אותו לעיבוד עצמי ומשמעות אישית.",
+      "id": 23
+    },
+    {
+      "topic": "איווה",
+      "question": "מה מאפיין חולי vmPFC במשימת ההימורים של איווה?",
+      "options": [
+        "ממשיכים לבחור רווח מיידי עם הפסד עתידי",
+        "לומדים מהר יותר מכולם",
+        "לא מבינים הוראות שפה",
+        "לא מסוגלים ללחוץ על כפתור"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הם יכולים להסביר את הכלל אך בפועל ממשיכים לטעות בהחלטות.",
+      "id": 24
+    },
+    {
+      "topic": "פיניאס גייג׳",
+      "question": "מה נשמר אצל גייג׳ יחסית אחרי הפגיעה?",
+      "options": [
+        "שפה, זיכרון בסיסי וחשיבה כללית",
+        "כל האישיות ללא שינוי",
+        "יכולת ויסות מושלמת",
+        "אף תפקוד לא נשמר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "השינוי המרכזי היה באישיות, אימפולסיביות ותפקוד חברתי.",
+      "id": 25
+    },
+    {
+      "topic": "סוציופתיה נרכשת",
+      "question": "מה הכוונה בסוציופתיה נרכשת אחרי vmPFC?",
+      "options": [
+        "ידע מוסרי יכול להישמר אך היישום החברתי-רגשי נפגע",
+        "אין ידע מילולי",
+        "אין ראייה",
+        "אין שמיעה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הקושי הוא לפעול בהתאם לשיקול מוסרי/חברתי בזמן אמת.",
+      "id": 26
+    },
+    {
+      "topic": "OFC",
+      "question": "מה התפקיד המרכזי של OFC?",
+      "options": [
+        "הערכת ערך מיידי ועדכון מה כדאי עכשיו",
+        "זיכרון עבודה בלבד",
+        "נשימה",
+        "ראייה ראשונית"
+      ],
+      "correctAnswer": 0,
+      "explanation": "OFC מעריך ערך של גירויים בזמן אמת ומעדכן לפי הקשר.",
+      "id": 27
+    },
+    {
+      "topic": "OFC מול vmPFC",
+      "question": "איזה ניסוח מתאים להבדל בין OFC ל-vmPFC?",
+      "options": [
+        "OFC: כמה זה טוב עכשיו; vmPFC: האם זה נכון בשבילי",
+        "OFC ראייה ו-vmPFC שמיעה",
+        "אין הבדל כלל",
+        "OFC רק מוטורי"
+      ],
+      "correctAnswer": 0,
+      "explanation": "זה מסכם את ההבחנה בשיעור בין ערך מיידי למשמעות אישית.",
+      "id": 28
+    },
+    {
+      "topic": "ACC",
+      "question": "מה עושה dACC?",
+      "options": [
+        "ניטור קונפליקט, טעויות, מאמץ ומוטיבציה",
+        "עיבוד ריח בלבד",
+        "ייצור מיאלין",
+        "ראייה ראשונית"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-dACC קשור לקונפליקט, מאמץ ושקלול עלות-תועלת.",
+      "id": 29
+    },
+    {
+      "topic": "ACC",
+      "question": "מה מאפיין sgACC?",
+      "options": [
+        "חלק רגשי-לימבי יותר, קשור לדיכאון עמיד ולוויסות רגשי",
+        "אזור ראייה ראשוני",
+        "מסלול שפה",
+        "גרעין בזאלי"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-sgACC מתואר כחלק רגשי, קשור לדיכאון ולגירוי מוחי עמוק.",
+      "id": 30
+    }
+  ],
+  "lesson4": [
+    {
+      "topic": "מערכת לימבית",
+      "question": "למה מעגל פאפז היה חשוב היסטורית?",
+      "options": [
+        "הוא הציע שרגש עובד במעגל ולא באזור יחיד",
+        "הוא גילה את CT",
+        "הוא ביטל את ההיפוקמפוס",
+        "הוא תיאר רק ראייה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "פאפז קידם חשיבה של מעגלים, אף שהיום המעגל נקשר יותר לזיכרון.",
+      "id": 1
+    },
+    {
+      "topic": "מעגל פאפז",
+      "question": "איזה סיב יוצא מההיפוקמפוס במעגל פאפז?",
+      "options": [
+        "פורניקס",
+        "SLF",
+        "arcuate",
+        "internal capsule"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הפורניקס יוצא מההיפוקמפוס לכיוון הגופים הממילריים.",
+      "id": 2
+    },
+    {
+      "topic": "מעגל פאפז",
+      "question": "לאיזה תפקוד מעגל פאפז נקשר היום יותר?",
+      "options": [
+        "זיכרון",
+        "ראייה ראשונית",
+        "שמיעה",
+        "תנועה בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מדגיש שכיום המעגל מובן יותר כקשור לזיכרון מאשר לרגש בלבד.",
+      "id": 3
+    },
+    {
+      "topic": "מקלין",
+      "question": "מה הבעיה במודל שלושת המוחות של מקלין?",
+      "options": [
+        "הוא פשטני ולא משקף אבולוציה אמיתית של אזורים",
+        "הוא מדויק לחלוטין",
+        "הוא מתאר רק MRI",
+        "הוא מתייחס רק לקורטקס ראייתי"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מסביר שאין שכבות מוח שנוספו אחת מעל השנייה באופן כזה פשוט.",
+      "id": 4
+    },
+    {
+      "topic": "מקלין",
+      "question": "מה כינה מקלין המוח הזוחלי?",
+      "options": [
+        "גזע מוח ובזאל גנגליה",
+        "נאוקורטקס בלבד",
+        "היפוקמפוס בלבד",
+        "קורפוס קלוסום"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במודל שלו המערכת הבסיסית כללה גזע מוח ובזאל גנגליה.",
+      "id": 5
+    },
+    {
+      "topic": "לימבית",
+      "question": "מה נכון לגבי הגדרת המערכת הלימבית?",
+      "options": [
+        "אין הגדרה אחת מוסכמת וברורה",
+        "היא כוללת רק אמיגדלה",
+        "היא כוללת רק עצב הראייה",
+        "היא תמיד ללא קורטקס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מדגיש שהגבול הלימבי אינו מוגדר חד-משמעית.",
+      "id": 6
+    },
+    {
+      "topic": "אמיגדלה",
+      "question": "מהי האמיגדלה מבחינה אנטומית?",
+      "options": [
+        "אוסף גרעינים",
+        "שכבת קורטקס אחת",
+        "סיב יחיד",
+        "חדר מוח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "האמיגדלה היא אוסף גרעינים ותת-גרעינים.",
+      "id": 7
+    },
+    {
+      "topic": "אמיגדלה",
+      "question": "מה עושה basolateral complex?",
+      "options": [
+        "מקבל מידע חושי ומהווה אתר התכנסות CS-US בהתניית פחד",
+        "מוציא תגובות אוטונומיות בלבד",
+        "מייצר CSF",
+        "שולח רק לתלמוס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הבאסולטרל מקבל קלט מהתלמוס ומהקורטקס ומשתתף ביצירת אסוציאציות.",
+      "id": 8
+    },
+    {
+      "topic": "אמיגדלה",
+      "question": "מה עושה central nucleus?",
+      "options": [
+        "פלט להיפותלמוס וגזע מוח לתגובות אוטונומיות",
+        "זיכרון עבודה",
+        "קלט ריח בלבד",
+        "ראייה ראשונית"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הגרעין המרכזי מוציא לפועל תגובות גופניות של פחד.",
+      "id": 9
+    },
+    {
+      "topic": "אמיגדלה",
+      "question": "למה קשור medial nucleus?",
+      "options": [
+        "מידע מחוש הריח",
+        "תכנון מופשט",
+        "ראייה בלבד",
+        "תנועת יד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הגרעין המדיאלי פחות נחקר בבני אדם וקשור לריח.",
+      "id": 10
+    },
+    {
+      "topic": "לאדו",
+      "question": "מהו dual pathway של לדו?",
+      "options": [
+        "מסלול מהיר תלמוס-אמיגדלה ומסלול איטי דרך קורטקס",
+        "שני מסלולי דופמין בלבד",
+        "שני נתיבי ראייה בלי אמיגדלה",
+        "מסלול יחיד דרך היפוקמפוס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסלול המהיר גס ומהיר, והמסלול הקורטיקלי איטי ומדויק יותר.",
+      "id": 11
+    },
+    {
+      "topic": "התניית פחד",
+      "question": "מה מתכנס באמיגדלה בהתניה קלאסית?",
+      "options": [
+        "CS ו-US",
+        "MRI ו-CT",
+        "שכבה 4 ושכבה 6 בלבד",
+        "דופמין וסרוטונין בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הלטרל אמיגדלה מקשרת בין הגירוי המותנה והבלתי מותנה.",
+      "id": 12
+    },
+    {
+      "topic": "הכחדה",
+      "question": "מה נכון לגבי הכחדת פחד?",
+      "options": [
+        "זו למידה חדשה ולא מחיקה מלאה של ההתניה",
+        "היא מוחקת את כל הזיכרון",
+        "היא לא מערבת PFC",
+        "היא מתרחשת רק בעין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מדגיש שהלמידה המקורית נשארת והתגובה יורדת דרך מנגנון אחר.",
+      "id": 13
+    },
+    {
+      "topic": "הכחדה",
+      "question": "מה תפקיד אזורים פרה-פרונטליים בהכחדה?",
+      "options": [
+        "לתת קונטקסט ולווסת את האמיגדלה",
+        "להפעיל רק שרירים",
+        "לצבוע מיאלין",
+        "לחסום כל זיכרון"
+      ],
+      "correctAnswer": 0,
+      "explanation": "vmPFC/OFC יכולים לעזור בהפחתת פלט הפחד לפי הקשר.",
+      "id": 14
+    },
+    {
+      "topic": "אמיגדלה",
+      "question": "מהי אחת הפונקציות הרחבות של האמיגדלה מעבר לפחד?",
+      "options": [
+        "זיהוי בולטות/משמעות של גירויים",
+        "ייצור מיאלין",
+        "העברת דם",
+        "שמיעה ראשונית"
+      ],
+      "correctAnswer": 0,
+      "explanation": "האמיגדלה מתריעה שיש משהו חדש או משמעותי, לא רק פחד.",
+      "id": 15
+    },
+    {
+      "topic": "אמיגדלה וזיכרון",
+      "question": "איך האמיגדלה קשורה לזיכרון אפיזודי?",
+      "options": [
+        "יכולה לווסת גיבוש זיכרונות רגשיים דרך קשר להיפוקמפוס",
+        "מוחקת כל זיכרון",
+        "אין קשר",
+        "מחליפה את ההיפוקמפוס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "רגש יכול לחזק גיבוש זיכרון דרך השפעת האמיגדלה.",
+      "id": 16
+    },
+    {
+      "topic": "SM",
+      "question": "מה אפיין את המטופלת/מטופל SM?",
+      "options": [
+        "פגיעה באמיגדלה עקב מחלת אורבך-וויטה",
+        "פגיעה רק בראייה",
+        "עודף היפוקמפוס",
+        "פגיעה בקורפוס קלוסום בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "SM הוא מקרה קלאסי של פגיעה אמיגדלרית.",
+      "id": 17
+    },
+    {
+      "topic": "SM",
+      "question": "איזה קושי בולט מופיע ללא אמיגדלה במקרה SM?",
+      "options": [
+        "זיהוי פחד בהבעות פנים וחוויית פחד",
+        "זיכרון עבודה בלבד",
+        "ראיית צבעים",
+        "שמיעה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מדגיש פגיעה בזיהוי וחוויית פחד, לצד תפקוד קוגניטיבי יחסית שמור.",
+      "id": 18
+    },
+    {
+      "topic": "צורת C",
+      "question": "למה ההיפוקמפוס והסיבים שלו מקבלים צורה מכופפת?",
+      "options": [
+        "גדילת המוח ודחיסת שטח לתוך הגולגולת יוצרות מבנים בצורת C",
+        "כי אין תלמוס",
+        "בגלל CT",
+        "כי הם שרירים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הגדילה הטמפורלית/פרונטלית יוצרת מבנים סביב התלמוס.",
+      "id": 19
+    },
+    {
+      "topic": "BNST",
+      "question": "מהו BNST ביחס לאמיגדלה?",
+      "options": [
+        "חלק מהextended amygdala וקשור יותר לחרדה",
+        "חלק מ-V1",
+        "גרעין שמיעה",
+        "שכבת עור"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-BNST מתואר כ״אמיגדלה הנוספת״, דומה אך קשור לחרדה ממושכת.",
+      "id": 20
+    },
+    {
+      "topic": "פחד מול חרדה",
+      "question": "מה ההבדל המרכזי בין פחד לחרדה לפי השיעור?",
+      "options": [
+        "פחד: האם הגירוי מסוכן; חרדה: האם המצב מסוכן",
+        "פחד הוא תמיד איטי וחרדה תמיד רגעית",
+        "אין הבדל",
+        "חרדה היא ראייה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "האמיגדלה קשורה להזעקת פחד, BNST לתחושת סכנה ממושכת יותר.",
+      "id": 21
+    },
+    {
+      "topic": "BNST",
+      "question": "מה מראה ניסוי light-enhanced startle?",
+      "options": [
+        "BNST מעורב בהגברת בהלה לאורך זמן",
+        "אמיגדלה אינה קיימת",
+        "התלמוס מייצר מיאלין",
+        "אין קשר לחרדה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "פגיעה ב-BNST מבטלת את השפעת האור הממושך על רפלקס הבהלה.",
+      "id": 22
+    },
+    {
+      "topic": "אינסולה",
+      "question": "היכן ממוקמת האינסולה?",
+      "options": [
+        "מוסתרת בין האונה הפרונטלית לטמפורלית",
+        "בתוך העין",
+        "בחוט השדרה בלבד",
+        "בגולגולת החיצונית"
+      ],
+      "correctAnswer": 0,
+      "explanation": "האינסולה מוסתרת על ידי האופרקולום בין פרונטלי לטמפורלי.",
+      "id": 23
+    },
+    {
+      "topic": "אינסולה",
+      "question": "מה מאפיין את posterior insula?",
+      "options": [
+        "אזור אינטרוספטיבי ראשוני, גרנולרי יותר",
+        "אזור החלטה מוסרית בלבד",
+        "אין קלט גופני",
+        "חומר לבן בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "החלק האחורי מעבד מידע פנימי מהגוף בצורה סומטוטופית.",
+      "id": 24
+    },
+    {
+      "topic": "אינסולה",
+      "question": "מה מאפיין את anterior insula?",
+      "options": [
+        "דיסגרנולרית יותר ועושה אינטגרציה ומודעות לתחושה",
+        "רק פלט מוטורי",
+        "רק עיבוד ראייה",
+        "אין פעילות"
+      ],
+      "correctAnswer": 0,
+      "explanation": "החלק הקדמי משלב קונטקסט ומקושר ל״איך אני מרגיש״.",
+      "id": 25
+    },
+    {
+      "topic": "אינסולה",
+      "question": "איזה חוש ראשוני מעובד באינסולה?",
+      "options": [
+        "טעם",
+        "ראייה",
+        "שמיעה",
+        "שיווי משקל בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין שהקורטקס הראשוני של הטעם נמצא באינסולה.",
+      "id": 26
+    },
+    {
+      "topic": "אינסולה",
+      "question": "למה האינסולה קשורה באמפתיה?",
+      "options": [
+        "אותם אזורים משתתפים בתחושה שלנו ובתחושה שאחר חווה",
+        "היא מוחקת אמפתיה תמיד",
+        "היא רק תנועה",
+        "אין קשר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציג אמפתיה כהפעלת אזורים של חוויה פנימית.",
+      "id": 27
+    },
+    {
+      "topic": "מודל קרייג",
+      "question": "מה מציע מודל קרייג על האינסולה?",
+      "options": [
+        "מדרג מאחור: ייצוג גופני, קדימה: מודעות/רגש",
+        "כל האינסולה עושה אותו דבר",
+        "החלק האחורי עוסק רק בשפה",
+        "אין אינטגרציה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המודל מתאר מעבר מייצוג סנסורי גופני למודעות רגשית.",
+      "id": 28
+    },
+    {
+      "topic": "סינגולייט",
+      "question": "מהם תפקודים כלליים של הסינגולייט קורטקס?",
+      "options": [
+        "קונפליקט, כאב, מוטיבציה וייחוס עצמי",
+        "ראייה בלבד",
+        "שמיעה בלבד",
+        "ייצור דם"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך פותח את הסינגולייט סביב קונפליקט, כאב, מוטיבציה ועצמי.",
+      "id": 29
+    },
+    {
+      "topic": "רגולציה רגשית",
+      "question": "מה קורה ב-PTSD לפי המעגלים שתוארו?",
+      "options": [
+        "אמיגדלה/אינסולה/BNST עשויים להיות היפראקטיביים ו-vmPFC/sgACC פחות מווסתים",
+        "אין מעורבות של מוח",
+        "רק קורפוס קלוסום פעיל",
+        "רק ראייה נפגעת"
+      ],
+      "correctAnswer": 0,
+      "explanation": "השיעור קושר PTSD לוויסות פרה-פרונטלי חלש, פחד חזק וזיכרון קונטקסטואלי פגוע.",
+      "id": 30
+    }
+  ],
+  "lesson5": [
+    {
+      "topic": "היפוקמפוס",
+      "question": "מהי הפורמציה ההיפוקמפלית?",
+      "options": [
+        "אוסף מבנים שעובדים יחד ולא דבר יחיד",
+        "גרעין יחיד בתלמוס",
+        "חומר לבן בלבד",
+        "שריר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך פותח בכך שההיפוקמפוס הוא אוסף חלקים.",
+      "id": 1
+    },
+    {
+      "topic": "MTL",
+      "question": "אילו אזורים קורטיקליים נמצאים ליד ההיפוקמפוס ומחברים אליו מידע?",
+      "options": [
+        "פרה-היפוקמפלי, אנטוריינלי ופריראינלי",
+        "V1 ו-M1 בלבד",
+        "פוטמן וקאודט",
+        "LGN ו-MGN"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אלו הקורטקסים שמזינים מידע להיפוקמפוס.",
+      "id": 2
+    },
+    {
+      "topic": "ריח וזיכרון",
+      "question": "למה ריח יכול להיות טריגר חזק לזיכרון?",
+      "options": [
+        "אזורים ליד ההיפוקמפוס מקבלים מידע ריחי",
+        "כי ריח עובר רק בצרבלום",
+        "כי אין קשר להיפוקמפוס",
+        "כי ריח מוחק זיכרון"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין שעצב הריח מגיע לא רחוק מהאזורים שסביב ההיפוקמפוס.",
+      "id": 3
+    },
+    {
+      "topic": "מבנה",
+      "question": "מהם dentate gyrus וקרן אמון?",
+      "options": [
+        "חלקים של ההיפוקמפוס/הפורמציה ההיפוקמפלית",
+        "חלקי תלמוס",
+        "סיבי דופמין",
+        "אונות מוח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הדנטייט גיירוס וקרן אמון מתוארים כחלקים מרכזיים במבנה ההיפוקמפלית.",
+      "id": 4
+    },
+    {
+      "topic": "תאים",
+      "question": "מה מאפיין את dentate gyrus במיקרוסקופ?",
+      "options": [
+        "הרבה תאים גרנולריים דחוסים",
+        "רק תאים פירמידליים גדולים",
+        "אין תאים",
+        "רק חומר לבן"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הדנטייט מתואר כבעל הרבה תאים גרנולריים צפופים.",
+      "id": 5
+    },
+    {
+      "topic": "תאים",
+      "question": "אילו תאים נמצאים ב-CA1-CA3 ובסוביקולום?",
+      "options": [
+        "תאים פירמידליים",
+        "רק מיקרוגליה",
+        "רק תאי דם",
+        "רק אוליגודנדרוציטים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "במסמך מצוין שב-CA ובסוביקולום יש תאים פירמידליים.",
+      "id": 6
+    },
+    {
+      "topic": "מעגל",
+      "question": "מהו מעגל שלושת הסינפסות?",
+      "options": [
+        "אנטוריינל -> דנטייט -> CA3 -> CA1",
+        "תלמוס -> עין -> שריר",
+        "OFC -> V1 -> עור",
+        "קאודט -> ריח -> אוזן"
+      ],
+      "correctAnswer": 0,
+      "explanation": "זהו נתיב מעבר המידע המרכזי בתוך ההיפוקמפוס.",
+      "id": 7
+    },
+    {
+      "topic": "דנטייט",
+      "question": "מה עושה dentate gyrus מבחינה חישובית?",
+      "options": [
+        "pattern separation - הבחנה בין תבניות דומות",
+        "pattern completion",
+        "ייצור דופמין",
+        "הפעלת שריר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הוא מדגיש הבדלים בין זיכרונות דומים, כמו איפה חניתי היום ואתמול.",
+      "id": 8
+    },
+    {
+      "topic": "CA3",
+      "question": "מה עושה CA3?",
+      "options": [
+        "pattern completion - השלמת תבניות ואסוציאציות",
+        "רק הפרדת תבניות",
+        "ראייה ראשונית",
+        "ייצור מיאלין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "CA3 משלים זיכרון מתוך רמז חלקי.",
+      "id": 9
+    },
+    {
+      "topic": "CA1",
+      "question": "מה תפקיד CA1?",
+      "options": [
+        "השוואה בין מידע מהקורטקס לבין מה שהגיע מ-CA3",
+        "שליטה בשריר",
+        "הערכת פחד בלבד",
+        "שמיעה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "CA1 משווה בין קלט חיצוני/קורטיקלי לבין השלמה פנימית.",
+      "id": 10
+    },
+    {
+      "topic": "נוירוגנזה",
+      "question": "באיזה אזור יש נוירוגנזה לפי השיעור?",
+      "options": [
+        "dentate gyrus",
+        "קורפוס קלוסום",
+        "LGN",
+        "אינסולה קדמית בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הדנטייט גיירוס מתואר כאחד האזורים שבהם נוצרים נוירונים חדשים.",
+      "id": 11
+    },
+    {
+      "topic": "PTSD",
+      "question": "איך אפשר להבין PTSD דרך CA3 ו-CA1?",
+      "options": [
+        "CA3 מקפיץ זיכרון מרמז קטן ו-CA1 מתקשה לעדכן לפי הקונטקסט הנוכחי",
+        "אין קשר להיפוקמפוס",
+        "רק דופמין עולה",
+        "כל הזיכרון נעלם"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מתאר הצפה וקושי להכניס קונטקסט בטוח.",
+      "id": 12
+    },
+    {
+      "topic": "חשיפה",
+      "question": "מה טיפול בחשיפה מנסה ללמד בהקשר ההיפוקמפי?",
+      "options": [
+        "לעדכן את הזיכרון בתנאים בטוחים ולקחת קונטקסט חדש בחשבון",
+        "למחוק את ההיפוקמפוס",
+        "להגדיל CT",
+        "להפעיל רק שריר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "חשיפה חוזרת בתנאים בטוחים יכולה לעזור לעדכון דרך CA1/קונטקסט.",
+      "id": 13
+    },
+    {
+      "topic": "דיכאון וחרדה",
+      "question": "מה יכול לקרות ל-pattern separation בדיכאון/חרדה?",
+      "options": [
+        "הפרדה חלשה גורמת להכללת יתר",
+        "הפרדה מושלמת תמיד",
+        "אין קשר",
+        "רק תנועה משתנה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך קושר הפרדה חלשה להכללת יתר בין מצבים.",
+      "id": 14
+    },
+    {
+      "topic": "SSRI",
+      "question": "מה הוצע לגבי SSRI ודנטייט גיירוס?",
+      "options": [
+        "SSRI מגבירים נוירוגנזה וסטרס מדכא אותה",
+        "SSRI מחלישים כל זיכרון מיד",
+        "אין קשר",
+        "SSRI עובדים רק על ראייה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "זה מוזכר כהסבר אפשרי לכך שלוקח זמן לתרופה להשפיע.",
+      "id": 15
+    },
+    {
+      "topic": "קונסולידציה",
+      "question": "מה עושה ההיפוקמפוס לאורך זמן לזיכרון?",
+      "options": [
+        "יוצר קשרים ישירים בין אזורי קורטקס כך שפחות צריך אותו",
+        "שומר כל זיכרון רק בתוכו לנצח",
+        "מוחק קורטקס",
+        "מחליף את האמיגדלה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "היפוקמפוס מאחד פיסות מידע ובהמשך הקורטקס יכול לשאת את הקשרים.",
+      "id": 16
+    },
+    {
+      "topic": "רקונסולידציה",
+      "question": "מה קורה כשמעלים זיכרון מחדש?",
+      "options": [
+        "הוא נעשה לא יציב לזמן קצר ויכול להתגבש מחדש",
+        "הוא תמיד נמחק",
+        "אין שינוי",
+        "הוא הופך לשריר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מתאר חלון זמן של אי-יציבות וגיבוש מחדש.",
+      "id": 17
+    },
+    {
+      "topic": "עתיד",
+      "question": "מה הקשר בין זיכרון עבר לדמיון עתיד?",
+      "options": [
+        "אותו מנגנון עוזר לזכור עבר ולתכנן עתיד",
+        "אין קשר",
+        "עתיד מעובד רק בעין",
+        "עבר מעובד רק בבאזל גנגליה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ההיפוקמפוס מוצג כמכונת זמן/ניבוי לאורך זמן.",
+      "id": 18
+    },
+    {
+      "topic": "פריראינל",
+      "question": "מה תפקיד perirhinal cortex?",
+      "options": [
+        "מידע של מה/זיהוי מהנתיב הוונטרלי",
+        "מידע של איפה בלבד",
+        "בקרה מוטורית",
+        "פחד בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הפריראינל מזרים מידע של זיהוי לתוך ההיפוקמפוס.",
+      "id": 19
+    },
+    {
+      "topic": "פרה-היפוקמפלי",
+      "question": "מה תפקיד parahippocampal cortex?",
+      "options": [
+        "קונטקסט מרחבי, איפה ואיך",
+        "זיהוי מה בלבד",
+        "דופמין",
+        "שמיעה ראשונית"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הוא מספק מידע מרחבי והקשרי.",
+      "id": 20
+    },
+    {
+      "topic": "אנטוריינל",
+      "question": "מה עושה entorhinal cortex?",
+      "options": [
+        "מקבל מידע משני הנתיבים ומעביר בעיקר להיפוקמפוס",
+        "מוציא פלט לשריר",
+        "רק ריח",
+        "אין קלט"
+      ],
+      "correctAnswer": 0,
+      "explanation": "האנטוריינל הוא שער מרכזי להיפוקמפוס.",
+      "id": 21
+    },
+    {
+      "topic": "איחוד חוויה",
+      "question": "מה עושה ההיפוקמפוס בחוויה אפיזודית?",
+      "options": [
+        "מאחד מי, איפה, מה ורגש לחוויה אחת",
+        "מפריד כל מידע לנצח",
+        "מעבד רק טעם",
+        "מייצר דופמין"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ההיפוקמפוס מאחד פיסות מידע ממקורות שונים לאירוע.",
+      "id": 22
+    },
+    {
+      "topic": "פאפז וזיכרון",
+      "question": "מהו מסלול הפלט של ההיפוקמפוס במעגל פאפז?",
+      "options": [
+        "פורניקס -> גופים ממילריים -> תלמוס -> סינגולייט",
+        "SLF -> ברוקה -> ורניקה",
+        "עין -> LGN -> V1",
+        "SN -> סטריאטום"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מתאר פלט דרך הפורניקס לגופים הממילריים, תלמוס וסינגולייט.",
+      "id": 23
+    },
+    {
+      "topic": "אמנזיה",
+      "question": "למה אמנזיה לא חייבת לנבוע רק מפגיעה בהיפוקמפוס?",
+      "options": [
+        "פגיעה בכל שלב במעגל יכולה לשבש את המערכת",
+        "כי ההיפוקמפוס לא קשור לזיכרון",
+        "רק פגיעה בעין גורמת אמנזיה",
+        "אין מעגלים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "אם חותכים מידע באחד משלבי המעגל, הזיכרון יכול להיפגע.",
+      "id": 24
+    },
+    {
+      "topic": "גופים ממילריים",
+      "question": "למה נקשרו mammillary bodies?",
+      "options": [
+        "יצירת/סנכרון פעילות תטא הקשורה לזיכרון",
+        "ראייה",
+        "דופמין",
+        "שמיעה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין קשר לתבנית תדר תטא בהיזכרות.",
+      "id": 25
+    },
+    {
+      "topic": "זיכרון אפיזודי",
+      "question": "מהו זיכרון אפיזודי לפי השיעור?",
+      "options": [
+        "חוויה של אירוע בתוך קונטקסט של איפה, מתי וסביבה",
+        "מיומנות מוטורית בלבד",
+        "רפלקס פשוט",
+        "עיבוד צבע"
+      ],
+      "correctAnswer": 0,
+      "explanation": "היפוקמפוס מקודד אירועים עם הקשר עשיר.",
+      "id": 26
+    },
+    {
+      "topic": "HM",
+      "question": "מה קרה ל-HM אחרי הסרת היפוקמפוס ואמיגדלה?",
+      "options": [
+        "לא יצר זיכרונות חדשים אפיזודיים",
+        "לא יכול היה ללמוד מיומנויות כלל",
+        "ראייתו נמחקה",
+        "השתפר בזיכרון"
+      ],
+      "correctAnswer": 0,
+      "explanation": "HM הדגים אמנזיה אנטרוגרדית חזקה.",
+      "id": 27
+    },
+    {
+      "topic": "פרוצדורלי",
+      "question": "מה גילו אצל HM במטלת ציור במראה?",
+      "options": [
+        "הוא למד מיומנות בלי לזכור שעשה אותה",
+        "הוא לא השתפר כלל",
+        "הוא זכר כל מפגש",
+        "זה בדק רק פחד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "למידה פרוצדורלית יכולה להישמר למרות פגיעה אפיזודית.",
+      "id": 28
+    },
+    {
+      "topic": "מקום וגריד",
+      "question": "מהם place cells?",
+      "options": [
+        "נוירונים שפועלים כשהחיה/אדם במקום מסוים",
+        "תאי דם",
+        "תאי גליה",
+        "תאי דופמין בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ההיפוקמפוס מכיל ייצוגים מרחביים כמו GPS פנימי.",
+      "id": 29
+    },
+    {
+      "topic": "אלצהיימר",
+      "question": "איזה אזור נפגע מוקדם באלצהיימר לפי השיעור?",
+      "options": [
+        "entorhinal cortex",
+        "M1",
+        "עצב ראייה",
+        "פוטמן בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "פגיעה מוקדמת באנטוריינל קשורה לקושי בהתמצאות.",
+      "id": 30
+    }
+  ],
+  "lesson6": [
+    {
+      "topic": "בזאל גנגליה",
+      "question": "מה תפקיד כללי של הבזאל גנגליה?",
+      "options": [
+        "בחירה, סינון ותעדוף פעולות/ייצוגים להוצאה לפועל",
+        "עיבוד ראייה ראשונית בלבד",
+        "ייצור CSF",
+        "שמירה על עצמות"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המערכת עוזרת לעבור מעיבוד מקבילי לפעולה סדורה.",
+      "id": 1
+    },
+    {
+      "topic": "אנטומיה",
+      "question": "מה משמעות ganglia בהקשר זה?",
+      "options": [
+        "גרעינים/צברי תאים",
+        "סיבים לבנים בלבד",
+        "חדרים",
+        "שרירים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "גנגליה הם גרעינים, צברים של נוירונים.",
+      "id": 2
+    },
+    {
+      "topic": "אנטומיה",
+      "question": "מהם caudate ו-putamen יחד?",
+      "options": [
+        "חלקים של הסטריאטום",
+        "חלקים של האינסולה",
+        "שכבות קורטקס",
+        "גרעיני תלמוס בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הקאודט והפוטמן הם מרכיבי הסטריאטום.",
+      "id": 3
+    },
+    {
+      "topic": "אנטומיה",
+      "question": "למה סטריאטום נקרא מפוספס?",
+      "options": [
+        "כי אקסונים עם מיאלין עוברים במרווחים ויוצרים פסים לבנים",
+        "כי הוא מצלם פסים",
+        "כי הוא שריר",
+        "כי אין בו תאים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "השם נובע מהמראה המפוספס בחתך.",
+      "id": 4
+    },
+    {
+      "topic": "קאודט",
+      "question": "מאילו אזורים מקבל הקאודט בעיקר מידע?",
+      "options": [
+        "פרה-פרונטליים ואסוציאטיביים",
+        "רק שרירים",
+        "רק רשתית",
+        "רק אוזן"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הקאודט קשור יותר לבקרה קוגניטיבית ומכוונת מטרה.",
+      "id": 5
+    },
+    {
+      "topic": "פוטמן",
+      "question": "איזה מידע מקבל הפוטמן יותר?",
+      "options": [
+        "סנסורי-מוטורי ופעולות/הרגלים",
+        "ריח בלבד",
+        "זיכרון אפיזודי בלבד",
+        "שפה בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הפוטמן קשור יותר לפעולות מוטוריות והרגלים.",
+      "id": 6
+    },
+    {
+      "topic": "גלובוס פלידוס",
+      "question": "מהו GPi?",
+      "options": [
+        "פלט של המערכת לתלמוס",
+        "קלט ראייתי",
+        "חלק מההיפוקמפוס",
+        "גרעין ריח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הגלובוס פלידוס אינטרנל הוא תחנת פלט מרכזית לתלמוס.",
+      "id": 7
+    },
+    {
+      "topic": "STN",
+      "question": "היכן נמצא subthalamic nucleus?",
+      "options": [
+        "מתחת לתלמוס",
+        "בתוך העין",
+        "בצרבלום בלבד",
+        "בקורפוס קלוסום"
+      ],
+      "correctAnswer": 0,
+      "explanation": "שמו מציין את מיקומו התת-תלמי.",
+      "id": 8
+    },
+    {
+      "topic": "SN",
+      "question": "למה substancia nigra נראית שחורה?",
+      "options": [
+        "בגלל דופמין/פיגמנט בתאים שם",
+        "כי יש שם דם",
+        "כי אין תאים",
+        "כי היא שריר"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מקשר את הצבע השחור לתאים דופמינרגיים.",
+      "id": 9
+    },
+    {
+      "topic": "דורסל/ונטרל",
+      "question": "מה מאפיין dorsal striatum?",
+      "options": [
+        "מוטוריקה, קוגניציה, הרגלים ומטרה",
+        "תגמול בלבד",
+        "ריח בלבד",
+        "זיכרון אפיזודי בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הדורסל מקבל קלט קורטיקלי וקשור לבקרה מוטורית וקוגניטיבית.",
+      "id": 10
+    },
+    {
+      "topic": "דורסל/ונטרל",
+      "question": "מה מאפיין ventral striatum?",
+      "options": [
+        "תגמול, מוטיבציה ולמידה מותנית",
+        "ראייה ראשונית",
+        "שמיעה",
+        "שיווי משקל"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הוונטרל סטריאטום מקושר לתגמול ומוטיבציה.",
+      "id": 11
+    },
+    {
+      "topic": "לופים",
+      "question": "מה המבנה הכללי של לולאת בזאל גנגליה?",
+      "options": [
+        "קורטקס -> סטריאטום -> תלמוס -> קורטקס",
+        "עין -> עור -> שריר",
+        "היפוקמפוס -> רשתית",
+        "אוזן -> V1"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הלולאות חוזרות לקורטקס דרך סטריאטום ותלמוס.",
+      "id": 12
+    },
+    {
+      "topic": "לופ מוטורי",
+      "question": "מהו הקלט המרכזי בלופ המוטורי?",
+      "options": [
+        "motor cortex/SMA לפוטמן",
+        "OFC להיפוקמפוס",
+        "V1 לקאודט",
+        "אינסולה ל-LGN"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הלופ המוטורי מתחיל באזורים מוטוריים ומגיע לפוטמן.",
+      "id": 13
+    },
+    {
+      "topic": "לופ קוגניטיבי",
+      "question": "מהו הקלט המרכזי בלופ הקוגניטיבי?",
+      "options": [
+        "dlPFC לקאודט הדורסלי",
+        "V1 לפוטמן",
+        "אוזן לסטריאטום",
+        "BNST לתלמוס בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הלופ הקוגניטיבי קשור לתכנון, זיכרון עבודה וגמישות.",
+      "id": 14
+    },
+    {
+      "topic": "לופ לימבי",
+      "question": "עם מה עובד הלופ הלימבי?",
+      "options": [
+        "ventral striatum וקלט מ-OFC/ACC/mPFC",
+        "פוטמן בלבד",
+        "V1 בלבד",
+        "LGN בלבד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הלופ הלימבי מבקר מוטיבציה והחלטות רגשיות.",
+      "id": 15
+    },
+    {
+      "topic": "מסלול ישיר",
+      "question": "מה עושה המסלול הישיר?",
+      "options": [
+        "משחרר ברקס ומקל על הפעלת קורטקס",
+        "מוסיף ברקס תמיד",
+        "מוחק זיכרון",
+        "עוצר נשימה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הוא מוביל לדיסאינהיביציה של התלמוס ולהגברת פעילות קורטיקלית.",
+      "id": 16
+    },
+    {
+      "topic": "מסלול עקיף",
+      "question": "מה עושה המסלול הלא ישיר?",
+      "options": [
+        "מגביר אינהיביציה ומדכא פעולות מתחרות",
+        "משחרר כל פעולה",
+        "אין לו תפקיד",
+        "מפעיל ראייה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסלול העקיף שם ברקס על פעולות לא רצויות.",
+      "id": 17
+    },
+    {
+      "topic": "בחירת פעולה",
+      "question": "איך שני המסלולים עוזרים לבחור פעולה?",
+      "options": [
+        "הישיר מחזק פעולה רצויה והעקיף מדכא מתחרות",
+        "שניהם עושים אותו דבר",
+        "הם עובדים רק בזיכרון",
+        "הם לא קשורים לפעולה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "כך הבזאל גנגליה מתעדפת פעולה ומחלישה אלטרנטיבות.",
+      "id": 18
+    },
+    {
+      "topic": "ריבוי תחנות",
+      "question": "למה יש הרבה תחנות באמצע המעגל?",
+      "options": [
+        "כדי לאפשר ויסות עדין וקלט קונטקסטואלי",
+        "כי אין משמעות",
+        "כדי להאט בלי סיבה",
+        "כדי לצבוע תאים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "יותר תחנות מאפשרות הכנסת מידע ובקרה על הבחירה.",
+      "id": 19
+    },
+    {
+      "topic": "דופמין",
+      "question": "איך דופמין משפיע על המסלול הישיר והעקיף?",
+      "options": [
+        "מעורר D1/ישיר ומעכב D2/עקיף",
+        "מעכב את שניהם באותה מידה",
+        "מפעיל רק ריח",
+        "אין לו רצפטורים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מציין שהרצפטורים השונים מגיבים אחרת לדופמין.",
+      "id": 20
+    },
+    {
+      "topic": "פרקינסון",
+      "question": "מה קורה בפרקינסון?",
+      "options": [
+        "תאי substantia nigra מתנוונים ומפסיקים לשלוח דופמין",
+        "יש יותר מדי דופמין תמיד",
+        "ההיפוקמפוס נמחק",
+        "אין שינוי במעגלים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "חוסר דופמין משבש את ויסות מסלולי הבזאל גנגליה.",
+      "id": 21
+    },
+    {
+      "topic": "פרקינסון",
+      "question": "למה קשה להתחיל פעולות בפרקינסון?",
+      "options": [
+        "אין מספיק דחף דרך בזאל גנגליה-תלמוס-קורטקס",
+        "כי הראייה נמחקת",
+        "כי אין היפוקמפוס",
+        "כי אין פחד"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסמך מתאר קושי בהתחלת פעולות ותנועה קטועה.",
+      "id": 22
+    },
+    {
+      "topic": "Hyperdirect",
+      "question": "מהו המסלול ההייפרדיירקט?",
+      "options": [
+        "קורטקס ישירות ל-STN לעצירת חירום",
+        "היפוקמפוס ישירות לעין",
+        "OFC ישירות לשריר",
+        "תלמוס ישירות לעור"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הוא עוקף את הסטריאטום ומאפשר עצירה מהירה ופחות מעודנת.",
+      "id": 23
+    },
+    {
+      "topic": "D1/D2",
+      "question": "מה מסמן D1 לפי הסיכום?",
+      "options": [
+        "הקלה/המרצה של פעולה",
+        "עיכוב בלבד",
+        "זיכרון אפיזודי",
+        "ריח"
+      ],
+      "correctAnswer": 0,
+      "explanation": "D1 קשור למסלול הישיר ולהקלה על פעולה.",
+      "id": 24
+    },
+    {
+      "topic": "תגמול",
+      "question": "מהו VTA?",
+      "options": [
+        "אזור בגזע המוח שמייצר דופמין ושולח לנוקליוס אקומבנס ול-PFC",
+        "גרעין ראייה",
+        "חלק מהקורפוס קלוסום",
+        "שכבת קורטקס"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ה-VTA קשור לניבוי תגמול ודופמין.",
+      "id": 25
+    },
+    {
+      "topic": "תגמול",
+      "question": "מה עושה nucleus accumbens?",
+      "options": [
+        "אינטגרציה של תגמול וקונטקסט",
+        "ראייה ראשונית",
+        "שמיעה",
+        "ייצור CSF"
+      ],
+      "correctAnswer": 0,
+      "explanation": "הוא מקבל דופמין מה-VTA ומידע מה-PFC.",
+      "id": 26
+    },
+    {
+      "topic": "דופמין",
+      "question": "לפי שולץ, מה מקודד דופמין?",
+      "options": [
+        "טעות ניבוי תגמול",
+        "הנאה בלבד בלי ניבוי",
+        "ראייה",
+        "חמצן בדם"
+      ],
+      "correctAnswer": 0,
+      "explanation": "דופמין עולה כשמקבלים תגמול לא צפוי ויורד כשציפינו ולא קיבלנו.",
+      "id": 27
+    },
+    {
+      "topic": "רצייה/אהבה",
+      "question": "מה ההבדל בין wanting ל-liking?",
+      "options": [
+        "דופמין קשור יותר לרצייה; liking קשור גם לאופיואידים/אנדוקנבינואידים",
+        "אין הבדל",
+        "לייקינג הוא רק דופמין",
+        "wanting הוא רק ראייה"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המודל של ברידג׳ ורובינסון מפריד בין מוטיבציה לרצות לבין הנאה.",
+      "id": 28
+    },
+    {
+      "topic": "מסלולי דופמין",
+      "question": "איזה מסלול נפגע בפרקינסון?",
+      "options": [
+        "nigrostriatal",
+        "mesolimbic בלבד",
+        "mesocortical בלבד",
+        "fornix"
+      ],
+      "correctAnswer": 0,
+      "explanation": "המסלול מהסובסטנציה ניגרה לסטריאטום קשור למודולציה מוטורית.",
+      "id": 29
+    },
+    {
+      "topic": "תלמוס וקליניקה",
+      "question": "מה נכון לגבי התלמוס?",
+      "options": [
+        "לא רק תחנת מעבר חושית אלא אוסף גרעינים עם בקרה, קשב ועוררות",
+        "רק עצם",
+        "רק ראייה",
+        "אין לו גרעינים"
+      ],
+      "correctAnswer": 0,
+      "explanation": "התלמוס כולל גרעינים ספציפיים ולא ספציפיים ומשתתף גם בעוררות וסינון.",
+      "id": 30
+    }
+  ]
+};
+const lesson1Questions = questionBank.lesson1;
+const lesson2Questions = questionBank.lesson2;
+const lesson3Questions = questionBank.lesson3;
+const lesson4Questions = questionBank.lesson4;
+const lesson5Questions = questionBank.lesson5;
+const lesson6Questions = questionBank.lesson6;
+
+(function () {
+  const lessons = {
+    lesson1: { title: 'שיעור 1', questions: lesson1Questions },
+    lesson2: { title: 'שיעור 2', questions: lesson2Questions },
+    lesson3: { title: 'שיעור 3', questions: lesson3Questions },
+    lesson4: { title: 'שיעור 4', questions: lesson4Questions },
+    lesson5: { title: 'שיעור 5', questions: lesson5Questions },
+    lesson6: { title: 'שיעור 6', questions: lesson6Questions }
+  };
+
+  const state = { lessonKey: null, questions: [], currentIndex: 0, selectedIndex: null, score: 0, answered: false, wrongQuestions: [], topicStats: {} };
+  const menuScreen = document.getElementById('menuScreen');
+  const quizScreen = document.getElementById('quizScreen');
+  const resultScreen = document.getElementById('resultScreen');
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const feedbackBox = document.getElementById('feedbackBox');
+  const topicBadge = document.getElementById('topicBadge');
+  const progressText = document.getElementById('progressText');
+  const progressFill = document.getElementById('progressFill');
+  const lessonTitle = document.getElementById('lessonTitle');
+  const sessionBadge = document.getElementById('sessionBadge');
+  const checkBtn = document.getElementById('checkBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+  const scoreText = document.getElementById('scoreText');
+  const summaryText = document.getElementById('summaryText');
+  const statsBox = document.getElementById('statsBox');
+  const topicStatsBox = document.getElementById('topicStatsBox');
+  const wrongList = document.getElementById('wrongList');
+  const retryWrongBtn = document.getElementById('retryWrongBtn');
+  const menuFromResultsBtn = document.getElementById('menuFromResultsBtn');
+  const lastSessionBox = document.getElementById('lastSessionBox');
+  const lastSessionContent = document.getElementById('lastSessionContent');
+
+  function shuffle(array) { const arr = [...array]; for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+  function prepareQuestions(questionSet) { return shuffle(questionSet).map(q => { const indexedOptions = q.options.map((text, index) => ({ text, originalIndex: index })); const shuffledOptions = shuffle(indexedOptions); const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.correctAnswer); return { id: q.id, topic: q.topic, question: q.question, explanation: q.explanation, options: shuffledOptions.map(opt => opt.text), correctAnswer: newCorrectIndex }; }); }
+  function resetTopicStats(questionSet) { state.topicStats = {}; questionSet.forEach(q => { if (!state.topicStats[q.topic]) state.topicStats[q.topic] = { correct: 0, total: 0 }; }); }
+  function saveSession() { try { const payload = { lessonTitle: lessons[state.lessonKey]?.title || '', score: state.score, total: state.questions.length, when: new Date().toLocaleString('he-IL') }; localStorage.setItem('neuroQuizLastSession', JSON.stringify(payload)); } catch(e) {} }
+  function loadLastSession() { try { const raw = localStorage.getItem('neuroQuizLastSession'); if (!raw) { lastSessionBox.classList.add('hidden'); return; } const data = JSON.parse(raw); lastSessionContent.textContent = data.lessonTitle + ': ' + data.score + ' מתוך ' + data.total + ' · ' + data.when; lastSessionBox.classList.remove('hidden'); } catch(e) { lastSessionBox.classList.add('hidden'); } }
+  function startLesson(lessonKey, mode) { mode = mode || 'full'; const lesson = lessons[lessonKey]; if (!lesson) return; state.lessonKey = lessonKey; const sourceQuestions = (mode === 'wrongOnly') ? state.wrongQuestions : lesson.questions; state.questions = prepareQuestions(sourceQuestions); state.currentIndex = 0; state.selectedIndex = null; state.score = 0; state.answered = false; if (mode !== 'wrongOnly') state.wrongQuestions = []; resetTopicStats(sourceQuestions); menuScreen.classList.add('hidden'); resultScreen.classList.add('hidden'); quizScreen.classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); lessonTitle.textContent = lesson.title; sessionBadge.textContent = (mode === 'wrongOnly') ? 'מצב טעויות' : 'תרגול מלא'; renderQuestion(); }
+  function renderQuestion() { const q = state.questions[state.currentIndex]; state.selectedIndex = null; state.answered = false; feedbackBox.className = 'feedback'; feedbackBox.innerHTML = ''; checkBtn.classList.remove('hidden'); nextBtn.classList.add('hidden'); topicBadge.textContent = q.topic; progressText.textContent = 'שאלה ' + (state.currentIndex + 1) + ' מתוך ' + state.questions.length; progressFill.style.width = ((state.currentIndex / state.questions.length) * 100) + '%'; questionText.textContent = q.question; optionsContainer.innerHTML = ''; q.options.forEach(function(option, index) { const el = document.createElement('button'); el.type = 'button'; el.className = 'option'; el.textContent = option; el.addEventListener('click', function() { if (state.answered) return; state.selectedIndex = index; document.querySelectorAll('.option').forEach(function(opt) { opt.classList.remove('selected'); }); el.classList.add('selected'); }); optionsContainer.appendChild(el); }); }
+  function checkAnswer() { if (state.selectedIndex === null) { alert('צריך לבחור תשובה לפני שבודקים'); return; } const q = state.questions[state.currentIndex]; const optionElements = document.querySelectorAll('.option'); state.answered = true; if (!state.topicStats[q.topic]) state.topicStats[q.topic] = { correct: 0, total: 0 }; state.topicStats[q.topic].total += 1; optionElements.forEach(function(el, index) { el.classList.remove('selected'); if (index === q.correctAnswer) el.classList.add('correct'); if (index === state.selectedIndex && index !== q.correctAnswer) el.classList.add('wrong'); }); const isCorrect = state.selectedIndex === q.correctAnswer; if (isCorrect) { state.score += 1; state.topicStats[q.topic].correct += 1; feedbackBox.className = 'feedback show correct'; feedbackBox.innerHTML = '<strong>נכון מאוד.</strong><br>' + q.explanation; } else { const original = lessons[state.lessonKey].questions.find(function(item) { return item.id === q.id; }); if (original && !state.wrongQuestions.some(function(item) { return item.id === q.id; })) state.wrongQuestions.push(original); feedbackBox.className = 'feedback show wrong'; feedbackBox.innerHTML = '<strong>לא נכון.</strong><br>התשובה הנכונה היא: <strong>' + q.options[q.correctAnswer] + '</strong>.<br>' + q.explanation; } progressFill.style.width = (((state.currentIndex + 1) / state.questions.length) * 100) + '%'; checkBtn.classList.add('hidden'); nextBtn.classList.remove('hidden'); }
+  function nextQuestion() { state.currentIndex += 1; if (state.currentIndex < state.questions.length) renderQuestion(); else showResults(); }
+  function showResults() { quizScreen.classList.add('hidden'); resultScreen.classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); const percent = Math.round((state.score / state.questions.length) * 100); scoreText.textContent = lessons[state.lessonKey].title + ': ' + state.score + ' מתוך ' + state.questions.length + ' (' + percent + '%)'; let message = 'יש בסיס טוב, אבל יש עוד כמה נקודות ששווה לחזק.'; if (percent === 100) message = 'מושלם. שליטה מלאה בפרק.'; else if (percent >= 80) message = 'עבודה חזקה מאוד. את לגמרי בכיוון הנכון.'; else if (percent >= 60) message = 'יש בסיס טוב. עוד סיבוב קטן יחזק את החומר.'; else message = 'זה בדיוק השלב שבו תרגול חוזר גורם לחומר להידבק.'; summaryText.textContent = message; statsBox.innerHTML = '<div class="stat"><strong>ציון כללי</strong><br>' + state.score + ' / ' + state.questions.length + '</div>' + '<div class="stat"><strong>טעויות</strong><br>' + state.wrongQuestions.length + '</div>' + '<div class="stat"><strong>שיעור</strong><br>' + lessons[state.lessonKey].title + '</div>'; topicStatsBox.innerHTML = ''; Object.entries(state.topicStats).forEach(function(entry) { const topic = entry[0]; const data = entry[1]; const pct = data.total ? Math.round((data.correct / data.total) * 100) : 0; const box = document.createElement('div'); box.className = 'stat'; box.innerHTML = '<strong>' + topic + '</strong><br>' + data.correct + ' / ' + data.total + '<br>' + pct + '%'; topicStatsBox.appendChild(box); }); wrongList.innerHTML = ''; if (state.wrongQuestions.length) { state.wrongQuestions.forEach(function(q) { const li = document.createElement('li'); li.textContent = q.question; wrongList.appendChild(li); }); retryWrongBtn.classList.remove('hidden'); } else { const li = document.createElement('li'); li.textContent = 'אין טעויות לחזרה.'; wrongList.appendChild(li); retryWrongBtn.classList.add('hidden'); } saveSession(); loadLastSession(); }
+  function goToMenu() { quizScreen.classList.add('hidden'); resultScreen.classList.add('hidden'); menuScreen.classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); loadLastSession(); }
+  document.querySelectorAll('[data-lesson]').forEach(function(btn) { btn.addEventListener('click', function() { startLesson(btn.dataset.lesson); }); });
+  checkBtn.addEventListener('click', checkAnswer); nextBtn.addEventListener('click', nextQuestion); backBtn.addEventListener('click', goToMenu); menuFromResultsBtn.addEventListener('click', goToMenu); retryWrongBtn.addEventListener('click', function() { startLesson(state.lessonKey, 'wrongOnly'); }); loadLastSession();
+
+  if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./service-worker.js').catch(function() {});
+    });
+  }
+})();
+</script>
+</body>
+</html>

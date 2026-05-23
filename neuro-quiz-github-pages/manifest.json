@@ -1,0 +1,21 @@
+{
+  "name": "בנק שאלות נוירואנטומיה",
+  "short_name": "Neuro Quiz",
+  "description": "שאלון תרגול נוירואנטומיה לפי שיעורים, מבוסס על הסיכום המאוחד של איריס ויעל.",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f3ff",
+  "theme_color": "#8b6fd8",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
