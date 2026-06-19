@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neuro-quiz-v3';
+const CACHE_NAME = 'neuro-quiz-v4';
 const APP_SHELL = [
   './',
   './index.html',
