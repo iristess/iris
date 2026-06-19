@@ -116,4 +116,205 @@
     q(29,'hard','עיבוד עצמי','במשימה ״עד כמה התכונה מתארת אותך?״ איזה שילוב צפוי?','mPFC יחד עם רכיבים של רשת ברירת המחדל','V1 והמדולה בלבד','פוטמן ו־STN בלבד','SCN והיפופיזה','עיבוד עצמי הוא תהליך פנימי וחברתי המגייס אזורים מדיאליים של ה־DMN.'),
     q(30,'hard','אינטגרציה שפתית','מדוע בזמן דיבור חייבת להיות תקשורת בין המערכת המוטורית לשמיעתית?','כדי לחזות את הצליל העצמי, לנטר שגיאות ולהבחין בין קול עצמי לחיצוני','כדי להפסיק כל קלט שמיעתי','כדי להפעיל את ה־VMH','כדי לייצר קורטיזול','לולאת חיזוי ומשוב מחברת תוכנית דיבור לתוצאה השמיעתית ומאפשרת תיקון ותחושת סוכנות.')
   ];
+
+  // מסיחים מאוזנים: מסירים רמזי אורך ותשובות אבסורדיות, בלי לשנות את
+  // התשובה הנכונה. מסיח חלופי נלקח מתשובה נכונה לשאלה אחרת באותו שיעור,
+  // בעדיפות לאותו נושא ולאותו סוג תשובה. כך הוא נשאר מושג אמיתי ורלוונטי.
+  const answerType = question => {
+    const text = question.trim();
+    if (/^(איזה|איזו|אילו|היכן|מתי|באיזה|באיזו|לאיזה|מאילו|מאיזה|עם איזה|עם אילו)/.test(text)) return 'entity';
+    if (/^(מהו|מהי|מהם|מהן|מה פירוש|מה משמעות)/.test(text)) return 'definition';
+    if (/^(למה|מדוע|כיצד|איך)/.test(text)) return 'mechanism';
+    return 'description';
+  };
+
+  const weakDistractor = (text, correct) => {
+    const suspicious = /(?:רק עצם|רק כלי דם|אין קשר|אין הבדל|אין משמעות|אין תפקיד|לא עושה|אינו קשור|מוחק|מבטל|מייצר שריר|מייצר עצם|כל המוח|תמיד בלבד|לעולם|בלבד$)/;
+    const ratio = text.length / Math.max(1, correct.length);
+    return suspicious.test(text) || ratio < 0.58 || ratio > 1.72 || (correct.length > 22 && text.split(/\s+/).length < 3);
+  };
+
+  Object.entries(questionBank).forEach(([lessonKey, questions]) => {
+    const answerPool = questions.map(item => ({
+      text: item.options[item.correctAnswer],
+      topic: item.topic,
+      type: answerType(item.question),
+      id: item.id
+    }));
+
+    questions.forEach(item => {
+      const correct = item.options[item.correctAnswer];
+      const distractorIndexes = item.options.map((_, index) => index).filter(index => index !== item.correctAnswer);
+      const distractors = distractorIndexes.map(index => item.options[index]);
+      const lengths = distractors.map(text => text.length);
+      const averageLength = lengths.reduce((sum, length) => sum + length, 0) / lengths.length;
+      const lengthCue = correct.length / Math.max(1, averageLength) > 1.35 || correct.length / Math.max(1, averageLength) < 0.72;
+      const needsRevision = lengthCue || distractors.some(text => weakDistractor(text, correct));
+      if (!needsRevision) return;
+
+      const type = answerType(item.question);
+      const retained = distractors.filter(text => !weakDistractor(text, correct));
+      const candidates = answerPool
+        .filter(candidate => candidate.id !== item.id && candidate.text !== correct && !retained.includes(candidate.text))
+        .map(candidate => ({
+          ...candidate,
+          score:
+            (candidate.topic === item.topic ? 0 : 0.25) +
+            (candidate.type === type ? 0 : 0.6) +
+            Math.abs(Math.log(Math.max(1, candidate.text.length) / Math.max(1, correct.length)))
+        }))
+        .sort((a, b) => a.score - b.score || a.id - b.id);
+
+      const replacements = [...retained];
+      for (const candidate of candidates) {
+        if (replacements.length === 3) break;
+        if (!replacements.includes(candidate.text)) replacements.push(candidate.text);
+      }
+
+      distractorIndexes.forEach((optionIndex, position) => {
+        item.options[optionIndex] = replacements[position];
+      });
+    });
+  });
+
+  // בשאלות עם תשובות משפטיות, מסיח טוב צריך לענות לאותו מנגנון בדיוק.
+  // הווריאציות הבאות מחליפות רכיב יחיד (אזור, כיוון, מסלול או סוג ויסות),
+  // ולכן יוצרות תשובות כמעט־נכונות במקום עובדות לא קשורות.
+  const nearMissGroups = [
+    ['טווח הקצר', 'טווח הארוך'],
+    ['חשיפה ממושכת', 'חשיפה קצרה'],
+    ['מגביר', 'מפחית', 'מעכב', 'מפעיל', 'מווסת'],
+    ['מגבירה', 'מפחיתה', 'מעכבת', 'מפעילה', 'מווסתת'],
+    ['גבוהה יותר', 'נמוכה יותר', 'יציבה יותר'],
+    ['פעילות יתר', 'פעילות חסר', 'פעילות תקינה'],
+    ['ישיר', 'עקיף', 'הייפרדיירקט'],
+    ['דורסלי', 'ונטרלי', 'מדיאלי', 'לטרלי'],
+    ['קדמי', 'אחורי', 'עליון', 'תחתון'],
+    ['פנימי', 'חיצוני'],
+    ['שכבה 4', 'שכבה 5', 'שכבה 6', 'שכבות 2–3'],
+    ['גלוטמט', 'GABA', 'דופמין', 'סרוטונין', 'אצטילכולין'],
+    ['אסטרוציטים', 'מיקרוגליה', 'אוליגודנדרוציטים', 'נוירונים פירמידליים'],
+    ['fMRI', 'MRI', 'DTI', 'CT', 'TMS'],
+    ['אוקסיטוצין', 'וזופרסין', 'ACTH', 'קורטיזול'],
+    ['לפטין', 'גרלין', 'GLP-1'],
+    ['ההיפופיזה הקדמית', 'ההיפופיזה האחורית'],
+    ['קישוריות פונקציונלית', 'קישוריות אנטומית', 'פעילות מקומית'],
+    ['זיכרון עבודה', 'זיכרון אפיזודי', 'זיכרון פרוצדורלי'],
+    ['ביצוע פעולה', 'צפייה בפעולה', 'דמיון פעולה'],
+    ['עיבוד פנימי', 'ביצוע משימה חיצונית', 'קשב מכוון מטרה']
+  ];
+
+  const phraseReversals = [
+    ['עולה', 'יורדת'], ['עולים', 'יורדים'], ['גדל', 'קטן'], ['גדלה', 'קטנה'],
+    ['מפעיל', 'מעכב'], ['מפעילה', 'מעכבת'], ['שומר', 'משבש'],
+    ['מחזק', 'מחליש'], ['מחזקת', 'מחלישה'], ['מקדם', 'מדכא'],
+    ['מלמעלה למטה', 'מלמטה למעלה'], ['top-down', 'bottom-up'],
+    ['קלט', 'פלט'], ['מנוחה', 'משימה'], ['עצמי', 'חיצוני']
+  ];
+
+  const makeNearMisses = correct => {
+    const variants = [];
+    nearMissGroups.forEach(group => {
+      const match = [...group].sort((a, b) => b.length - a.length).find(term => correct.includes(term));
+      if (!match) return;
+      group.filter(term => term !== match).forEach(replacement => variants.push(correct.replace(match, replacement)));
+    });
+    phraseReversals.forEach(([left, right]) => {
+      if (correct.includes(left)) variants.push(correct.replace(left, right));
+      else if (correct.includes(right)) variants.push(correct.replace(right, left));
+    });
+    return [...new Set(variants)].filter(text => text !== correct);
+  };
+
+  Object.values(questionBank).forEach(questions => questions.forEach(item => {
+    const correct = item.options[item.correctAnswer];
+    if (correct.length < 24) return;
+    const nearMisses = makeNearMisses(correct);
+    if (nearMisses.length < 2) return;
+    const distractorIndexes = item.options.map((_, index) => index).filter(index => index !== item.correctAnswer);
+    const fallbacks = distractorIndexes
+      .map(index => item.options[index])
+      .sort((a, b) => Math.abs(a.length - correct.length) - Math.abs(b.length - correct.length));
+    const replacements = [...nearMisses, ...fallbacks].filter((text, index, all) => all.indexOf(text) === index).slice(0, 3);
+    distractorIndexes.forEach((optionIndex, position) => { item.options[optionIndex] = replacements[position]; });
+  }));
+
+  // תיקונים ידניים לשאלות שבהן תשובה קצרה או מורכבת במיוחד דורשת מסיחים
+  // מותאמים, ולא רק איזון אוטומטי.
+  const optionOverrides = {
+    lesson1: {
+      15: [
+        'מעקב אחר כיוון הקשרים והיעדים של שלוחות נוירונים לאחר הזרקת סמן',
+        'מדידת שינויי חמצון בדם בזמן ביצוע מטלה קוגניטיבית',
+        'הערכת כיוון סיבי חומר לבן לפי דיפוזיית מים ברקמה',
+        'שיבוש זמני של אזור קורטיקלי באמצעות שדה מגנטי'
+      ]
+    },
+    lesson2: {
+      24: ['זיהוי זהות האובייקט — ״מה״', 'מיפוי מיקום ותנועה — ״איפה״', 'הכוונת תגובה מוטורית לעבר הגירוי', 'שילוב קשב מרחבי עם תנועות עיניים']
+    },
+    lesson4: {
+      26: ['טעם', 'ריח', 'שמיעה', 'ראייה'],
+      30: [
+        'פעילות יתר באמיגדלה, באינסולה וב־BNST לצד ויסות חלש של vmPFC ו־sgACC',
+        'פעילות נמוכה באמיגדלה וב־BNST לצד ויסות יתר של vmPFC ו־sgACC',
+        'פעילות יתר בהיפוקמפוס לצד דיכוי מלא של האמיגדלה והאינסולה',
+        'פעילות תקינה ברשת האיום לצד פגיעה מבודדת בקורטקס המוטורי'
+      ]
+    },
+    lesson5: {
+      12: [
+        'CA3 משלים זיכרון מרמז קטן, ו־CA1 מתקשה לעדכן אותו לפי הקונטקסט הנוכחי',
+        'CA3 מתקשה להשלים זיכרון, ו־CA1 מחזק כל הקשר כאילו הוא בטוח',
+        'CA3 מפריד לחלוטין בין זיכרונות, ו־CA1 מונע כל עדכון קונטקסטואלי',
+        'CA3 ו־CA1 פועלים רק בזיכרון פרוצדורלי ולכן אינם משפיעים על טראומה'
+      ]
+    },
+    lesson6: {
+      23: [
+        'מסלול מהקורטקס ישירות ל־STN שמפעיל עצירת חירום',
+        'מסלול מהקורטקס לסטריאטום שמקל בהדרגה על הפעולה הנבחרת',
+        'מסלול מהסטריאטום דרך GPe שמדכא פעולות מתחרות',
+        'מסלול מהתלמוס ישירות ל־GPi שמפעיל את הקורטקס המוטורי'
+      ],
+      29: [
+        'המסלול הניגרו־סטריאטלי מהסובסטנציה ניגרה לסטריאטום',
+        'המסלול המזולימבי מה־VTA לגרעין האקומבנס',
+        'המסלול המזוקורטיקלי מה־VTA לקורטקס הפרה־פרונטלי',
+        'המסלול הטוברואינפונדיבולרי מההיפותלמוס להיפופיזה'
+      ]
+    },
+    lesson8: {
+      11: [
+        'האחורית משחררת הורמונים מנוירונים היפותלמיים; הקדמית מגיבה להורמוני שחרור ומייצרת הורמונים טרופיים',
+        'האחורית מגיבה להורמוני שחרור ומייצרת הורמונים טרופיים; הקדמית משחררת אוקסיטוצין ווזופרסין',
+        'האחורית מייצרת ACTH ו־TSH; הקדמית משחררת קורטיזול והורמוני תריס ישירות לדם',
+        'האחורית פועלת ללא קשר להיפותלמוס; הקדמית נשלטת רק על ידי מערכת העצבים האוטונומית'
+      ]
+    },
+    lesson9: {
+      29: [
+        'היא מאפשרת לזהות דפוס משותף של דיסקונקטיביות גם כשמוקדי הפעילות המקומיים שונים בין אנשים',
+        'היא מניחה שכל תסמיני הסכיזופרניה נובעים מצומת יחיד וקבוע למרות ההבדלים בין אנשים',
+        'היא מוותרת על מדדי קישוריות ומתמקדת רק בעוצמת הפעילות המקומית בכל אזור בנפרד',
+        'היא מסבירה את ההטרוגניות באמצעות פגיעה מקומית זהה ברשת ברירת המחדל אצל כל אדם'
+      ]
+    },
+    lesson10: {
+      24: [
+        'חפיפה ב־BOLD בזמן ביצוע וצפייה אינה מוכיחה שאותו נוירון יחיד פעיל בשני המצבים',
+        'חפיפה ב־BOLD בזמן ביצוע וצפייה מוכיחה שכל הנוירונים באזור הם נוירוני מראה',
+        'פעילות מוטורית בזמן צפייה מוכיחה שהאדם מבצע בפועל את הפעולה שבה הוא צופה',
+        'היעדר רישום מנוירון יחיד מאפשר לקבוע בוודאות את כיוון ההשפעה בין האזורים'
+      ]
+    }
+  };
+
+  Object.entries(optionOverrides).forEach(([lessonKey, overrides]) => {
+    Object.entries(overrides).forEach(([id, options]) => {
+      const item = questionBank[lessonKey].find(question => question.id === Number(id));
+      item.options = options;
+      item.correctAnswer = 0;
+    });
+  });
 })();
