@@ -117,11 +117,15 @@
     q(30,'hard','אינטגרציה שפתית','מדוע בזמן דיבור חייבת להיות תקשורת בין המערכת המוטורית לשמיעתית?','כדי לחזות את הצליל העצמי, לנטר שגיאות ולהבחין בין קול עצמי לחיצוני','כדי להפסיק כל קלט שמיעתי','כדי להפעיל את ה־VMH','כדי לייצר קורטיזול','לולאת חיזוי ומשוב מחברת תוכנית דיבור לתוצאה השמיעתית ומאפשרת תיקון ותחושת סוכנות.')
   ];
 
-  // מסיחים מאוזנים: מסירים רמזי אורך ותשובות אבסורדיות, בלי לשנות את
-  // התשובה הנכונה. מסיח חלופי נלקח מתשובה נכונה לשאלה אחרת באותו שיעור,
-  // בעדיפות לאותו נושא ולאותו סוג תשובה. כך הוא נשאר מושג אמיתי ורלוונטי.
+  // איזון מסיחים לפי רמה: בקלה מסיחים הם מושגים אמיתיים מאותה משפחה;
+  // בבינונית הם מבלבלים בין מסלולים או מנגנונים סמוכים; ובקשה הם כמעט־נכונים
+  // שמחליפים רכיב אחד ביחס הסיבתי, בכיוון או באזור. הקוד אינו מחליף תת־מחרוזות,
+  // כדי למנוע הטיות שבורות ורמזי אורך.
   const answerType = question => {
     const text = question.trim();
+    if (/(?:כמה|איזה מספר|באיזה גיל)/.test(text)) return 'number';
+    if (/(?:איפה|היכן|מעל|מתחת|לאן)/.test(text)) return 'location';
+    if (/(?:מה עושה|מה תפקיד|איזה תפקוד)/.test(text)) return 'function';
     if (/^(איזה|איזו|אילו|היכן|מתי|באיזה|באיזו|לאיזה|מאילו|מאיזה|עם איזה|עם אילו)/.test(text)) return 'entity';
     if (/^(מהו|מהי|מהם|מהן|מה פירוש|מה משמעות)/.test(text)) return 'definition';
     if (/^(למה|מדוע|כיצד|איך)/.test(text)) return 'mechanism';
@@ -129,16 +133,20 @@
   };
 
   const weakDistractor = (text, correct) => {
-    const suspicious = /(?:רק עצם|רק כלי דם|אין קשר|אין הבדל|אין משמעות|אין תפקיד|לא עושה|אינו קשור|מוחק|מבטל|מייצר שריר|מייצר עצם|כל המוח|תמיד בלבד|לעולם|בלבד$)/;
+    const suspicious = /(?:רק עצם|רק כלי דם|אין קשר|אין הבדל|אין משמעות|אין תפקיד|לא עושה|אינו קשור|מוחק|מבטל|מייצר שריר|מייצר עצם|בתוך העין|רק בשינה|כל המוח|תמיד בלבד|לעולם|בלבד$)/;
     const ratio = text.length / Math.max(1, correct.length);
     return suspicious.test(text) || ratio < 0.58 || ratio > 1.72 || (correct.length > 22 && text.split(/\s+/).length < 3);
   };
 
   Object.entries(questionBank).forEach(([lessonKey, questions]) => {
+    // שיעורים 8–10 נכתבו מלכתחילה עם מסיחים מדורגים; שם שומרים על הניסוח הידני.
+    if (['lesson8', 'lesson9', 'lesson10'].includes(lessonKey)) return;
     const answerPool = questions.map(item => ({
       text: item.options[item.correctAnswer],
       topic: item.topic,
       type: answerType(item.question),
+      difficulty: item.difficulty,
+      question: item.question,
       id: item.id
     }));
 
@@ -153,14 +161,19 @@
       if (!needsRevision) return;
 
       const type = answerType(item.question);
-      const retained = distractors.filter(text => !weakDistractor(text, correct));
+      const retainedLimit = item.difficulty === 'easy' ? 2 : item.difficulty === 'medium' ? 1 : 0;
+      const retained = distractors.filter(text => !weakDistractor(text, correct)).slice(0, retainedLimit);
+      const questionTerms = new Set(item.question.toLowerCase().match(/[א-תA-Za-z0-9-]{3,}/g) || []);
       const candidates = answerPool
         .filter(candidate => candidate.id !== item.id && candidate.text !== correct && !retained.includes(candidate.text))
         .map(candidate => ({
           ...candidate,
           score:
-            (candidate.topic === item.topic ? 0 : 0.25) +
-            (candidate.type === type ? 0 : 0.6) +
+            (candidate.difficulty === item.difficulty ? 0 : 3) +
+            (candidate.topic === item.topic ? -1.25 : 0) +
+            (candidate.type === type ? 0 : 1.4) -
+            ((candidate.question.toLowerCase().match(/[א-תA-Za-z0-9-]{3,}/g) || [])
+              .filter(term => questionTerms.has(term)).length * 0.45) +
             Math.abs(Math.log(Math.max(1, candidate.text.length) / Math.max(1, correct.length)))
         }))
         .sort((a, b) => a.score - b.score || a.id - b.id);
@@ -177,7 +190,7 @@
     });
   });
 
-  // בשאלות עם תשובות משפטיות, מסיח טוב צריך לענות לאותו מנגנון בדיוק.
+  // בשאלות קשות עם תשובות משפטיות, מסיח טוב מחליף רכיב שלם אחד.
   // הווריאציות הבאות מחליפות רכיב יחיד (אזור, כיוון, מסלול או סוג ויסות),
   // ולכן יוצרות תשובות כמעט־נכונות במקום עובדות לא קשורות.
   const nearMissGroups = [
@@ -214,21 +227,29 @@
 
   const makeNearMisses = correct => {
     const variants = [];
+    const replaceTerm = (source, term, replacement) => {
+      const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = new RegExp('(^|[\\s־–,;/()])' + escaped + '(?=$|[\\s־–,;/().])');
+      return pattern.test(source) ? source.replace(pattern, '$1' + replacement) : null;
+    };
     nearMissGroups.forEach(group => {
-      const match = [...group].sort((a, b) => b.length - a.length).find(term => correct.includes(term));
+      const match = [...group].sort((a, b) => b.length - a.length).find(term => replaceTerm(correct, term, term));
       if (!match) return;
-      group.filter(term => term !== match).forEach(replacement => variants.push(correct.replace(match, replacement)));
+      group.filter(term => term !== match).forEach(replacement => variants.push(replaceTerm(correct, match, replacement)));
     });
     phraseReversals.forEach(([left, right]) => {
-      if (correct.includes(left)) variants.push(correct.replace(left, right));
-      else if (correct.includes(right)) variants.push(correct.replace(right, left));
+      const leftVariant = replaceTerm(correct, left, right);
+      const rightVariant = replaceTerm(correct, right, left);
+      if (leftVariant && leftVariant !== correct) variants.push(leftVariant);
+      else if (rightVariant && rightVariant !== correct) variants.push(rightVariant);
     });
-    return [...new Set(variants)].filter(text => text !== correct);
+    return [...new Set(variants)].filter(text => text && text !== correct);
   };
 
-  Object.values(questionBank).forEach(questions => questions.forEach(item => {
+  Object.entries(questionBank).forEach(([lessonKey, questions]) => questions.forEach(item => {
+    if (['lesson8', 'lesson9', 'lesson10'].includes(lessonKey)) return;
     const correct = item.options[item.correctAnswer];
-    if (correct.length < 24) return;
+    if (item.difficulty !== 'hard' || correct.length < 24) return;
     const nearMisses = makeNearMisses(correct);
     if (nearMisses.length < 2) return;
     const distractorIndexes = item.options.map((_, index) => index).filter(index => index !== item.correctAnswer);
@@ -243,12 +264,43 @@
   // מותאמים, ולא רק איזון אוטומטי.
   const optionOverrides = {
     lesson1: {
+      1: [
+        'הוא קידם את הרעיון שאזורים שונים במוח עושים דברים שונים',
+        'הוא הראה שהתפקוד נובע בעיקר מקשרים בין אזורים מרוחקים',
+        'הוא טען שכל הקורטקס משתתף באותה מידה בכל פונקציה',
+        'הוא קישר לראשונה בין אפזיה לפגיעה באונה הפרונטלית'
+      ],
+      4: ['סגיטלי', 'קורונלי', 'אקסיאלי', 'חתך אובליקי'],
+      9: [
+        'מפרידה בין האונה הטמפורלית למבנים פרונטליים ופריאטליים מעליה',
+        'מפרידה בין האונה הפרונטלית לאונה הפריאטלית',
+        'מפרידה בין שתי ההמיספרות לאורך קו האמצע',
+        'מפרידה בין האונה האוקסיפיטלית לצרבלום'
+      ],
+      11: ['אזורי ראייה ראשוניים', 'אזורים סומטוסנסוריים ראשוניים', 'אזורי שמיעה ראשוניים', 'אזורים מוטוריים ראשוניים'],
       15: [
         'מעקב אחר כיוון הקשרים והיעדים של שלוחות נוירונים לאחר הזרקת סמן',
         'מדידת שינויי חמצון בדם בזמן ביצוע מטלה קוגניטיבית',
         'הערכת כיוון סיבי חומר לבן לפי דיפוזיית מים ברקמה',
         'שיבוש זמני של אזור קורטיקלי באמצעות שדה מגנטי'
-      ]
+      ],
+      16: [
+        'הפגיעות שונות בגודל, במיקום ובזמן, ולכן קשה להסיק סיבתיות ישירה',
+        'הפגיעה מורידה תמיד את הפעילות רק במוקד האנטומי הנפגע',
+        'רוב מחקרי הלזיה מודדים רק קישוריות תפקודית ולא התנהגות',
+        'נזק מוחי משפיע על כל הפונקציות באותו אופן, ללא תלות במיקומו'
+      ],
+      21: ['נוירון פירמידלי', 'נוירון סטלטי', 'תא פורקינייה', 'תא גרנולרי'],
+      22: ['גלוטמט', 'GABA', 'אצטילכולין', 'דופמין'],
+      23: [
+        'שלוחות בצורת כוכב ויכולת להיות גלוטמטרגיים או GABA־ארגיים',
+        'גוף תא משולש ואקסון ארוך השולח פלט לאזורים מרוחקים',
+        'דנדריט יחיד המסתעף בקליפת הצרבלום ומשחרר GABA',
+        'יצירת מייאלין סביב מספר אקסונים במערכת העצבים המרכזית'
+      ],
+      26: ['אוליגודנדרוציט', 'תא שוואן', 'אסטרוציט', 'מיקרוגליה'],
+      27: ['הגנה חיסונית וגיזום סינפסות', 'ייצור מייאלין סביב אקסונים', 'ויסות זרימת דם מקומית לפי פעילות עצבית', 'העברת פוטנציאלי פעולה בין אזורי קורטקס'],
+      28: ['אקסון, דנדריט ואסטרוציט העוטף את הסינפסה', 'אקסון, דנדריט ומיקרוגליה העוטפת את הסינפסה', 'שלושה נוירונים פרה־סינפטיים המשתחררים יחד', 'דנדריט, אוליגודנדרוציט וכלי דם המחליפים את האקסון']
     },
     lesson2: {
       24: ['זיהוי זהות האובייקט — ״מה״', 'מיפוי מיקום ותנועה — ״איפה״', 'הכוונת תגובה מוטורית לעבר הגירוי', 'שילוב קשב מרחבי עם תנועות עיניים']
