@@ -290,7 +290,7 @@
   <!-- מסך תפריט -->
   <div class="card" id="menuScreen">
     <h1>בנק שאלות נוירואנטומיה</h1>
-    <p class="subtitle">תשעה שאלונים לפי שיעורים, 30 שאלות בכל שיעור המחולקות לרמה קלה, בינונית וקשה, עם ערבוב שאלות ותשובות, מצב חזרה על טעויות, שמירת תוצאה אחרונה ופירוט ציון לפי נושא.</p>
+    <p class="subtitle">עשרה שאלונים לפי שיעורים, 30 שאלות בכל שיעור המחולקות לרמה קלה, בינונית וקשה, עם ערבוב שאלות ותשובות, מצב חזרה על טעויות, שמירת תוצאה אחרונה ופירוט ציון לפי נושא.</p>
 
     <div id="lastSessionBox" class="stat hidden session-box">
       <strong>תוצאה אחרונה</strong>
@@ -309,6 +309,7 @@
       <button type="button" class="menu-card" data-lesson="lesson8"><span class="lesson-label">שיעור 8</span><span class="small-muted">היפותלמוס, הורמונים, סטרס, רעב, שינה וגזע המוח</span></button>
       <button type="button" class="menu-card" data-lesson="lesson9"><span class="lesson-label">שיעור 9</span><span class="small-muted">רשתות מוח גדולות, קישוריות ופסיכופתולוגיה</span></button>
       <button type="button" class="menu-card" data-lesson="lesson10"><span class="lesson-label">שיעור 10</span><span class="small-muted">המוח החברתי, מנטליזציה, נוירוני מראה ושפה</span></button>
+      <button type="button" class="menu-card" data-lesson="lesson11"><span class="lesson-label">שיעור 11</span><span class="small-muted">התפתחות מערכת העצבים, פלסטיות, נוירוגנזה והזדקנות</span></button>
     </div>
     <p class="small-muted">שיעור 7 לא נכלל: בסיכום הוא מסומן כשיעור חיפוש ב־fMRI שאינו רלוונטי לבחינה.</p>
   </div>
@@ -2752,6 +2753,7 @@ const lesson6Questions = questionBank.lesson6;
 const lesson8Questions = questionBank.lesson8;
 const lesson9Questions = questionBank.lesson9;
 const lesson10Questions = questionBank.lesson10;
+const lesson11Questions = questionBank.lesson11;
 
 (function () {
   const lessons = {
@@ -2763,7 +2765,8 @@ const lesson10Questions = questionBank.lesson10;
     lesson6: { title: 'שיעור 6', questions: lesson6Questions },
     lesson8: { title: 'שיעור 8', questions: lesson8Questions },
     lesson9: { title: 'שיעור 9', questions: lesson9Questions },
-    lesson10: { title: 'שיעור 10', questions: lesson10Questions }
+    lesson10: { title: 'שיעור 10', questions: lesson10Questions },
+    lesson11: { title: 'שיעור 11', questions: lesson11Questions }
   };
 
   const difficultyLabels = { easy: 'רמה קלה', medium: 'רמה בינונית', hard: 'רמה קשה', all: 'כל הרמות' };
