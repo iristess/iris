@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neuro-quiz-v9';
+const CACHE_NAME = 'neuro-quiz-v10';
 const APP_SHELL = [
   './',
   './index.html',
@@ -33,6 +33,19 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then(cached => cached || caches.match('./index.html')))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then(cached => {
