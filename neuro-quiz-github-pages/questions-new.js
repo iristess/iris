@@ -603,69 +603,8 @@
     });
   });
 
-  const brainRegionSvg = highlight => {
-    const regions = {
-      hypothalamus: '<ellipse cx="356" cy="252" rx="31" ry="20" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      amygdala: '<ellipse cx="304" cy="297" rx="27" ry="19" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      hippocampus: '<path d="M315 300 C342 270 400 275 431 303 C404 323 350 327 315 316 C306 313 307 307 315 300 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      fornix: '<path d="M277 244 C304 189 420 176 492 221 M282 244 C265 268 263 291 277 316 M492 221 C479 254 468 284 468 320" fill="none" stroke="#ff4f9d" stroke-width="14" stroke-linecap="round"/>',
-      mammillaryBodies: '<ellipse cx="337" cy="288" rx="13" ry="11" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/><ellipse cx="366" cy="288" rx="13" ry="11" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      limbicSystem: '<path d="M239 246 C264 161 371 127 471 164 C532 187 568 232 560 277 C535 258 496 239 445 232 C385 224 319 244 270 301 C248 292 235 272 239 246 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5" opacity="0.78"/>',
-      pfc: '<path d="M116 171 C123 113 178 75 253 83 C240 129 239 186 254 241 C207 258 147 233 124 203 C117 193 114 182 116 171 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      ofc: '<path d="M150 263 C181 239 227 238 269 253 C250 288 208 307 163 295 C146 287 141 274 150 263 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      dlPfc: '<path d="M126 143 C145 100 193 78 253 83 C242 115 238 147 241 178 C200 186 158 177 126 143 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      vmPfc: '<path d="M145 244 C178 213 233 211 282 234 C265 263 221 286 171 280 C154 272 145 259 145 244 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      acc: '<path d="M268 169 C319 130 421 124 501 172 C487 185 468 194 443 197 C393 169 328 170 279 205 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      dAcc: '<path d="M308 153 C357 131 436 139 501 172 C487 185 468 194 443 197 C397 173 345 169 308 188 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      sgAcc: '<path d="M245 229 C272 214 311 218 335 241 C312 259 274 263 248 248 C237 241 236 235 245 229 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      insula: '<path d="M267 206 C286 181 323 180 346 201 C335 229 303 246 273 232 C263 225 260 216 267 206 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      thalamus: '<ellipse cx="386" cy="238" rx="50" ry="31" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      lgn: '<ellipse cx="436" cy="267" rx="16" ry="13" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      mgn: '<ellipse cx="420" cy="281" rx="16" ry="13" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      vpl: '<path d="M408 216 C433 222 450 242 449 266 C427 258 410 243 399 224 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      vpm: '<path d="M390 253 C411 251 430 263 435 284 C411 291 390 282 378 263 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      reticularNucleus: '<path d="M329 196 C366 161 431 165 472 207 C464 217 454 224 443 229 C413 196 365 192 338 218 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      pag: '<ellipse cx="487" cy="273" rx="20" ry="18" fill="none" stroke="#ff4f9d" stroke-width="13"/>',
-      midbrain: '<path d="M462 270 C486 246 528 253 548 284 C532 311 485 317 457 292 C450 285 453 277 462 270 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      corpusCallosum: '<path d="M260 184 C314 143 420 151 488 206 C438 198 337 202 273 237 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      arcuateFasciculus: '<path d="M195 222 C278 166 460 155 548 235 M205 239 C298 185 454 188 535 255 M218 254 C315 209 452 216 520 276" fill="none" stroke="#ff4f9d" stroke-width="9" stroke-linecap="round"/>',
-      slf: '<path d="M175 194 C270 145 462 150 575 231 M173 214 C289 173 462 178 570 252" fill="none" stroke="#ff4f9d" stroke-width="10" stroke-linecap="round"/>',
-      uncinateFasciculus: '<path d="M162 277 C228 319 332 317 393 274 C332 282 234 273 177 235" fill="none" stroke="#ff4f9d" stroke-width="11" stroke-linecap="round"/>',
-      cingulum: '<path d="M254 218 C301 146 422 143 503 209 C477 211 449 210 421 207 C368 178 302 190 269 248 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5" opacity="0.82"/>',
-      centralSulcus: '<path d="M385 103 C371 157 388 215 371 276" fill="none" stroke="#ff4f9d" stroke-width="11" stroke-linecap="round"/>',
-      precentralGyrus: '<path d="M342 104 C327 158 344 221 328 286 C352 291 368 282 371 262 C383 211 365 158 378 108 Z" fill="#ff4f9d" stroke="#7f2458" stroke-width="5"/>',
-      sylvianFissure: '<path d="M166 260 C250 245 352 240 456 249 C511 253 555 244 598 221" fill="none" stroke="#ff4f9d" stroke-width="12" stroke-linecap="round"/>',
-      calcarineSulcus: '<path d="M560 227 C594 238 615 269 610 308 M563 238 C598 211 623 176 616 142" fill="none" stroke="#ff4f9d" stroke-width="10" stroke-linecap="round"/>',
-      longitudinalFissure: '<path d="M380 82 C370 149 374 230 379 383" fill="none" stroke="#ff4f9d" stroke-width="14" stroke-linecap="round"/>'
-    };
-    const mark = regions[highlight] || regions.pfc;
-    return `<svg viewBox="0 0 760 460" role="img" aria-label="איור סכמטי של מוח עם אזור מסומן">
-      <defs>
-        <filter id="regionGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#ff4f9d" flood-opacity="0.62"/>
-        </filter>
-      </defs>
-      <rect x="0" y="0" width="760" height="460" rx="22" fill="#fbf8ff"/>
-      <text x="100" y="52" fill="#716883" font-size="18" font-weight="700">קדמי</text>
-      <text x="612" y="52" fill="#716883" font-size="18" font-weight="700">אחורי</text>
-      <path d="M104 234 C80 165 112 101 178 67 C246 31 344 41 431 69 C517 96 592 147 635 211 C677 274 650 333 584 371 C512 412 388 413 281 387 C183 364 124 306 104 234 Z" fill="#f4edff" stroke="#5d45a6" stroke-width="5" stroke-linejoin="round"/>
-      <path d="M503 336 C541 310 606 318 639 360 C603 389 529 389 486 351 Z" fill="#e6dafa" stroke="#8b6fd8" stroke-width="4"/>
-      <path d="M573 365 C588 385 612 397 642 398" fill="none" stroke="#8b6fd8" stroke-width="13" stroke-linecap="round"/>
-      <path d="M134 186 C184 128 272 103 358 115 C448 128 536 176 603 243" fill="none" stroke="#cab8ef" stroke-width="5" stroke-linecap="round"/>
-      <path d="M142 240 C211 195 300 181 385 196 C469 211 541 250 596 306" fill="none" stroke="#cab8ef" stroke-width="5" stroke-linecap="round"/>
-      <path d="M193 318 C273 288 382 287 491 318" fill="none" stroke="#cab8ef" stroke-width="5" stroke-linecap="round"/>
-      <path d="M248 84 C221 123 211 177 224 235" fill="none" stroke="#cab8ef" stroke-width="4" stroke-linecap="round"/>
-      <path d="M417 93 C391 140 385 197 402 255" fill="none" stroke="#cab8ef" stroke-width="4" stroke-linecap="round"/>
-      <path d="M552 157 C520 197 511 252 531 307" fill="none" stroke="#cab8ef" stroke-width="4" stroke-linecap="round"/>
-      <path d="M260 184 C314 143 420 151 488 206 C438 198 337 202 273 237 Z" fill="#ffffff" stroke="#bca7ea" stroke-width="5" stroke-linejoin="round"/>
-      <ellipse cx="386" cy="238" rx="50" ry="31" fill="#ded0f7" stroke="#a98dde" stroke-width="4"/>
-      <path d="M268 271 C336 239 450 240 526 286" fill="none" stroke="#bca7ea" stroke-width="7" stroke-linecap="round"/>
-      <path d="M308 304 C342 286 394 289 425 315" fill="none" stroke="#bca7ea" stroke-width="6" stroke-linecap="round"/>
-      <g opacity="0.96" filter="url(#regionGlow)">${mark}</g>
-      <circle cx="635" cy="92" r="10" fill="#ff4f9d" stroke="#7f2458" stroke-width="3"/>
-      <text x="612" y="101" text-anchor="end" fill="#5d45a6" font-size="18" font-weight="800">האזור המסומן</text>
-    </svg>`;
-  };
+  const brainRegionImage = name =>
+    `<img src="./brain-region-images/${name}.webp" alt="תמונה אנטומית עם אזור מסומן" loading="lazy">`;
 
   questionBank.brainRegionImages = [
     q(1,'medium','לימבית ו־MTL','איזה מבנה מסומן באיור?','היפותלמוס','תלמוס','היפוקמפוס','גופים ממילריים','ההיפותלמוס נמצא מתחת לתלמוס וברצפת החדר השלישי, ומקשר בין ויסות עצבי, הורמונלי ואוטונומי.'),
@@ -674,14 +613,6 @@
     q(4,'medium','לימבית ו־MTL','איזה מסלול מסומן באיור?','פורניקס','קורפוס קלוסום','ארקואט פאסיקולוס','צינגולום','הפורניקס הוא מסלול קשתִי היוצא מההיפוקמפוס ומתחבר בין היתר לגופים הממילריים.'),
     q(5,'medium','לימבית ו־MTL','איזה מבנה מסומן באיור?','גופים ממילריים','היפותלמוס','PAG','גרעין רטיקולרי','הגופים הממילריים הם זוג מבנים קטנים בבסיס ההיפותלמוס, ומשתתפים במעגלים לימביים של זיכרון.'),
     q(6,'medium','לימבית ו־MTL','איזו מערכת מסומנת באיור?','מערכת לימבית','בזאל גנגליה','רשת ברירת המחדל','מערכת ראייה דורסלית','המערכת הלימבית כוללת מבנים מדיאליים כמו צינגולום, פורניקס, היפוקמפוס, אמיגדלה וגופים ממילריים.'),
-    q(7,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','PFC','OFC','ACC','אינסולה','ה־PFC נמצא בקדמת האונה הפרונטלית ומשתתף בתכנון, בקרה, זיכרון עבודה וקבלת החלטות.'),
-    q(8,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','OFC','dlPFC','vmPFC','sgACC','ה־OFC נמצא בחלק התחתון של האונה הפרונטלית, מעל ארובות העיניים, וקשור לערך, תגמול וקבלת החלטות חברתית.'),
-    q(9,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','dlPFC','OFC','vmPFC','ACC','ה־dlPFC הוא החלק הדורסו־לטרלי של ה־PFC, ומזוהה עם בקרה קוגניטיבית וזיכרון עבודה.'),
-    q(10,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','vmPFC','dlPFC','dACC','אינסולה','ה־vmPFC נמצא בחלק הוונטרו־מדיאלי של הקורטקס הפרה־פרונטלי וקשור לערך רגשי ולוויסות.'),
-    q(11,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','ACC','OFC','תלמוס','סולקוס מרכזי','ה־ACC נמצא בקורטקס המדיאלי מעל הקורפוס קלוסום, ומשתתף בניטור קונפליקט, כאב וויסות.'),
-    q(12,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','dACC','sgACC','OFC','היפותלמוס','ה־dACC הוא החלק הדורסלי של ה־ACC, ומקושר יותר לניטור קונפליקט, מאמץ ובקרה.'),
-    q(13,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','sgACC','dACC','dlPFC','PAG','ה־sgACC הוא החלק הסאב־גנואלי של ה־ACC, מתחת לברך הקורפוס קלוסום, ונקשר לוויסות מצב רוח.'),
-    q(14,'medium','פרונטלי, צינגולרי ואינסולה','איזה אזור מסומן באיור?','אינסולה','אמיגדלה','OFC','VPL','האינסולה נמצאת עמוק בתוך הסילביאן פיסורה, מתחת לאופרקולום, ומעורבת באינטרוספציה ומודעות גופנית.'),
     q(15,'medium','תלמוס וגזע מוח','איזה מבנה מסומן באיור?','תלמוס','היפותלמוס','מידבריין','קורפוס קלוסום','התלמוס הוא מבנה דיאנספלי עמוק, מעל ההיפותלמוס, ומהווה תחנת מעבר ובקרה מרכזית לקורטקס.'),
     q(16,'medium','תלמוס וגזע מוח','איזה גרעין מסומן באיור?','LGN','MGN','VPL','VPM','ה־LGN הוא הגרעין הגניקולטי הלטרלי בתלמוס, ומעביר מידע ראייתי אל הקורטקס הראייתי.'),
     q(17,'medium','תלמוס וגזע מוח','איזה גרעין מסומן באיור?','MGN','LGN','PAG','גרעין רטיקולרי','ה־MGN הוא הגרעין הגניקולטי המדיאלי בתלמוס, ומעביר מידע שמיעתי אל הקורטקס השמיעתי.'),
@@ -703,11 +634,36 @@
   ].map((item, index) => {
     const keys = [
       'hypothalamus', 'amygdala', 'hippocampus', 'fornix', 'mammillaryBodies', 'limbicSystem',
-      'pfc', 'ofc', 'dlPfc', 'vmPfc', 'acc', 'dAcc', 'sgAcc', 'insula',
       'thalamus', 'lgn', 'mgn', 'vpl', 'vpm', 'reticularNucleus', 'pag', 'midbrain',
       'corpusCallosum', 'arcuateFasciculus', 'slf', 'uncinateFasciculus', 'cingulum',
       'centralSulcus', 'precentralGyrus', 'sylvianFissure', 'calcarineSulcus', 'longitudinalFissure'
     ];
-    return Object.assign(item, { visualSvg: brainRegionSvg(keys[index]) });
+    const imageNames = {
+      hypothalamus: 'hypothalamus',
+      amygdala: 'amygdala',
+      hippocampus: 'hippocampus',
+      fornix: 'fornix',
+      mammillaryBodies: 'mammillary-bodies',
+      limbicSystem: 'limbic-system',
+      thalamus: 'thalamus',
+      lgn: 'lgn',
+      mgn: 'mgn',
+      vpl: 'vpl',
+      vpm: 'vpm',
+      reticularNucleus: 'reticular-nucleus',
+      pag: 'pag',
+      midbrain: 'midbrain',
+      corpusCallosum: 'corpus-callosum',
+      arcuateFasciculus: 'arcuate-fasciculus',
+      slf: 'slf',
+      uncinateFasciculus: 'uncinate-fasciculus',
+      cingulum: 'cingulum',
+      centralSulcus: 'central-sulcus',
+      precentralGyrus: 'precentral-gyrus',
+      sylvianFissure: 'sylvian-fissure',
+      calcarineSulcus: 'calcarine-sulcus',
+      longitudinalFissure: 'longitudinal-fissure'
+    };
+    return Object.assign(item, { visualSvg: brainRegionImage(imageNames[keys[index]]) });
   });
 })();

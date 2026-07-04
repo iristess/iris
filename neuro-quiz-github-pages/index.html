@@ -177,6 +177,13 @@
       height: auto;
       max-height: 360px;
     }
+    .question-visual img {
+      display: block;
+      width: 100%;
+      max-height: 440px;
+      object-fit: contain;
+      border-radius: 10px;
+    }
     .options { display: grid; gap: 11px; margin-bottom: 20px; }
     .option {
       border: 1px solid var(--line);
@@ -325,7 +332,7 @@
       <button type="button" class="menu-card" data-lesson="lesson11"><span class="lesson-label">שיעור 11</span><span class="small-muted">התפתחות מערכת העצבים, פלסטיות, נוירוגנזה והזדקנות</span></button>
       <button type="button" class="menu-card" id="generalPracticeBtn"><span class="lesson-label">תרגול כללי</span><span class="small-muted">30 שאלות אקראיות חדשות מכל השיעורים בכל פעם</span></button>
       <button type="button" class="menu-card" id="clinicalIntegrationBtn"><span class="lesson-label">אינטגרציה קלינית</span><span class="small-muted">מקרים סיפוריים: תופעה פסיכולוגית, מנגנון מוחי ואזור/רשת</span></button>
-      <button type="button" class="menu-card" id="imageIdentificationBtn"><span class="lesson-label">זיהוי אזורים בתמונה</span><span class="small-muted">32 שאלות לפי דפי הלמידה: מבנים, מסילות וסולקוסים</span></button>
+      <button type="button" class="menu-card" id="imageIdentificationBtn"><span class="lesson-label">זיהוי אזורים בתמונה</span><span class="small-muted">24 שאלות לפי דפי הלמידה: מבנים, מסילות וסולקוסים</span></button>
     </div>
     <p class="small-muted">שיעור 7 לא נכלל: בסיכום הוא מסומן כשיעור חיפוש ב־fMRI שאינו רלוונטי לבחינה.</p>
   </div>
@@ -2759,7 +2766,7 @@ const questionBank = {
   ]
 };
 </script>
-<script src="./questions-new.js?v=study-sheets-images-v24"></script>
+<script src="./questions-new.js?v=real-study-sheet-images-v25"></script>
 <script>
 const lesson1Questions = questionBank.lesson1;
 const lesson2Questions = questionBank.lesson2;
@@ -2791,7 +2798,7 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
   const difficultyLabels = { easy: 'רמה קלה', medium: 'רמה בינונית', hard: 'רמה קשה', all: 'כל הרמות' };
   const GENERAL_PRACTICE_SIZE = 30;
   const CLINICAL_INTEGRATION_SIZE = 21;
-  const IMAGE_IDENTIFICATION_SIZE = 32;
+  const IMAGE_IDENTIFICATION_SIZE = 24;
   const state = { lessonKey: null, sessionTitle: '', difficulty: 'all', mode: 'lesson', questions: [], currentIndex: 0, selectedIndex: null, score: 0, answered: false, wrongQuestions: [], topicStats: {} };
   const menuScreen = document.getElementById('menuScreen');
   const difficultyScreen = document.getElementById('difficultyScreen');
