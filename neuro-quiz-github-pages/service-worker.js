@@ -1,8 +1,8 @@
-const CACHE_NAME = 'neuro-quiz-v19';
+const CACHE_NAME = 'neuro-quiz-v20';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=clinical-names-v19',
+  './questions-new.js?v=strong-distractors-v20',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
