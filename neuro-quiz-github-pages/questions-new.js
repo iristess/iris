@@ -605,29 +605,42 @@
 
   const brainRegionSvg = highlight => {
     const regions = {
-      hypothalamus: '<ellipse cx="348" cy="242" rx="33" ry="20" />',
-      amygdala: '<ellipse cx="298" cy="276" rx="28" ry="20" />',
-      insula: '<ellipse cx="286" cy="214" rx="38" ry="26" transform="rotate(-18 286 214)" />',
-      hippocampus: '<path d="M310 284 C338 263 386 268 405 294 C383 303 345 310 312 304 Z" />',
-      basalGanglia: '<ellipse cx="370" cy="204" rx="48" ry="34" transform="rotate(-12 370 204)" />',
-      limbicSystem: '<path d="M238 242 C266 144 438 122 500 206 C460 195 397 189 343 213 C300 231 271 259 252 301 C238 286 232 265 238 242 Z" />',
-      pfc: '<path d="M132 160 C142 101 203 70 272 88 C246 133 238 182 246 232 C205 243 161 223 139 194 Z" />',
-      ofc: '<path d="M164 247 C194 226 232 224 269 239 C254 270 221 293 177 286 C162 276 157 262 164 247 Z" />',
-      acc: '<path d="M269 165 C325 132 430 134 489 188 C468 194 445 197 421 195 C377 161 317 160 278 190 Z" />'
+      hypothalamus: '<ellipse cx="356" cy="252" rx="31" ry="20" />',
+      amygdala: '<ellipse cx="304" cy="297" rx="27" ry="19" />',
+      insula: '<path d="M267 206 C286 181 323 180 346 201 C335 229 303 246 273 232 C263 225 260 216 267 206 Z" />',
+      hippocampus: '<path d="M315 300 C342 270 400 275 431 303 C404 323 350 327 315 316 C306 313 307 307 315 300 Z" />',
+      basalGanglia: '<path d="M352 188 C397 169 448 188 462 224 C443 256 389 267 350 243 C329 230 329 202 352 188 Z" />',
+      limbicSystem: '<path d="M239 246 C264 161 371 127 471 164 C532 187 568 232 560 277 C535 258 496 239 445 232 C385 224 319 244 270 301 C248 292 235 272 239 246 Z" />',
+      pfc: '<path d="M116 171 C123 113 178 75 253 83 C240 129 239 186 254 241 C207 258 147 233 124 203 C117 193 114 182 116 171 Z" />',
+      ofc: '<path d="M150 263 C181 239 227 238 269 253 C250 288 208 307 163 295 C146 287 141 274 150 263 Z" />',
+      acc: '<path d="M268 169 C319 130 421 124 501 172 C487 185 468 194 443 197 C393 169 328 170 279 205 Z" />'
     };
     const mark = regions[highlight] || regions.pfc;
-    return `<svg viewBox="0 0 720 420" role="img" aria-label="איור סכמטי של מוח עם אזור מסומן">
-      <rect x="0" y="0" width="720" height="420" rx="20" fill="#fbf8ff"/>
-      <text x="116" y="54" fill="#716883" font-size="18" font-weight="700">קדמי</text>
-      <text x="558" y="54" fill="#716883" font-size="18" font-weight="700">אחורי</text>
-      <path d="M122 230 C96 145 158 66 264 52 C354 39 478 64 566 139 C635 197 631 293 560 337 C486 384 343 379 238 343 C169 319 136 281 122 230 Z" fill="#f0eafd" stroke="#8b6fd8" stroke-width="4"/>
-      <path d="M516 315 C548 305 599 310 624 345 C588 363 531 358 498 331 Z" fill="#e7dcf7" stroke="#8b6fd8" stroke-width="3"/>
-      <path d="M263 188 C320 145 435 155 491 212 C437 199 330 199 275 232 Z" fill="#ffffff" stroke="#cbb9ef" stroke-width="4"/>
-      <ellipse cx="386" cy="233" rx="45" ry="28" fill="#e5dcf7" stroke="#b59ee6" stroke-width="3"/>
-      <path d="M265 250 C334 221 448 222 515 268" fill="none" stroke="#d7c7f2" stroke-width="5" stroke-linecap="round"/>
-      <g fill="#ef6fae" stroke="#9b3f70" stroke-width="4" opacity="0.92">${mark}</g>
-      <circle cx="600" cy="102" r="9" fill="#ef6fae" stroke="#9b3f70" stroke-width="3"/>
-      <text x="578" y="111" text-anchor="end" fill="#5d45a6" font-size="18" font-weight="800">האזור המסומן</text>
+    return `<svg viewBox="0 0 760 460" role="img" aria-label="איור סכמטי של מוח עם אזור מסומן">
+      <defs>
+        <filter id="regionGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#ff4f9d" flood-opacity="0.62"/>
+        </filter>
+      </defs>
+      <rect x="0" y="0" width="760" height="460" rx="22" fill="#fbf8ff"/>
+      <text x="100" y="52" fill="#716883" font-size="18" font-weight="700">קדמי</text>
+      <text x="612" y="52" fill="#716883" font-size="18" font-weight="700">אחורי</text>
+      <path d="M104 234 C80 165 112 101 178 67 C246 31 344 41 431 69 C517 96 592 147 635 211 C677 274 650 333 584 371 C512 412 388 413 281 387 C183 364 124 306 104 234 Z" fill="#f4edff" stroke="#5d45a6" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M503 336 C541 310 606 318 639 360 C603 389 529 389 486 351 Z" fill="#e6dafa" stroke="#8b6fd8" stroke-width="4"/>
+      <path d="M573 365 C588 385 612 397 642 398" fill="none" stroke="#8b6fd8" stroke-width="13" stroke-linecap="round"/>
+      <path d="M134 186 C184 128 272 103 358 115 C448 128 536 176 603 243" fill="none" stroke="#cab8ef" stroke-width="5" stroke-linecap="round"/>
+      <path d="M142 240 C211 195 300 181 385 196 C469 211 541 250 596 306" fill="none" stroke="#cab8ef" stroke-width="5" stroke-linecap="round"/>
+      <path d="M193 318 C273 288 382 287 491 318" fill="none" stroke="#cab8ef" stroke-width="5" stroke-linecap="round"/>
+      <path d="M248 84 C221 123 211 177 224 235" fill="none" stroke="#cab8ef" stroke-width="4" stroke-linecap="round"/>
+      <path d="M417 93 C391 140 385 197 402 255" fill="none" stroke="#cab8ef" stroke-width="4" stroke-linecap="round"/>
+      <path d="M552 157 C520 197 511 252 531 307" fill="none" stroke="#cab8ef" stroke-width="4" stroke-linecap="round"/>
+      <path d="M260 184 C314 143 420 151 488 206 C438 198 337 202 273 237 Z" fill="#ffffff" stroke="#bca7ea" stroke-width="5" stroke-linejoin="round"/>
+      <ellipse cx="386" cy="238" rx="50" ry="31" fill="#ded0f7" stroke="#a98dde" stroke-width="4"/>
+      <path d="M268 271 C336 239 450 240 526 286" fill="none" stroke="#bca7ea" stroke-width="7" stroke-linecap="round"/>
+      <path d="M308 304 C342 286 394 289 425 315" fill="none" stroke="#bca7ea" stroke-width="6" stroke-linecap="round"/>
+      <g fill="#ff4f9d" stroke="#7f2458" stroke-width="5" opacity="0.96" filter="url(#regionGlow)">${mark}</g>
+      <circle cx="635" cy="92" r="10" fill="#ff4f9d" stroke="#7f2458" stroke-width="3"/>
+      <text x="612" y="101" text-anchor="end" fill="#5d45a6" font-size="18" font-weight="800">האזור המסומן</text>
     </svg>`;
   };
 
