@@ -164,6 +164,19 @@
       background: var(--surface-soft);
       border: 1px solid var(--line);
     }
+    .question-visual {
+      margin: -6px 0 20px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .question-visual svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 360px;
+    }
     .options { display: grid; gap: 11px; margin-bottom: 20px; }
     .option {
       border: 1px solid var(--line);
@@ -312,6 +325,7 @@
       <button type="button" class="menu-card" data-lesson="lesson11"><span class="lesson-label">שיעור 11</span><span class="small-muted">התפתחות מערכת העצבים, פלסטיות, נוירוגנזה והזדקנות</span></button>
       <button type="button" class="menu-card" id="generalPracticeBtn"><span class="lesson-label">תרגול כללי</span><span class="small-muted">30 שאלות אקראיות חדשות מכל השיעורים בכל פעם</span></button>
       <button type="button" class="menu-card" id="clinicalIntegrationBtn"><span class="lesson-label">אינטגרציה קלינית</span><span class="small-muted">מקרים סיפוריים: תופעה פסיכולוגית, מנגנון מוחי ואזור/רשת</span></button>
+      <button type="button" class="menu-card" id="imageIdentificationBtn"><span class="lesson-label">זיהוי אזורים בתמונה</span><span class="small-muted">איורים סכמטיים: איזה אזור מוחי מסומן?</span></button>
     </div>
     <p class="small-muted">שיעור 7 לא נכלל: בסיכום הוא מסומן כשיעור חיפוש ב־fMRI שאינו רלוונטי לבחינה.</p>
   </div>
@@ -346,6 +360,7 @@
     </div>
 
     <div class="question" id="questionText"></div>
+    <div class="question-visual hidden" id="questionVisual"></div>
     <div class="options" id="optionsContainer"></div>
 
     <div class="controls">
@@ -2744,7 +2759,7 @@ const questionBank = {
   ]
 };
 </script>
-<script src="./questions-new.js?v=lesson2-distractors-v21"></script>
+<script src="./questions-new.js?v=brain-images-v22"></script>
 <script>
 const lesson1Questions = questionBank.lesson1;
 const lesson2Questions = questionBank.lesson2;
@@ -2757,6 +2772,7 @@ const lesson9Questions = questionBank.lesson9;
 const lesson10Questions = questionBank.lesson10;
 const lesson11Questions = questionBank.lesson11;
 const clinicalIntegrationQuestions = questionBank.clinicalIntegration || [];
+const brainRegionImageQuestions = questionBank.brainRegionImages || [];
 
 (function () {
   const lessons = {
@@ -2775,6 +2791,7 @@ const clinicalIntegrationQuestions = questionBank.clinicalIntegration || [];
   const difficultyLabels = { easy: 'רמה קלה', medium: 'רמה בינונית', hard: 'רמה קשה', all: 'כל הרמות' };
   const GENERAL_PRACTICE_SIZE = 30;
   const CLINICAL_INTEGRATION_SIZE = 21;
+  const IMAGE_IDENTIFICATION_SIZE = 12;
   const state = { lessonKey: null, sessionTitle: '', difficulty: 'all', mode: 'lesson', questions: [], currentIndex: 0, selectedIndex: null, score: 0, answered: false, wrongQuestions: [], topicStats: {} };
   const menuScreen = document.getElementById('menuScreen');
   const difficultyScreen = document.getElementById('difficultyScreen');
@@ -2782,6 +2799,7 @@ const clinicalIntegrationQuestions = questionBank.clinicalIntegration || [];
   const quizScreen = document.getElementById('quizScreen');
   const resultScreen = document.getElementById('resultScreen');
   const questionText = document.getElementById('questionText');
+  const questionVisual = document.getElementById('questionVisual');
   const optionsContainer = document.getElementById('optionsContainer');
   const feedbackBox = document.getElementById('feedbackBox');
   const topicBadge = document.getElementById('topicBadge');
@@ -2803,7 +2821,7 @@ const clinicalIntegrationQuestions = questionBank.clinicalIntegration || [];
   const lastSessionContent = document.getElementById('lastSessionContent');
 
   function shuffle(array) { const arr = [...array]; for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
-  function prepareQuestions(questionSet) { return shuffle(questionSet).map(q => { const indexedOptions = q.options.map((text, index) => ({ text, originalIndex: index })); const shuffledOptions = shuffle(indexedOptions); const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.correctAnswer); return { id: q.id, globalId: q.globalId, sourceLessonKey: q.sourceLessonKey, sourceLessonTitle: q.sourceLessonTitle, topic: q.topic, difficulty: q.difficulty, question: q.question, explanation: q.explanation, options: shuffledOptions.map(opt => opt.text), correctAnswer: newCorrectIndex }; }); }
+  function prepareQuestions(questionSet) { return shuffle(questionSet).map(q => { const indexedOptions = q.options.map((text, index) => ({ text, originalIndex: index })); const shuffledOptions = shuffle(indexedOptions); const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.correctAnswer); return { id: q.id, globalId: q.globalId, sourceLessonKey: q.sourceLessonKey, sourceLessonTitle: q.sourceLessonTitle, topic: q.topic, difficulty: q.difficulty, question: q.question, visualSvg: q.visualSvg, explanation: q.explanation, options: shuffledOptions.map(opt => opt.text), correctAnswer: newCorrectIndex }; }); }
   function resetTopicStats(questionSet) { state.topicStats = {}; questionSet.forEach(q => { if (!state.topicStats[q.topic]) state.topicStats[q.topic] = { correct: 0, total: 0 }; }); }
   function saveSession() { try { const payload = { lessonTitle: state.sessionTitle || lessons[state.lessonKey]?.title || '', difficulty: difficultyLabels[state.difficulty] || '', score: state.score, total: state.questions.length, when: new Date().toLocaleString('he-IL') }; localStorage.setItem('neuroQuizLastSession', JSON.stringify(payload)); } catch(e) {} }
   function loadLastSession() { try { const raw = localStorage.getItem('neuroQuizLastSession'); if (!raw) { lastSessionBox.classList.add('hidden'); return; } const data = JSON.parse(raw); lastSessionContent.textContent = data.lessonTitle + (data.difficulty ? ' · ' + data.difficulty : '') + ': ' + data.score + ' מתוך ' + data.total + ' · ' + data.when; lastSessionBox.classList.remove('hidden'); } catch(e) { lastSessionBox.classList.add('hidden'); } }
@@ -2816,7 +2834,8 @@ const clinicalIntegrationQuestions = questionBank.clinicalIntegration || [];
   function startLesson(lessonKey, difficulty, mode) { difficulty = difficulty || 'all'; mode = mode || 'full'; const lesson = lessons[lessonKey]; if (!lesson) return; state.lessonKey = lessonKey; state.difficulty = difficulty; const sourceQuestions = (mode === 'wrongOnly') ? state.wrongQuestions : (difficulty === 'all' ? lesson.questions : lesson.questions.filter(q => q.difficulty === difficulty)).map(function(q) { return tagLessonQuestion(lessonKey, q); }); if (mode !== 'wrongOnly') state.wrongQuestions = []; beginQuestionSession(sourceQuestions, lesson.title, (mode === 'wrongOnly') ? 'מצב טעויות · ' + difficultyLabels[difficulty] : difficultyLabels[difficulty], mode === 'wrongOnly' ? 'wrongOnly' : 'lesson'); }
   function startGeneralPractice() { const allQuestions = getAllLessonQuestions(); const selectedQuestions = shuffle(allQuestions).slice(0, Math.min(GENERAL_PRACTICE_SIZE, allQuestions.length)); state.lessonKey = null; state.difficulty = 'all'; state.wrongQuestions = []; beginQuestionSession(selectedQuestions, 'תרגול כללי', '30 שאלות אקראיות חדשות מכל השיעורים', 'general'); }
   function startClinicalIntegrationPractice() { const allQuestions = clinicalIntegrationQuestions.map(function(q) { return tagStandaloneQuestion('clinicalIntegration', 'אינטגרציה קלינית', q); }); const selectedQuestions = shuffle(allQuestions).slice(0, Math.min(CLINICAL_INTEGRATION_SIZE, allQuestions.length)); state.lessonKey = null; state.difficulty = 'hard'; state.wrongQuestions = []; beginQuestionSession(selectedQuestions, 'אינטגרציה קלינית', 'מקרים סיפוריים · תופעה פסיכולוגית → מנגנון מוחי', 'clinicalIntegration'); }
-  function renderQuestion() { const q = state.questions[state.currentIndex]; state.selectedIndex = null; state.answered = false; feedbackBox.className = 'feedback'; feedbackBox.innerHTML = ''; checkBtn.classList.remove('hidden'); nextBtn.classList.add('hidden'); topicBadge.textContent = q.topic; progressText.textContent = 'שאלה ' + (state.currentIndex + 1) + ' מתוך ' + state.questions.length; progressFill.style.width = ((state.currentIndex / state.questions.length) * 100) + '%'; questionText.textContent = q.question; optionsContainer.innerHTML = ''; q.options.forEach(function(option, index) { const el = document.createElement('button'); el.type = 'button'; el.className = 'option'; el.textContent = option; el.addEventListener('click', function() { if (state.answered) return; state.selectedIndex = index; document.querySelectorAll('.option').forEach(function(opt) { opt.classList.remove('selected'); }); el.classList.add('selected'); }); optionsContainer.appendChild(el); }); }
+  function startBrainRegionImagePractice() { const allQuestions = brainRegionImageQuestions.map(function(q) { return tagStandaloneQuestion('brainRegionImages', 'זיהוי אזורים בתמונה', q); }); const selectedQuestions = shuffle(allQuestions).slice(0, Math.min(IMAGE_IDENTIFICATION_SIZE, allQuestions.length)); state.lessonKey = null; state.difficulty = 'medium'; state.wrongQuestions = []; beginQuestionSession(selectedQuestions, 'זיהוי אזורים בתמונה', 'איור סכמטי · איזה אזור מסומן?', 'brainRegionImages'); }
+  function renderQuestion() { const q = state.questions[state.currentIndex]; state.selectedIndex = null; state.answered = false; feedbackBox.className = 'feedback'; feedbackBox.innerHTML = ''; checkBtn.classList.remove('hidden'); nextBtn.classList.add('hidden'); topicBadge.textContent = q.topic; progressText.textContent = 'שאלה ' + (state.currentIndex + 1) + ' מתוך ' + state.questions.length; progressFill.style.width = ((state.currentIndex / state.questions.length) * 100) + '%'; questionText.textContent = q.question; if (q.visualSvg) { questionVisual.innerHTML = q.visualSvg; questionVisual.classList.remove('hidden'); } else { questionVisual.innerHTML = ''; questionVisual.classList.add('hidden'); } optionsContainer.innerHTML = ''; q.options.forEach(function(option, index) { const el = document.createElement('button'); el.type = 'button'; el.className = 'option'; el.textContent = option; el.addEventListener('click', function() { if (state.answered) return; state.selectedIndex = index; document.querySelectorAll('.option').forEach(function(opt) { opt.classList.remove('selected'); }); el.classList.add('selected'); }); optionsContainer.appendChild(el); }); }
   function checkAnswer() { if (state.selectedIndex === null) { alert('צריך לבחור תשובה לפני שבודקים'); return; } const q = state.questions[state.currentIndex]; const optionElements = document.querySelectorAll('.option'); state.answered = true; if (!state.topicStats[q.topic]) state.topicStats[q.topic] = { correct: 0, total: 0 }; state.topicStats[q.topic].total += 1; optionElements.forEach(function(el, index) { el.classList.remove('selected'); if (index === q.correctAnswer) el.classList.add('correct'); if (index === state.selectedIndex && index !== q.correctAnswer) el.classList.add('wrong'); }); const isCorrect = state.selectedIndex === q.correctAnswer; if (isCorrect) { state.score += 1; state.topicStats[q.topic].correct += 1; feedbackBox.className = 'feedback show correct'; feedbackBox.innerHTML = '<strong>נכון מאוד.</strong><br>' + q.explanation; } else { const original = getOriginalQuestion(q); const wrongQuestion = original ? tagLessonQuestion(q.sourceLessonKey || state.lessonKey, original) : q; if (!state.wrongQuestions.some(function(item) { return item.globalId === q.globalId; })) state.wrongQuestions.push(wrongQuestion); feedbackBox.className = 'feedback show wrong'; feedbackBox.innerHTML = '<strong>לא נכון.</strong><br>התשובה הנכונה היא: <strong>' + q.options[q.correctAnswer] + '</strong>.<br>' + q.explanation; } progressFill.style.width = (((state.currentIndex + 1) / state.questions.length) * 100) + '%'; checkBtn.classList.add('hidden'); nextBtn.classList.remove('hidden'); }
   function nextQuestion() { state.currentIndex += 1; if (state.currentIndex < state.questions.length) renderQuestion(); else showResults(); }
   function showResults() { quizScreen.classList.add('hidden'); resultScreen.classList.remove('hidden'); window.scrollTo({ top: 0, behavior: 'smooth' }); const percent = Math.round((state.score / state.questions.length) * 100); scoreText.textContent = state.sessionTitle + ': ' + state.score + ' מתוך ' + state.questions.length + ' (' + percent + '%)'; let message = 'יש בסיס טוב, אבל יש עוד כמה נקודות ששווה לחזק.'; if (percent === 100) message = 'מושלם. שליטה מלאה בפרק.'; else if (percent >= 80) message = 'עבודה חזקה מאוד. את לגמרי בכיוון הנכון.'; else if (percent >= 60) message = 'יש בסיס טוב. עוד סיבוב קטן יחזק את החומר.'; else message = 'זה בדיוק השלב שבו תרגול חוזר גורם לחומר להידבק.'; summaryText.textContent = message; statsBox.innerHTML = '<div class="stat"><strong>ציון כללי</strong><br>' + state.score + ' / ' + state.questions.length + '</div>' + '<div class="stat"><strong>טעויות</strong><br>' + state.wrongQuestions.length + '</div>' + '<div class="stat"><strong>סוג תרגול</strong><br>' + state.sessionTitle + '</div>'; topicStatsBox.innerHTML = ''; Object.entries(state.topicStats).forEach(function(entry) { const topic = entry[0]; const data = entry[1]; const pct = data.total ? Math.round((data.correct / data.total) * 100) : 0; const box = document.createElement('div'); box.className = 'stat'; box.innerHTML = '<strong>' + topic + '</strong><br>' + data.correct + ' / ' + data.total + '<br>' + pct + '%'; topicStatsBox.appendChild(box); }); wrongList.innerHTML = ''; if (state.wrongQuestions.length) { state.wrongQuestions.forEach(function(q) { const li = document.createElement('li'); li.textContent = (q.sourceLessonTitle ? q.sourceLessonTitle + ': ' : '') + q.question; wrongList.appendChild(li); }); retryWrongBtn.classList.remove('hidden'); } else { const li = document.createElement('li'); li.textContent = 'אין טעויות לחזרה.'; wrongList.appendChild(li); retryWrongBtn.classList.add('hidden'); } saveSession(); loadLastSession(); }
@@ -2825,6 +2844,7 @@ const clinicalIntegrationQuestions = questionBank.clinicalIntegration || [];
   document.querySelectorAll('[data-difficulty]').forEach(function(btn) { btn.addEventListener('click', function() { startLesson(state.lessonKey, btn.dataset.difficulty); }); });
   document.getElementById('generalPracticeBtn').addEventListener('click', startGeneralPractice);
   document.getElementById('clinicalIntegrationBtn').addEventListener('click', startClinicalIntegrationPractice);
+  document.getElementById('imageIdentificationBtn').addEventListener('click', startBrainRegionImagePractice);
   document.getElementById('difficultyBackBtn').addEventListener('click', goToMenu);
   checkBtn.addEventListener('click', checkAnswer); nextBtn.addEventListener('click', nextQuestion); backBtn.addEventListener('click', goToMenu); menuFromResultsBtn.addEventListener('click', goToMenu); retryWrongBtn.addEventListener('click', function() { beginQuestionSession(state.wrongQuestions, 'תרגול טעויות', 'מצב טעויות · ' + state.sessionTitle, 'wrongOnly'); }); loadLastSession();
 
