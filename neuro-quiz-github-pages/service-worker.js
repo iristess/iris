@@ -1,9 +1,9 @@
-const CACHE_NAME = 'neuro-quiz-v31-english-credit';
+const CACHE_NAME = 'neuro-quiz-v32-localized-last-result';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=english-credit-v31',
-  './questions-en.js?v=english-credit-v31',
+  './questions-new.js?v=localized-last-result-v32',
+  './questions-en.js?v=localized-last-result-v32',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'

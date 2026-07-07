@@ -2830,8 +2830,8 @@ const questionBank = {
 };
 window.questionBank = questionBank;
 </script>
-<script src="./questions-new.js?v=english-credit-v31"></script>
-<script src="./questions-en.js?v=english-credit-v31"></script>
+<script src="./questions-new.js?v=localized-last-result-v32"></script>
+<script src="./questions-en.js?v=localized-last-result-v32"></script>
 <script>
 const lesson1Questions = questionBank.lesson1;
 const lesson2Questions = questionBank.lesson2;
@@ -3056,8 +3056,48 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
   }
   function prepareQuestions(questionSet) { return shuffle(questionSet).map(q => { const item = localizeQuestion(q); const indexedOptions = item.options.map((text, index) => ({ text, originalIndex: index })); const shuffledOptions = shuffle(indexedOptions); const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === item.correctAnswer); return { id: item.id, globalId: item.globalId, sourceLessonKey: item.sourceLessonKey, sourceLessonTitle: item.sourceLessonTitle, topic: item.topic, difficulty: item.difficulty, question: item.question, visualSvg: item.visualSvg, explanation: item.explanation, options: shuffledOptions.map(opt => opt.text), correctAnswer: newCorrectIndex }; }); }
   function resetTopicStats(questionSet) { state.topicStats = {}; questionSet.forEach(q => { const item = localizeQuestion(q); if (!state.topicStats[item.topic]) state.topicStats[item.topic] = { correct: 0, total: 0 }; }); }
-  function saveSession() { try { const payload = { lessonTitle: state.sessionTitle || getLessonTitle(state.lessonKey) || '', difficulty: getDifficultyLabel(state.difficulty) || '', score: state.score, total: state.questions.length, when: new Date().toLocaleString(currentLanguage === 'he' ? 'he-IL' : 'en-US'), language: currentLanguage }; localStorage.setItem('neuroQuizLastSession', JSON.stringify(payload)); } catch(e) {} }
-  function loadLastSession() { try { const raw = localStorage.getItem('neuroQuizLastSession'); if (!raw) { lastSessionBox.classList.add('hidden'); return; } const data = JSON.parse(raw); const scoreConnector = currentLanguage === 'he' ? ' מתוך ' : ' out of '; lastSessionContent.textContent = data.lessonTitle + (data.difficulty ? ' · ' + data.difficulty : '') + ': ' + data.score + scoreConnector + data.total + ' · ' + data.when; lastSessionBox.classList.remove('hidden'); } catch(e) { lastSessionBox.classList.add('hidden'); } }
+  function inferLessonKeyFromTitle(title) {
+    return Object.keys(lessonCopy.he).find(function(key) {
+      return lessonCopy.he[key].title === title || lessonCopy.en[key].title === title;
+    });
+  }
+  function getStoredSessionTitle(data) {
+    const lessonKey = data.lessonKey || inferLessonKeyFromTitle(data.lessonTitle);
+    if (lessonKey) return getLessonTitle(lessonKey);
+    const title = data.lessonTitle || '';
+    const knownTitles = {
+      'תרגול כללי': t('generalPracticeTitle'),
+      'General practice': t('generalPracticeTitle'),
+      'אינטגרציה קלינית': t('clinicalIntegrationTitle'),
+      'Clinical integration': t('clinicalIntegrationTitle'),
+      'זיהוי אזורים בתמונה': t('imageIdentificationTitle'),
+      'Image identification': t('imageIdentificationTitle'),
+      'תרגול רק על הטעויות': t('retryWrong'),
+      'Practice mistakes only': t('retryWrong')
+    };
+    if (data.mode === 'general') return t('generalPracticeTitle');
+    if (data.mode === 'clinicalIntegration') return t('clinicalIntegrationTitle');
+    if (data.mode === 'brainRegionImages') return t('imageIdentificationTitle');
+    if (data.mode === 'wrongOnly') return t('retryWrong');
+    return knownTitles[title] || title;
+  }
+  function getStoredDifficultyLabel(data) {
+    const difficultyMap = {
+      'רמה קלה': 'easy',
+      'Easy': 'easy',
+      'רמה בינונית': 'medium',
+      'Medium': 'medium',
+      'רמה קשה': 'hard',
+      'Hard': 'hard',
+      'כל הרמות': 'all',
+      'All levels': 'all'
+    };
+    const isDifficultyKey = Boolean(difficultyLabels.he[data.difficulty] || difficultyLabels.en[data.difficulty]);
+    const difficultyKey = isDifficultyKey ? data.difficulty : difficultyMap[data.difficulty];
+    return difficultyKey ? getDifficultyLabel(difficultyKey) : (data.difficulty || '');
+  }
+  function saveSession() { try { const now = new Date(); const payload = { lessonKey: state.lessonKey, lessonTitle: state.sessionTitle || getLessonTitle(state.lessonKey) || '', mode: state.mode, difficulty: state.difficulty, score: state.score, total: state.questions.length, when: now.toLocaleString(currentLanguage === 'he' ? 'he-IL' : 'en-US'), whenISO: now.toISOString(), language: currentLanguage }; localStorage.setItem('neuroQuizLastSession', JSON.stringify(payload)); } catch(e) {} }
+  function loadLastSession() { try { const raw = localStorage.getItem('neuroQuizLastSession'); if (!raw) { lastSessionBox.classList.add('hidden'); return; } const data = JSON.parse(raw); const scoreConnector = currentLanguage === 'he' ? ' מתוך ' : ' out of '; const title = getStoredSessionTitle(data); const difficulty = getStoredDifficultyLabel(data); const when = data.whenISO ? new Date(data.whenISO).toLocaleString(currentLanguage === 'he' ? 'he-IL' : 'en-US') : data.when; lastSessionContent.textContent = title + (difficulty ? ' · ' + difficulty : '') + ': ' + data.score + scoreConnector + data.total + ' · ' + when; lastSessionBox.classList.remove('hidden'); } catch(e) { lastSessionBox.classList.add('hidden'); } }
   function tagLessonQuestion(lessonKey, question) { return Object.assign({}, question, { globalId: lessonKey + ':' + question.id, sourceLessonKey: lessonKey, sourceLessonTitle: getLessonTitle(lessonKey) }); }
   function tagStandaloneQuestion(bankKey, bankTitle, question) { return Object.assign({}, question, { globalId: bankKey + ':' + question.id, sourceLessonKey: null, sourceLessonTitle: bankTitle }); }
   function getAllLessonQuestions() { return Object.keys(lessons).flatMap(function(lessonKey) { return lessons[lessonKey].questions.map(function(q) { return tagLessonQuestion(lessonKey, q); }); }); }
