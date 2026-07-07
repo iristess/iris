@@ -464,9 +464,9 @@
 
   <footer class="creator-credit">
     <span>
-      <span class="credit-source">השאלות נלקחו מהסיכום המאוחד של איריס ויעל</span>
+      <span class="credit-source" data-i18n="creditSource">השאלות נלקחו מהסיכום המאוחד של איריס ויעל</span>
       <span class="credit-divider">|</span>
-      <span class="credit-name">Prepared for practice by <strong>Iris Tesler</strong></span>
+      <span class="credit-name" data-i18n-html="creditName">נערך לתרגול על ידי <strong>איריס טסלר</strong></span>
     </span>
   </footer>
 
@@ -2830,8 +2830,8 @@ const questionBank = {
 };
 window.questionBank = questionBank;
 </script>
-<script src="./questions-new.js?v=full-english-translations-v30"></script>
-<script src="./questions-en.js?v=full-english-translations-v30"></script>
+<script src="./questions-new.js?v=english-credit-v31"></script>
+<script src="./questions-en.js?v=english-credit-v31"></script>
 <script>
 const lesson1Questions = questionBank.lesson1;
 const lesson2Questions = questionBank.lesson2;
@@ -2904,6 +2904,8 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
       generalBadge: '30 שאלות אקראיות חדשות מכל השיעורים',
       clinicalBadge: 'מקרים סיפוריים · תופעה פסיכולוגית → מנגנון מוחי',
       imageBadge: 'איורים לפי דפי הלמידה · מבנים, מסילות וסולקוסים',
+      creditSource: 'השאלות נלקחו מהסיכום המאוחד של איריס ויעל',
+      creditName: 'נערך לתרגול על ידי <strong>איריס טסלר</strong>',
     },
     en: {
       appTitle: 'Neuroanatomy Question Bank',
@@ -2958,6 +2960,8 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
       generalBadge: '30 new random questions from all lessons',
       clinicalBadge: 'Clinical vignettes · psychological phenomenon → neural mechanism',
       imageBadge: 'Study-sheet illustrations · structures, tracts, and sulci',
+      creditSource: 'Questions are based on the unified summary by Iris and Yael',
+      creditName: 'Prepared for practice by <strong>Iris Tesler</strong>',
     }
   };
 
@@ -3076,6 +3080,7 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
     document.documentElement.dir = currentLanguage === 'he' ? 'rtl' : 'ltr';
     document.title = t('appTitle');
     document.querySelectorAll('[data-i18n]').forEach(function(el) { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el) { el.innerHTML = t(el.dataset.i18nHtml); });
     document.querySelectorAll('[data-lesson-title]').forEach(function(el) { el.textContent = getLessonTitle(el.dataset.lessonTitle); });
     document.querySelectorAll('[data-lesson-description]').forEach(function(el) { el.textContent = getLessonDescription(el.dataset.lessonDescription); });
     document.querySelectorAll('[data-language]').forEach(function(btn) { btn.classList.toggle('active', btn.dataset.language === currentLanguage); });
