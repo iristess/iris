@@ -1,8 +1,9 @@
-const CACHE_NAME = 'neuro-quiz-v28';
+const CACHE_NAME = 'neuro-quiz-v30-full-english-translations';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=thalamic-color-labels-v28',
+  './questions-new.js?v=full-english-translations-v30',
+  './questions-en.js?v=full-english-translations-v30',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
