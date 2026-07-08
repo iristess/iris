@@ -1,9 +1,9 @@
-const CACHE_NAME = 'neuro-quiz-v33-credit-wording';
+const CACHE_NAME = 'neuro-quiz-v34-rtl-credit-order';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=credit-wording-v33',
-  './questions-en.js?v=credit-wording-v33',
+  './questions-new.js?v=rtl-credit-order-v34',
+  './questions-en.js?v=rtl-credit-order-v34',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'

@@ -329,9 +329,12 @@
       color: #b7a6d9;
     }
     .creator-credit .credit-name {
-      direction: ltr;
+      direction: rtl;
       unicode-bidi: isolate;
       white-space: nowrap;
+    }
+    html[dir="ltr"] .creator-credit .credit-name {
+      direction: ltr;
     }
     .creator-credit strong {
       color: var(--primary-dark);
@@ -2830,8 +2833,8 @@ const questionBank = {
 };
 window.questionBank = questionBank;
 </script>
-<script src="./questions-new.js?v=credit-wording-v33"></script>
-<script src="./questions-en.js?v=credit-wording-v33"></script>
+<script src="./questions-new.js?v=rtl-credit-order-v34"></script>
+<script src="./questions-en.js?v=rtl-credit-order-v34"></script>
 <script>
 const lesson1Questions = questionBank.lesson1;
 const lesson2Questions = questionBank.lesson2;
