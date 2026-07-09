@@ -1,9 +1,10 @@
-const CACHE_NAME = 'neuro-quiz-v34-rtl-credit-order';
+const CACHE_NAME = 'neuro-quiz-v36-question-quality';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=rtl-credit-order-v34',
-  './questions-en.js?v=rtl-credit-order-v34',
+  './questions-new.js?v=question-quality-v36',
+  './questions-en.js?v=question-quality-v36',
+  './questions-quality.js?v=question-quality-v36',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
