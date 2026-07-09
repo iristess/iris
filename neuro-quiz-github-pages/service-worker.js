@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neuro-quiz-v45-compact-home-dark-options';
+const CACHE_NAME = 'neuro-quiz-v46-distinct-question-card';
 const APP_SHELL = [
   './',
   './index.html',
