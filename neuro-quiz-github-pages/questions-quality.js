@@ -373,6 +373,16 @@
     });
   };
 
+  const keepHebrew = function (lessonKey, id) {
+    const item = questionBank[lessonKey] && questionBank[lessonKey].find(function (question) { return question.id === id; });
+    if (!item) return {};
+    return {
+      question: item.question,
+      options: item.options,
+      explanation: item.explanation
+    };
+  };
+
   revise('lesson1', 19, {
     question: 'מה DTI מעריך?',
     options: [
@@ -411,6 +421,186 @@
     question: 'Which neurotransmitter do pyramidal cells usually use?',
     options: ['Glutamate', 'GABA', 'Acetylcholine', 'Dopamine'],
     explanation: 'Pyramidal cells are usually excitatory glutamatergic neurons.'
+  });
+
+  revise('lesson1', 2, {
+    question: questionBank.lesson1.find(function (question) { return question.id === 2; }).question,
+    options: questionBank.lesson1.find(function (question) { return question.id === 2; }).options,
+    explanation: questionBank.lesson1.find(function (question) { return question.id === 2; }).explanation
+  }, {
+    question: 'What emphasis did Wernicke add after Broca?',
+    options: [
+      'Connections between regions matter, not only a single focus',
+      'Language function is localized only in one frontal speech-production center',
+      'The whole cortex participates equally in language comprehension',
+      'Brain function can be inferred from skull bumps'
+    ],
+    explanation: 'Wernicke emphasized that circuits and connections between regions influence function.'
+  });
+
+  revise('lesson1', 3, {
+    question: questionBank.lesson1.find(function (question) { return question.id === 3; }).question,
+    options: questionBank.lesson1.find(function (question) { return question.id === 3; }).options,
+    explanation: questionBank.lesson1.find(function (question) { return question.id === 3; }).explanation
+  }, {
+    question: 'What characterizes the contemporary network approach?',
+    options: [
+      'A function is understood as a network of several interacting regions',
+      'Each complex function is assigned to one isolated cortical point',
+      'Connections are ignored if the local region is structurally intact',
+      'All brain regions contribute equally to every task'
+    ],
+    explanation: 'The document emphasizes a middle path: different regions work together as a network that supports a function.'
+  });
+
+  revise('lesson1', 5, {
+    question: questionBank.lesson1.find(function (question) { return question.id === 5; }).question,
+    options: questionBank.lesson1.find(function (question) { return question.id === 5; }).options,
+    explanation: questionBank.lesson1.find(function (question) { return question.id === 5; }).explanation
+  }, {
+    question: 'Which section is especially useful for lateral regions such as the basal ganglia?',
+    options: ['Coronal','Sagittal','Axial','Oblique'],
+    explanation: 'The document says that the coronal section is useful for lateral regions such as the basal ganglia.'
+  });
+
+  revise('lesson1', 6, {
+    question: questionBank.lesson1.find(function (question) { return question.id === 6; }).question,
+    options: questionBank.lesson1.find(function (question) { return question.id === 6; }).options,
+    explanation: questionBank.lesson1.find(function (question) { return question.id === 6; }).explanation
+  }, {
+    question: 'What is true about the meaning of dorsal above the midbrain compared with in the brainstem?',
+    options: [
+      'Above the midbrain, dorsal points toward the skull; in the brainstem, it points posteriorly',
+      'Dorsal always means anterior throughout the entire nervous system',
+      'Dorsal always means inferior throughout the entire nervous system',
+      'The term dorsal is used only for spinal cord anatomy'
+    ],
+    explanation: 'Because the neural axis bends, directional terms change meaning between the forebrain and the brainstem.'
+  });
+
+  revise('lesson1', 10, {
+    question: questionBank.lesson1.find(function (question) { return question.id === 10; }).question,
+    options: questionBank.lesson1.find(function (question) { return question.id === 10; }).options,
+    explanation: questionBank.lesson1.find(function (question) { return question.id === 10; }).explanation
+  }, {
+    question: 'Which fissure is the prominent one between the two hemispheres?',
+    options: ['The longitudinal fissure','The Sylvian fissure','The calcarine sulcus','The central sulcus'],
+    explanation: 'The longitudinal fissure is the groove between the two hemispheres.'
+  });
+
+  revise('lesson1', 12, {
+    question: questionBank.lesson1.find(function (question) { return question.id === 12; }).question,
+    options: questionBank.lesson1.find(function (question) { return question.id === 12; }).options,
+    explanation: questionBank.lesson1.find(function (question) { return question.id === 12; }).explanation
+  }, {
+    question: 'Which stain highlights cell bodies and cortical layers?',
+    options: ['Nissl','Golgi','Weigert myelin stain','Tract tracer injection'],
+    explanation: 'Nissl staining mainly stains cell bodies, so it is useful for identifying layers.'
+  });
+
+  revise('lesson1', 17, {
+    question: 'מה עושה TMS בהקשר של לזיה זמנית?',
+    options: [
+      'משבש או מווסת זמנית פעילות באזור קורטיקלי ממוקד באמצעות שדה מגנטי',
+      'מראה לאן מגיע סמן שהוזרק לנוירון או לאקסון',
+      'מודד ישירות פוטנציאלי פעולה של נוירון יחיד',
+      'ממפה דיפוזיית מים כדי להסיק על ארגון חומר לבן'
+    ],
+    explanation: 'TMS יכול להפריע או לווסת זמנית פעילות באזור קורטיקלי ממוקד, ולכן הוא משמש לבדיקת תרומה סיבתית של אזור לתפקוד בלי לתאר זאת כ״שיתוק״ של אזור.'
+  }, {
+    question: 'What does TMS do in the context of a temporary lesion?',
+    options: [
+      'Temporarily perturbs or modulates activity in a targeted cortical region using a magnetic field',
+      'Shows where a tracer injected into a neuron or axon arrives',
+      'Directly records action potentials from a single neuron',
+      'Maps water diffusion to infer white-matter organization'
+    ],
+    explanation: 'TMS can transiently perturb or modulate activity in a targeted cortical region, allowing causal testing without implying that the region is fully shut down.'
+  });
+
+  revise('lesson1', 24, {
+    question: 'היכן נמצאים תאי פורקינייה?',
+    options: [
+      'בקורטקס הצרבלרי',
+      'בפורמציה ההיפוקמפלית',
+      'בסטריאטום הדורסלי',
+      'בקרן הקדמית של חוט השדרה'
+    ],
+    explanation: 'תאי פורקינייה הם תאי פלט גדולים של הקורטקס הצרבלרי.'
+  }, {
+    question: 'Where are Purkinje cells located?',
+    options: [
+      'In the cerebellar cortex',
+      'In the hippocampal formation',
+      'In the dorsal striatum',
+      'In the anterior horn of the spinal cord'
+    ],
+    explanation: 'Purkinje cells are large output neurons of the cerebellar cortex.'
+  });
+
+  revise('lesson1', 26, {
+    question: questionBank.lesson1.find(function (question) { return question.id === 26; }).question,
+    options: questionBank.lesson1.find(function (question) { return question.id === 26; }).options,
+    explanation: questionBank.lesson1.find(function (question) { return question.id === 26; }).explanation
+  }, {
+    question: 'Which cell produces myelin in the central nervous system?',
+    options: ['Oligodendrocyte','Schwann cell','Astrocyte','Microglia'],
+    explanation: 'Oligodendrocytes wrap CNS axons in myelin and speed conduction.'
+  });
+
+  revise('lesson2', 33, keepHebrew('lesson2', 33), {
+    question: 'Where is layer IV located and why is it important?',
+    options: [
+      'Within the cortex, as an input layer that is especially prominent in sensory areas',
+      'In the white matter below cortex, as the main commissural tract',
+      'In the thalamus, as the output layer of relay nuclei',
+      'In the cerebellar cortex, as the Purkinje-cell layer'
+    ],
+    explanation: 'Layer IV is a cortical input layer and is particularly prominent in primary sensory cortices.'
+  });
+
+  revise('lesson3', 19, keepHebrew('lesson3', 19), {
+    question: 'Which Brodmann areas are commonly associated with ventromedial prefrontal cortex in the summary?',
+    options: [
+      '10, 14, 25, and part of 32',
+      '9 and 46',
+      '17 and 18',
+      '41 and 42'
+    ],
+    explanation: 'The summary links vmPFC mainly with medial/orbital prefrontal areas such as 10, 14, 25, and part of 32.'
+  });
+
+  revise('lesson3', 31, keepHebrew('lesson3', 31), {
+    question: 'A student cannot keep rules in mind while switching between two tasks. Which network is most relevant?',
+    options: [
+      'Prefrontal control networks, especially DLPFC and ACC',
+      'Primary visual cortex and LGN',
+      'Hippocampal place-cell networks',
+      'Posterior pituitary and PVN'
+    ],
+    explanation: 'Flexible rule maintenance and conflict monitoring are strongly associated with prefrontal control networks, especially DLPFC and ACC.'
+  });
+
+  revise('lesson3', 32, keepHebrew('lesson3', 32), {
+    question: 'A patient repeatedly chooses immediate rewards despite clear future losses. Which prefrontal region is most relevant?',
+    options: [
+      'OFC or vmPFC',
+      'Primary visual cortex',
+      'Suprachiasmatic nucleus',
+      'VPL thalamus'
+    ],
+    explanation: 'OFC/vmPFC regions are central for value-based decision making and linking choices with future outcomes.'
+  });
+
+  revise('lesson3', 33, keepHebrew('lesson3', 33), {
+    question: 'Where is the prefrontal cortex located?',
+    options: [
+      'In the anterior part of the frontal lobe',
+      'In the medial temporal lobe',
+      'At the occipital pole around V1',
+      'In the dorsal brainstem'
+    ],
+    explanation: 'The prefrontal cortex occupies the anterior part of the frontal lobe.'
   });
 
   revise('lesson4', 18, {
@@ -453,6 +643,17 @@
     explanation: 'Dentate-gyrus neurogenesis is well established in animal models. Its extent and persistence in adult humans remain scientifically debated.'
   });
 
+  revise('lesson5', 2, keepHebrew('lesson5', 2), {
+    question: 'Which cortical regions are located near the hippocampus and feed information into it?',
+    options: [
+      'Parahippocampal, entorhinal, and perirhinal cortex',
+      'Primary visual, primary auditory, and primary motor cortex',
+      'OFC, DLPFC, and primary somatosensory cortex',
+      'LGN, MGN, and VPL thalamic nuclei'
+    ],
+    explanation: 'The parahippocampal, entorhinal, and perirhinal cortices sit near the hippocampus and provide important input routes into the hippocampal formation.'
+  });
+
   revise('lesson8', 4, {
     question: 'מהו סדר ההפרשות בציר HPA?',
     options: ['CRH → ACTH → קורטיזול','ACTH → CRH → קורטיזול','קורטיזול → CRH → ACTH','גרלין → לפטין → קורטיזול'],
@@ -461,6 +662,45 @@
     question: 'What is the secretion sequence in the HPA axis?',
     options: ['CRH → ACTH → cortisol','ACTH → CRH → cortisol','Cortisol → CRH → ACTH','Ghrelin → leptin → cortisol'],
     explanation: 'The hypothalamus releases CRH, the anterior pituitary follows with ACTH, and the adrenal cortex then releases cortisol.'
+  });
+
+  revise('lesson8', 5, keepHebrew('lesson8', 5), {
+    question: 'Which hypothalamic region is related to promoting eating?',
+    options: ['LHA','VMH','Arcuate nucleus','PVN'],
+    explanation: 'The lateral hypothalamic area is classically associated with food seeking and eating, but it is part of broader hunger–satiety circuitry rather than a single isolated hunger center.'
+  });
+
+  revise('lesson8', 6, keepHebrew('lesson8', 6), {
+    question: 'Damage to the VMH is classically expected to cause what?',
+    options: [
+      'Overeating and obesity',
+      'Reduced food seeking or aphagia',
+      'A complete inability to sense stomach stretch',
+      'Loss of circadian light entrainment'
+    ],
+    explanation: 'The VMH is classically associated with satiety-related regulation; damage may contribute to hyperphagia within a broader hypothalamic and hormonal network.'
+  });
+
+  revise('lesson8', 12, keepHebrew('lesson8', 12), {
+    question: 'Why are there two stages in the hypothalamus–anterior pituitary axis?',
+    options: [
+      'To allow amplification, timing, and precise feedback control',
+      'To let the posterior pituitary release oxytocin directly',
+      'To bypass hypothalamic regulation of target glands',
+      'To make target glands release hormones without feedback'
+    ],
+    explanation: 'The extra endocrine stage allows small hypothalamic signals to regulate pituitary output, target-gland secretion, and feedback loops.'
+  });
+
+  revise('lesson8', 13, keepHebrew('lesson8', 13), {
+    question: 'What is the immediate role of cortisol during short-term stress?',
+    options: [
+      'To make energy available and temporarily suppress non-urgent processes',
+      'To store glucose and lower cardiovascular readiness immediately',
+      'To increase reproductive investment during acute threat',
+      'To shut down all immune activity permanently'
+    ],
+    explanation: 'In acute stress, cortisol helps mobilize energy and temporarily shifts resources away from processes that are less urgent for immediate coping.'
   });
 
   revise('lesson8', 14, {
@@ -483,6 +723,138 @@
     explanation: 'PTSD and chronic stress have been associated with hippocampal, prefrontal, and amygdala alterations, but correlational findings alone cannot determine whether these are vulnerability factors, consequences, or both.'
   });
 
+  revise('lesson8', 15, keepHebrew('lesson8', 15), {
+    question: 'What is the difference between leptin and ghrelin?',
+    options: [
+      'Leptin promotes satiety and ghrelin promotes hunger',
+      'Leptin and ghrelin both signal low energy stores',
+      'Leptin mainly triggers food seeking and ghrelin mainly signals stored fat',
+      'Both act only in the brainstem and bypass hypothalamic circuits'
+    ],
+    explanation: 'Leptin is generally associated with satiety and energy stores, while ghrelin is associated with hunger signaling.'
+  });
+
+  revise('lesson8', 16, keepHebrew('lesson8', 16), {
+    question: 'How do GLP-1-like weight-loss drugs reduce appetite?',
+    options: [
+      'They activate satiety-related circuits and reduce hunger',
+      'They imitate ghrelin and strengthen food-seeking signals',
+      'They act only in the stomach and have no brain effects',
+      'They directly damage the VMH to prevent eating'
+    ],
+    explanation: 'GLP-1-based treatments influence metabolic and satiety-related signaling, including brain circuits involved in appetite regulation.'
+  });
+
+  revise('lesson8', 17, keepHebrew('lesson8', 17), {
+    question: 'What does entrainment mean in circadian rhythm?',
+    options: [
+      'Calibrating the internal clock to the external light–dark cycle',
+      'Suppressing all hormone secretion during daylight',
+      'Moving visual information from retina to primary visual cortex',
+      'Resetting hunger and satiety nuclei without light input'
+    ],
+    explanation: 'Entrainment is the alignment of the endogenous clock, especially the SCN, with environmental timing cues such as light.'
+  });
+
+  revise('lesson8', 18, keepHebrew('lesson8', 18), {
+    question: 'Why is the vagus important beyond motor control?',
+    options: [
+      'It carries two-way information between the brain and organs and participates in autonomic regulation',
+      'It is only a motor nerve for voluntary limb movement',
+      'It carries visual information from retina to thalamus',
+      'It replaces hypothalamic endocrine output during stress'
+    ],
+    explanation: 'The vagus carries visceral afferent and efferent information and is a major route for brain–body autonomic regulation.'
+  });
+
+  revise('lesson8', 19, keepHebrew('lesson8', 19), {
+    question: 'Why can damage to a small brainstem region be life-threatening?',
+    options: [
+      'The area is packed with pathways and nuclei essential for breathing, arousal, and autonomic functions',
+      'It contains only redundant sensory relay nuclei',
+      'It affects only appetite while sparing arousal and breathing',
+      'It changes cortical layer IV without affecting vital functions'
+    ],
+    explanation: 'The brainstem contains dense pathways and nuclei for vital functions, so small lesions can have large consequences.'
+  });
+
+  revise('lesson8', 20, keepHebrew('lesson8', 20), {
+    question: 'What do many monoamine nuclei in the brainstem have in common?',
+    options: [
+      'A relatively small nucleus sends diffuse projections and influences many regions',
+      'They are large cortical columns with strictly local projections',
+      'They release posterior-pituitary hormones into blood',
+      'They relay one sensory modality to one primary cortex only'
+    ],
+    explanation: 'Monoamine systems such as locus coeruleus and raphe nuclei arise from relatively small nuclei with widespread projections that influence arousal, mood, attention, and regulation.'
+  });
+
+  revise('lesson8', 21, keepHebrew('lesson8', 21), {
+    question: 'A tumor that disconnects the portal system to the anterior pituitary would directly impair which mechanism?',
+    options: [
+      'Transfer of releasing hormones from the hypothalamus to anterior pituitary cells',
+      'Direct axonal release of oxytocin from posterior pituitary terminals',
+      'Feedback from cortisol to the hippocampus without pituitary involvement',
+      'Vagal afferent signaling from internal organs to the brainstem'
+    ],
+    explanation: 'The portal system carries hypothalamic releasing hormones to endocrine cells in the anterior pituitary.'
+  });
+
+  revise('lesson8', 23, keepHebrew('lesson8', 23), {
+    question: 'How can chronic activation of the HPA axis disrupt the reproductive system?',
+    options: [
+      'Hormonal axes are close and influence each other, and stress can suppress gonadotropic signals',
+      'The HPA axis directly turns the ovaries or testes into adrenal tissue',
+      'Cortisol permanently increases all reproductive hormones during threat',
+      'Stress affects reproduction only through voluntary behavior, not endocrine regulation'
+    ],
+    explanation: 'Hypothalamic and pituitary axes interact; prolonged stress signaling can reduce reproductive-axis activity.'
+  });
+
+  revise('lesson8', 25, keepHebrew('lesson8', 25), {
+    question: 'A patient does not initiate eating even though satiety-related signaling is intact. Which lesion fits best?',
+    options: [
+      'Damage to the LHA',
+      'Damage to VMH satiety-related circuits',
+      'Overactivation of arcuate hunger signaling',
+      'A lesion limited to the SCN circadian clock'
+    ],
+    explanation: 'The LHA is classically associated with food seeking and feeding motivation; damage can reduce initiation of eating.'
+  });
+
+  revise('lesson8', 26, keepHebrew('lesson8', 26), {
+    question: 'A blind person without light input to the non-visual retinal pathway develops a sleep time that shifts later each day. What is the explanation?',
+    options: [
+      'The endogenous clock is not entrained and therefore runs on a cycle that is not exactly 24 hours',
+      'The SCN receives too much visual-cortex feedback and shortens the day',
+      'The HPA axis directly replaces light as the clock signal',
+      'The vagus nerve resets the circadian rhythm once per day'
+    ],
+    explanation: 'Without retinal light information reaching the circadian system, the internal clock may free-run rather than lock to the 24-hour day.'
+  });
+
+  revise('lesson8', 27, keepHebrew('lesson8', 27), {
+    question: 'How does the hypothalamus translate emotion into a bodily response?',
+    options: [
+      'It integrates limbic input and activates autonomic and endocrine output through the brainstem and pituitary',
+      'It sends all emotional information directly to V1 for visual interpretation',
+      'It stores episodic memory before the hippocampus receives input',
+      'It controls only voluntary skeletal movement through M1'
+    ],
+    explanation: 'The hypothalamus links limbic appraisal with autonomic and endocrine output, helping turn emotional states into bodily responses.'
+  });
+
+  revise('lesson8', 28, keepHebrew('lesson8', 28), {
+    question: 'Damage to the ascending reticular activating system is expected first and foremost to cause what?',
+    options: [
+      'Severe reduction in arousal up to coma',
+      'Loss of only appetite while consciousness remains unchanged',
+      'Selective inability to release oxytocin with normal wakefulness',
+      'A mild shift in circadian phase without arousal change'
+    ],
+    explanation: 'The ascending reticular activating system is essential for maintaining arousal and wakefulness.'
+  });
+
   revise('lesson8', 29, {
     question: 'איזה מנגנון עשוי לתרום למעגל שמתחזק תסמיני PTSD?',
     options: [
@@ -503,6 +875,17 @@
     explanation: 'PTSD models emphasize imbalance among hippocampal context, prefrontal regulation, and amygdala threat responses. The mapping is not one-to-one, and causal direction may vary.'
   });
 
+  revise('lesson8', 30, keepHebrew('lesson8', 30), {
+    question: 'Why are the mammillary bodies classified as part of the hypothalamus even though they participate in memory?',
+    options: [
+      'Anatomical and developmental classification does not necessarily match the single function of a structure',
+      'They are not part of the hypothalamus because memory always belongs to cortex',
+      'They are classified by neurotransmitter rather than location or development',
+      'They are brainstem nuclei because all memory circuits pass through the brainstem'
+    ],
+    explanation: 'The mammillary bodies are anatomically part of the hypothalamus and also participate in memory-related circuitry such as the Papez circuit.'
+  });
+
   revise('lesson8', 32, {
     question: 'מטופל אוכל ללא תחושת שובע ברורה אחרי פגיעה היפותלמית ממוקדת. איזה אזור מתאים ביותר לפי המודל הקלאסי של מעגלי רעב־שובע?',
     options: ['VMH','LHA','SCN','PCC'],
@@ -511,6 +894,292 @@
     question: 'A patient eats without a clear feeling of satiety after a focal hypothalamic lesion. Which region best fits the classical hunger–satiety model?',
     options: ['VMH','LHA','SCN','PCC'],
     explanation: 'The VMH was classically associated with satiety-related circuits. More careful wording treats it as one part of broader hypothalamic and hormonal networks rather than a single isolated satiety center.'
+  });
+
+  revise('lesson9', 2, keepHebrew('lesson9', 2), {
+    question: 'What does the BOLD signal measure indirectly?',
+    options: [
+      'Changes in oxygenation and blood flow related to neural activity',
+      'Action potentials from a single identified neuron',
+      'The exact number of axons in a white-matter tract',
+      'The concentration of cortisol in the bloodstream'
+    ],
+    explanation: 'BOLD is an indirect hemodynamic measure: it reflects local blood oxygenation and flow changes related to neural activity.'
+  });
+
+  revise('lesson9', 3, keepHebrew('lesson9', 3), {
+    question: 'When is the default mode network relatively more active?',
+    options: [
+      'During rest and internal processing',
+      'Only during primary visual stimulation',
+      'Only during reflexive spinal responses',
+      'Only during deep coma'
+    ],
+    explanation: 'The DMN is relatively active during rest, mind-wandering, self-related thought, and other internally oriented processing.'
+  });
+
+  revise('lesson9', 4, keepHebrew('lesson9', 4), {
+    question: 'Which central regions belong to the DMN?',
+    options: [
+      'mPFC, PCC/precuneus, and inferior parietal regions',
+      'Primary motor cortex, cerebellar cortex, and spinal anterior horn',
+      'SCN, VMH, and LHA',
+      'V1, LGN, and retina'
+    ],
+    explanation: 'The DMN includes anterior and posterior midline hubs such as mPFC and PCC/precuneus, along with inferior parietal regions.'
+  });
+
+  revise('lesson9', 5, keepHebrew('lesson9', 5), {
+    question: 'What is the central role of the salience network?',
+    options: [
+      'Detecting important information and helping switch between internal and external processing',
+      'Maintaining self-related thought without interruption',
+      'Holding rules and goals during demanding tasks',
+      'Encoding primary visual features in retinotopic maps'
+    ],
+    explanation: 'The salience network helps identify relevant events and coordinate switching between networks such as the DMN and CEN.'
+  });
+
+  revise('lesson9', 6, keepHebrew('lesson9', 6), {
+    question: 'Which function is associated with the Central Executive Network?',
+    options: [
+      'Working memory, planning, and control',
+      'Resting self-referential thought',
+      'Bottom-up capture by unexpected stimuli',
+      'Primary processing of retinal input'
+    ],
+    explanation: 'The CEN is recruited during goal-directed control, working memory, planning, and task performance.'
+  });
+
+  revise('lesson9', 7, keepHebrew('lesson9', 7), {
+    question: 'What characterizes the DAN?',
+    options: [
+      'Top-down allocation of attention according to a goal',
+      'Bottom-up reorienting to a surprising stimulus',
+      'Resting autobiographical thought',
+      'Endocrine feedback through the pituitary'
+    ],
+    explanation: 'The dorsal attention network supports voluntary, goal-directed allocation of attention.'
+  });
+
+  revise('lesson9', 8, keepHebrew('lesson9', 8), {
+    question: 'What characterizes the VAN?',
+    options: [
+      'Bottom-up attention to a salient or unexpected event',
+      'Sustained top-down attention to a planned target',
+      'Resting self-referential processing',
+      'Thalamic relay of visual input to V1'
+    ],
+    explanation: 'The ventral attention network is recruited when salient or unexpected information redirects attention.'
+  });
+
+  revise('lesson9', 10, keepHebrew('lesson9', 10), {
+    question: 'Does functional connectivity require a direct anatomical connection?',
+    options: [
+      'No, correlation can also arise through indirect or shared influences',
+      'Yes, there must always be one direct axon between the regions',
+      'Yes, but only if both regions are in the same cortical lobe',
+      'No, because functional connectivity is the same thing as hormone secretion'
+    ],
+    explanation: 'Functional connectivity is a statistical relationship between activity patterns; it does not prove a direct anatomical pathway or causality.'
+  });
+
+  revise('lesson9', 11, keepHebrew('lesson9', 11), {
+    question: 'What led to the discovery of the DMN in task studies?',
+    options: [
+      'Certain regions decreased in activity relative to rest and were correlated with each other during rest',
+      'Researchers found a single axon linking every region active in rest',
+      'Task activation was compared to a baseline assumed to have zero brain activity',
+      'The network appeared only during primary motor movement'
+    ],
+    explanation: 'The DMN emerged because some regions were more active at rest than during externally focused tasks, showing that baseline is not neural silence.'
+  });
+
+  revise('lesson9', 12, keepHebrew('lesson9', 12), {
+    question: 'What does anti-correlation between the DMN and CEN mean?',
+    options: [
+      'When one network’s activity increases, the other tends to decrease',
+      'Both networks always rise and fall together',
+      'The two networks are connected by one direct anatomical tract',
+      'The DMN becomes the visual network during tasks'
+    ],
+    explanation: 'Anti-correlation describes an inverse relationship between activity patterns, often interpreted as competition between internal processing and external control.'
+  });
+
+  revise('lesson9', 13, keepHebrew('lesson9', 13), {
+    question: 'How does the salience network function as a switch?',
+    options: [
+      'It identifies what is important and helps transfer resources between the DMN and CEN',
+      'It permanently turns off both the DMN and CEN',
+      'It anatomically connects every pair of regions in the brain',
+      'It replaces executive control with primary sensory processing'
+    ],
+    explanation: 'The salience network helps recruit control networks when important events require a shift away from internal processing.'
+  });
+
+  revise('lesson9', 14, keepHebrew('lesson9', 14), {
+    question: 'What is the difference between the somatomotor network and the visual network?',
+    options: [
+      'The first coordinates sensation and movement, and the second coordinates visual processing',
+      'The first is a resting-state self network, and the second is an endocrine stress axis',
+      'The first is located only in the hippocampus, and the second only in the pituitary',
+      'The two names describe the same network during different sleep stages'
+    ],
+    explanation: 'Different networks group regions that cooperate around different functional domains, such as movement/sensation versus visual processing.'
+  });
+
+  revise('lesson9', 15, keepHebrew('lesson9', 15), {
+    question: 'What is a hub in a brain network?',
+    options: [
+      'A node with many connections or a central integrative role',
+      'A node with no edges by definition',
+      'A hormone receptor that replaces graph analysis',
+      'A region that can belong only to one network forever'
+    ],
+    explanation: 'Hubs are highly connected or strategically placed nodes that support communication within and between networks.'
+  });
+
+  revise('lesson9', 16, keepHebrew('lesson9', 16), {
+    question: 'How can a network be both segregated and integrated?',
+    options: [
+      'It can have strong internal connections while hubs connect it to other networks',
+      'It must be completely isolated from every other network',
+      'It must have identical activity in every node at every moment',
+      'It can communicate only through the endocrine system'
+    ],
+    explanation: 'Segregation supports specialization inside a network, while integration allows coordination with other networks.'
+  });
+
+  revise('lesson9', 17, keepHebrew('lesson9', 17), {
+    question: 'What does it mean that networks are dynamic?',
+    options: [
+      'Connection strength and cooperation patterns change from moment to moment and across life',
+      'The anatomical location of each cortical lobe changes every second',
+      'Functional connectivity is fixed at birth and never changes',
+      'Only structural MRI can measure network dynamics'
+    ],
+    explanation: 'Network organization is not a single rigid map; coupling between regions can vary with state, task, development, and experience.'
+  });
+
+  revise('lesson9', 21, keepHebrew('lesson9', 21), {
+    question: 'Two regions are correlated in resting-state fMRI. What may be inferred?',
+    options: [
+      'They have functional connectivity, but not necessarily a direct connection or causality',
+      'One region definitely causes activity in the other',
+      'A single anatomical tract must connect them directly',
+      'They must belong to different networks'
+    ],
+    explanation: 'Resting-state correlation supports functional connectivity, but it does not by itself establish direction, cause, or direct anatomy.'
+  });
+
+  revise('lesson9', 22, keepHebrew('lesson9', 22), {
+    question: 'Why is baseline selection important in fMRI studies?',
+    options: [
+      'Because reported activation is relative to a comparison state, and the brain is active in that state too',
+      'Because baseline activity is always zero and therefore easy to subtract',
+      'Because baseline choice determines the person’s anatomical connectivity',
+      'Because BOLD directly records single-neuron spikes only at rest'
+    ],
+    explanation: 'fMRI contrasts depend on the comparison condition; rest is an active state and can change the interpretation of “activation.”'
+  });
+
+  revise('lesson9', 24, keepHebrew('lesson9', 24), {
+    question: 'Why can impairment in the same function result from damage in different regions?',
+    options: [
+      'Higher functions depend on distributed networks, and disruption of different essential nodes can impair the same system',
+      'Every function is controlled by exactly one cortical point',
+      'Damage in any region produces identical symptoms',
+      'Only the thalamus can cause network-level impairments'
+    ],
+    explanation: 'A network approach explains why different lesions can disturb the same function when they affect different parts of a shared system.'
+  });
+
+  revise('lesson9', 25, keepHebrew('lesson9', 25), {
+    question: 'What is a possible therapeutic advantage of looking at a whole network?',
+    options: [
+      'The network can be influenced through an accessible node even if the damaged node is not accessible',
+      'Treatment must target only the structurally damaged node',
+      'Connectivity measures make behavior irrelevant',
+      'Every node in a network always responds identically to treatment'
+    ],
+    explanation: 'Network thinking can suggest intervention points that influence a broader system even when the original damaged site is hard to access.'
+  });
+
+  revise('lesson9', 26, keepHebrew('lesson9', 26), {
+    question: 'How can disruption of thalamo-cortical rhythm affect psychopathology?',
+    options: [
+      'The thalamus may fail to synchronize cortical networks properly, so they become uncoordinated',
+      'The thalamus becomes a default-mode hub only during sleep',
+      'The cortex stops needing thalamic input for any function',
+      'The rhythm directly measures cortisol feedback in the HPA axis'
+    ],
+    explanation: 'Thalamo-cortical models emphasize timing, coordination, and synchronization across cortical networks.'
+  });
+
+  revise('lesson9', 27, keepHebrew('lesson9', 27), {
+    question: 'During a planned task, an alarm suddenly sounds. Which network transition is likely?',
+    options: [
+      'From goal-directed DAN to recruitment of VAN/SN after a salient stimulus',
+      'From the DMN to deeper internal self-processing only',
+      'From visual cortex to the posterior pituitary',
+      'From CEN to permanent shutdown of attention'
+    ],
+    explanation: 'A sudden alarm is a salient bottom-up event, so ventral attention and salience systems may interrupt the current goal-directed set.'
+  });
+
+  revise('lesson9', 28, keepHebrew('lesson9', 28), {
+    question: 'What does the weight of an edge usually represent in functional connectivity analysis?',
+    options: [
+      'The strength of the statistical relationship between two nodes',
+      'The physical weight of a cortical region',
+      'The number of hormones released by the pituitary',
+      'The certainty that one node directly causes another'
+    ],
+    explanation: 'In functional network analysis, edge weight usually reflects the strength of correlation or another statistical dependency measure.'
+  });
+
+  revise('lesson9', 30, keepHebrew('lesson9', 30), {
+    question: 'Which failure would explain mind-wandering, difficulty performing a task, and hypersensitivity to stimuli?',
+    options: [
+      'An SN that does not switch efficiently between the DMN and CEN',
+      'A visual network that cannot encode retinotopy',
+      'A posterior pituitary that cannot release oxytocin',
+      'A motor cortex that cannot activate spinal reflexes'
+    ],
+    explanation: 'The triple-network model links inefficient salience switching with poor coordination between internal processing, executive control, and responses to salient stimuli.'
+  });
+
+  revise('lesson9', 31, keepHebrew('lesson9', 31), {
+    question: 'A person has difficulty shifting from internal thoughts to an external task, especially when an important stimulus appears. Which network may be impaired?',
+    options: [
+      'The salience network that mediates switching between the DMN and CEN',
+      'The primary visual network that maps the retina',
+      'The somatomotor network that controls finger movement',
+      'The hypothalamic pituitary axis that releases cortisol'
+    ],
+    explanation: 'The salience network helps detect important information and shift resources between internal and executive-control states.'
+  });
+
+  revise('lesson9', 32, keepHebrew('lesson9', 32), {
+    question: 'In fMRI, regions do not act together even though there is no clear anatomical damage between them. Which distinction fits?',
+    options: [
+      'Functional connectivity can change even without damage to a direct anatomical connection',
+      'Anatomical connectivity and functional connectivity are always identical',
+      'A missing direct lesion proves the fMRI finding is impossible',
+      'Only single-neuron recording can measure any form of connectivity'
+    ],
+    explanation: 'Functional connectivity is about statistical coupling between activity patterns, so it can change without a visible direct structural lesion.'
+  });
+
+  revise('lesson9', 33, keepHebrew('lesson9', 33), {
+    question: 'Where are central hubs of the default mode network located?',
+    options: [
+      'In medial regions such as the mPFC and PCC/precuneus',
+      'Only in the primary motor cortex',
+      'Only in the posterior pituitary',
+      'Only in the lateral geniculate nucleus'
+    ],
+    explanation: 'The DMN includes anterior and posterior midline hubs, especially mPFC and PCC/precuneus, along with parietal regions.'
   });
 
   revise('lesson10', 4, {

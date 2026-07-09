@@ -180,14 +180,14 @@
       },
       17: {
         topic: 'Research and Lesions',
-        question: 'What does TMS do in the context of a lesion?',
+        question: 'What does TMS do in the context of a temporary lesion?',
         options: [
-          'Creates a temporary disruption or brief paralysis of a region',
+          'Temporarily perturbs or modulates activity in a targeted cortical region using a magnetic field',
           'Shows where substances injected into a neuron or axon arrive',
-          'Lesions vary in size, region, and timing, making direct inference difficult',
-          'Whole neurons are visible, but only a few cells'
+          'Directly records action potentials from a single neuron',
+          'Maps water diffusion to infer white-matter organization'
         ],
-        explanation: 'TMS can briefly disrupt activity in a specific area and thereby mimic a temporary lesion.'
+        explanation: 'TMS can transiently perturb or modulate activity in a targeted cortical region, allowing causal testing without implying that the region is fully shut down.'
       },
       18: {
         topic: 'Imaging',

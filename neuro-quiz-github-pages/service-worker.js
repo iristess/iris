@@ -1,12 +1,12 @@
-const CACHE_NAME = 'neuro-quiz-v43-full-qa';
+const CACHE_NAME = 'neuro-quiz-v44-final-copy-qa';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=question-quality-v43',
-  './questions-en.js?v=question-quality-v43',
-  './questions-advanced.js?v=question-quality-v43',
-  './questions-clinical.js?v=question-quality-v43',
-  './questions-quality.js?v=question-quality-v43',
+  './questions-new.js?v=question-quality-v44',
+  './questions-en.js?v=question-quality-v44',
+  './questions-advanced.js?v=question-quality-v44',
+  './questions-clinical.js?v=question-quality-v44',
+  './questions-quality.js?v=question-quality-v44',
   './manifest.json',
   './icons/icon.svg',
   './brain-region-images/amygdala.webp',

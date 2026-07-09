@@ -33,6 +33,18 @@
       --danger-soft: #fff0f7;
       --warning: #8362c7;
       --warning-soft: #f5f0ff;
+      --option-bg: #ffffff;
+      --option-hover-bg: #fdfbff;
+      --correct-text: #314d98;
+      --wrong-text: #84385b;
+      --secondary-bg: #f0eafd;
+      --secondary-hover-bg: #e5dcf7;
+      --disclaimer-text: #625479;
+      --image-bg: #ffffff;
+      --focus-ring: #8b6fd8;
+      --footer-bg: rgba(255, 255, 255, 0.62);
+      --footer-text: #6c5d86;
+      --footer-source: #766894;
       --shadow: 0 18px 50px rgba(65, 48, 105, 0.13);
       --radius: 18px;
     }
@@ -56,6 +68,18 @@
       --danger-soft: #402033;
       --warning: #ceb7ff;
       --warning-soft: #31254b;
+      --option-bg: #271f3b;
+      --option-hover-bg: #33264f;
+      --correct-text: #dce9ff;
+      --wrong-text: #ffe1ee;
+      --secondary-bg: #33274e;
+      --secondary-hover-bg: #41315f;
+      --disclaimer-text: #d8cdeb;
+      --image-bg: #f8f5ff;
+      --focus-ring: #d9c9ff;
+      --footer-bg: rgba(33, 26, 53, 0.72);
+      --footer-text: #c8bbda;
+      --footer-source: #d6c8ea;
       --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
     }
     * { box-sizing: border-box; }
@@ -102,6 +126,39 @@
     }
     .small-muted { color: var(--muted); font-size: 0.95rem; }
     .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 14px; }
+    .intro-panel {
+      margin: 0 0 24px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--surface-soft), color-mix(in srgb, var(--primary-soft) 55%, var(--surface)));
+    }
+    .intro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+    .intro-section h2 { font-size: 1.08rem; margin-bottom: 8px; color: var(--primary-dark); }
+    .intro-section p { margin: 0; color: var(--muted); }
+    .guide-list { margin: 0; padding-right: 18px; color: var(--muted); }
+    html[dir="ltr"] .guide-list { padding-right: 0; padding-left: 18px; }
+    .feature-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .feature-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--line));
+      background: color-mix(in srgb, var(--surface) 78%, var(--primary-soft));
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .start-cue {
+      margin: 18px 0 16px;
+      padding: 13px 15px;
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
+      color: var(--text);
+    }
     .language-bar {
       display: flex;
       justify-content: space-between;
@@ -188,6 +245,11 @@
       transform: translateY(-2px);
       outline: none;
     }
+    button:focus-visible,
+    .option:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
     .theme-toggle {
       display: inline-flex;
       gap: 6px;
@@ -241,7 +303,7 @@
     .progress-track {
       width: 100%;
       height: 11px;
-      background: #eadff8;
+      background: var(--primary-soft);
       border-radius: 999px;
       overflow: hidden;
       margin-bottom: 22px;
@@ -267,7 +329,7 @@
       padding: 14px;
       border: 1px solid var(--line);
       border-radius: 14px;
-      background: #fff;
+      background: var(--image-bg);
     }
     .question-visual svg {
       display: block;
@@ -289,7 +351,7 @@
       padding: 15px 16px;
       cursor: pointer;
       transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
-      background: #fff;
+      background: var(--option-bg);
       text-align: right;
       font: inherit;
       font-size: 1rem;
@@ -297,7 +359,7 @@
     }
     .option:hover {
       border-color: rgba(139, 111, 216, 0.40);
-      background: #fdfbff;
+      background: var(--option-hover-bg);
       box-shadow: 0 8px 20px rgba(65, 48, 105, 0.08);
       transform: translateY(-1px);
     }
@@ -309,12 +371,12 @@
     .option.correct {
       border-color: rgba(95, 130, 216, 0.55);
       background: var(--success-soft);
-      color: #314d98;
+      color: var(--correct-text);
     }
     .option.wrong {
       border-color: rgba(198, 91, 137, 0.55);
       background: var(--danger-soft);
-      color: #84385b;
+      color: var(--wrong-text);
     }
     button {
       border: none;
@@ -328,8 +390,8 @@
     button:hover { transform: translateY(-1px); }
     .primary { background: var(--primary); color: white; box-shadow: 0 10px 22px rgba(139, 111, 216, 0.24); }
     .primary:hover { background: var(--primary-dark); }
-    .secondary { background: #f0eafd; color: var(--text); }
-    .secondary:hover { background: #e5dcf7; }
+    .secondary { background: var(--secondary-bg); color: var(--text); }
+    .secondary:hover { background: var(--secondary-hover-bg); }
     .dark { background: #4b3b76; color: white; }
     .dark:hover { background: #332653; }
     .feedback {
@@ -339,9 +401,9 @@
       display: none;
     }
     .feedback.show { display: block; }
-    .feedback.correct { background: var(--success-soft); color: #314d98; border: 1px solid rgba(95, 130, 216, 0.25); }
-    .feedback.wrong { background: var(--danger-soft); color: #84385b; border: 1px solid rgba(198, 91, 137, 0.24); }
-    .clinical-disclaimer { margin: 12px 0 18px; padding: 12px 14px; border: 1px solid rgba(139, 111, 216, 0.24); border-radius: 12px; background: rgba(139, 111, 216, 0.08); color: #625479; font-size: 0.92rem; line-height: 1.55; }
+    .feedback.correct { background: var(--success-soft); color: var(--correct-text); border: 1px solid rgba(95, 130, 216, 0.25); }
+    .feedback.wrong { background: var(--danger-soft); color: var(--wrong-text); border: 1px solid rgba(198, 91, 137, 0.24); }
+    .clinical-disclaimer { margin: 12px 0 18px; padding: 12px 14px; border: 1px solid rgba(139, 111, 216, 0.24); border-radius: 12px; background: rgba(139, 111, 216, 0.08); color: var(--disclaimer-text); font-size: 0.92rem; line-height: 1.55; }
     .feedback.warning { display: block; background: var(--warning-soft); color: var(--warning); border: 1px solid rgba(131, 98, 199, 0.25); }
     .score-text { font-size: 1.32rem; font-weight: 800; margin-bottom: 10px; color: var(--primary-dark); }
     .stats-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 18px 0; }
@@ -352,7 +414,7 @@
     .creator-credit {
       margin: 20px auto 0;
       padding: 15px 18px;
-      color: #6c5d86;
+      color: var(--footer-text);
       text-align: center;
       font-size: 0.94rem;
       line-height: 1.5;
@@ -366,7 +428,7 @@
       padding: 10px 18px;
       border: 1px solid rgba(139, 111, 216, 0.20);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.62);
+      background: var(--footer-bg);
       box-shadow: 0 8px 24px rgba(65, 48, 105, 0.08);
       backdrop-filter: blur(8px);
     }
@@ -383,7 +445,7 @@
       text-decoration: underline;
     }
     .creator-credit .credit-source {
-      color: #766894;
+      color: var(--footer-source);
     }
     .creator-credit .credit-divider {
       color: #b7a6d9;
@@ -445,6 +507,46 @@
 
     <h1 data-i18n="appTitle">בנק שאלות נוירואנטומיה</h1>
     <p class="subtitle" data-i18n="appSubtitle">תרגול נוירואנטומיה לפי שיעורים ורמות קושי, עם תרגול כללי, אינטגרציה קלינית, זיהוי אזורים בתמונה, מעבר בין עברית לאנגלית, ערבוב שאלות ותשובות, חזרה על טעויות ופירוט ציון לפי נושא.</p>
+
+    <section class="intro-panel" aria-labelledby="introWhatTitle">
+      <div class="intro-grid">
+        <div class="intro-section">
+          <h2 id="introWhatTitle" data-i18n="introWhatTitle">מה תמצאו כאן?</h2>
+          <p data-i18n="introWhatBody">התרגול מחולק לפי שיעורים ורמות קושי, וכולל שאלות ידע, קשרים ומסלולים, שאלות אינטגרציה, מקרים קליניים וזיהוי מבנים בתמונות. בכל שיעור זמינות כל 33 השאלות, ואפשר לתרגל בעברית או באנגלית.</p>
+        </div>
+        <div class="intro-section">
+          <h2 data-i18n="introHowTitle">איך כדאי להשתמש בתרגול?</h2>
+          <ul class="guide-list">
+            <li data-i18n="introHow1">לומדים נושא חדש? התחילו בתרגול לפי שיעור וברמה קלה.</li>
+            <li data-i18n="introHow2">רוצים לחבר בין מושגים ומסלולים? עברו לרמה בינונית.</li>
+            <li data-i18n="introHow3">מתכוננים למבחן? נסו את הרמה הקשה או את כל 33 השאלות.</li>
+            <li data-i18n="introHow4">רוצים לבדוק שליפה רחבה? השתמשו בתרגול הכללי, באינטגרציה הקלינית או בזיהוי תמונות.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-section" style="margin-top: 16px;">
+        <h2 data-i18n="introIncludedTitle">מה הכלי כולל?</h2>
+        <div class="feature-grid" aria-label="Quiz features">
+          <span class="feature-chip" data-i18n="feature1">33 שאלות בכל שיעור</span>
+          <span class="feature-chip" data-i18n="feature2">שלוש רמות קושי לפי סוג החשיבה</span>
+          <span class="feature-chip" data-i18n="feature3">תרגול כללי אקראי מכל מאגרי השיעורים</span>
+          <span class="feature-chip" data-i18n="feature4">30 שאלות אינטגרציה קלינית</span>
+          <span class="feature-chip" data-i18n="feature5">24 שאלות זיהוי מבנים בתמונות</span>
+          <span class="feature-chip" data-i18n="feature6">עברית ואנגלית</span>
+          <span class="feature-chip" data-i18n="feature7">ערבוב שאלות ותשובות</span>
+          <span class="feature-chip" data-i18n="feature8">חזרה על טעויות</span>
+          <span class="feature-chip" data-i18n="feature9">ציון לפי נושא</span>
+          <span class="feature-chip" data-i18n="feature10">שמירת היסטוריית תרגול מקומית בדפדפן</span>
+          <span class="feature-chip" data-i18n="feature11">מצב בהיר וכהה</span>
+        </div>
+      </div>
+      <p class="small-muted" style="margin: 16px 0 0;" data-i18n="courseAlignmentNote">הכלי נבנה לצורכי תרגול מתוך חומרי הקורס והסיכום המאוחד של איריס ויעל. הוא מיועד לחזרה וללמידה ואינו תחליף לחומר הרשמי של הקורס.</p>
+    </section>
+
+    <div class="start-cue">
+      <strong data-i18n="startCueTitle">לא בטוחים מאיפה להתחיל?</strong>
+      <span data-i18n="startCueBody">בחרו שיעור שאתם לומדים עכשיו והתחילו ברמה קלה. לקראת המבחן, עברו לתרגול כללי או לכל 33 השאלות בשיעור.</span>
+    </div>
 
     <div id="lastSessionBox" class="stat hidden session-box">
       <strong data-i18n="lastResult">תוצאה אחרונה</strong>
@@ -548,7 +650,7 @@
 </div>
 
 <script>
-// שאלות מבוססות על הקובץ "איציק". בכל שיעור יש 30 שאלות.
+// שאלות מבוססות על הקובץ "איציק". בכל שיעור יש 33 שאלות.
 const questionBank = {
   "lesson1": [
     {
@@ -2905,11 +3007,11 @@ const questionBank = {
 };
 window.questionBank = questionBank;
 </script>
-<script src="./questions-new.js?v=question-quality-v43"></script>
-<script src="./questions-en.js?v=question-quality-v43"></script>
-<script src="./questions-advanced.js?v=question-quality-v43"></script>
-<script src="./questions-clinical.js?v=question-quality-v43"></script>
-<script src="./questions-quality.js?v=question-quality-v43"></script>
+<script src="./questions-new.js?v=question-quality-v44"></script>
+<script src="./questions-en.js?v=question-quality-v44"></script>
+<script src="./questions-advanced.js?v=question-quality-v44"></script>
+<script src="./questions-clinical.js?v=question-quality-v44"></script>
+<script src="./questions-quality.js?v=question-quality-v44"></script>
 <script>
 const lesson1Questions = questionBank.lesson1;
 const lesson2Questions = questionBank.lesson2;
@@ -2934,18 +3036,40 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
   const copy = {
     he: {
       appTitle: 'בנק שאלות נוירואנטומיה',
-      appSubtitle: 'תרגול נוירואנטומיה לפי שיעורים ורמות קושי, עם תרגול כללי, אינטגרציה קלינית, זיהוי אזורים בתמונה, מעבר בין עברית לאנגלית, ערבוב שאלות ותשובות, חזרה על טעויות ופירוט ציון לפי נושא.',
+      appSubtitle: 'כלי תרגול אינטראקטיבי שנבנה מתוך חומרי הקורס והסיכום המאוחד, כדי לעזור לחזור על מושגים, להבין קשרים בין מבנים ומסלולים, ולתרגל יישום של הידע לפני המבחן.',
       languageTitle: 'שפת תרגול',
       languageSubtitle: 'בחרי אם לתרגל בעברית או באנגלית.',
+      introWhatTitle: 'מה תמצאו כאן?',
+      introWhatBody: 'התרגול מחולק לפי שיעורים ורמות קושי, וכולל שאלות ידע, קשרים ומסלולים, שאלות אינטגרציה, מקרים קליניים וזיהוי מבנים בתמונות. בכל שיעור זמינות כל 33 השאלות, ואפשר לתרגל בעברית או באנגלית.',
+      introHowTitle: 'איך כדאי להשתמש בתרגול?',
+      introHow1: 'לומדים נושא חדש? התחילו בתרגול לפי שיעור וברמה קלה.',
+      introHow2: 'רוצים לחבר בין מושגים ומסלולים? עברו לרמה בינונית.',
+      introHow3: 'מתכוננים למבחן? נסו את הרמה הקשה או את כל 33 השאלות.',
+      introHow4: 'רוצים לבדוק שליפה רחבה? השתמשו בתרגול הכללי, באינטגרציה הקלינית או בזיהוי תמונות.',
+      introIncludedTitle: 'מה הכלי כולל?',
+      feature1: '33 שאלות בכל שיעור',
+      feature2: 'שלוש רמות קושי לפי סוג החשיבה',
+      feature3: 'תרגול כללי אקראי מכל מאגרי השיעורים',
+      feature4: '30 שאלות אינטגרציה קלינית',
+      feature5: '24 שאלות זיהוי מבנים בתמונות',
+      feature6: 'עברית ואנגלית',
+      feature7: 'ערבוב שאלות ותשובות',
+      feature8: 'חזרה על טעויות',
+      feature9: 'ציון לפי נושא',
+      feature10: 'שמירת היסטוריית תרגול מקומית בדפדפן',
+      feature11: 'מצב בהיר וכהה',
+      courseAlignmentNote: 'הכלי נבנה לצורכי תרגול מתוך חומרי הקורס והסיכום המאוחד של איריס ויעל. הוא מיועד לחזרה וללמידה ואינו תחליף לחומר הרשמי של הקורס.',
+      startCueTitle: 'לא בטוחים מאיפה להתחיל?',
+      startCueBody: 'בחרו שיעור שאתם לומדים עכשיו והתחילו ברמה קלה. לקראת המבחן, עברו לתרגול כללי או לכל 33 השאלות בשיעור.',
       lastResult: 'תוצאה אחרונה',
       generalPracticeTitle: 'תרגול כללי',
-      generalPracticeDescription: '30 שאלות שנדגמות מחדש באקראי מכל מאגרי השיעורים המלאים',
+      generalPracticeDescription: '30 שאלות שנדגמות באקראי מכל מאגרי השיעורים המלאים, לתרגול שליפה רחב לפני המבחן.',
       clinicalIntegrationTitle: 'אינטגרציה קלינית',
-      clinicalIntegrationDescription: '30 מקרים בשלוש רמות: תופעה פסיכולוגית, מנגנון מוחי ואזור/רשת',
+      clinicalIntegrationDescription: '30 מקרים שמתרגלים חיבור בין תופעה, מנגנון מוחי ואזור או רשת רלוונטיים.',
       clinicalDisclaimer: 'השאלות הקליניות מיועדות לתרגול התאמה בין תופעה למנגנון מוחי אפשרי מתוך חומר הקורס. הן אינן כלי אבחוני, והמיפוי בין סימפטומים, הפרעות ואזורים מוחיים אינו חד־חד ערכי.',
       anatomicalImageAlt: 'תמונה אנטומית עם אזור מסומן',
       imageIdentificationTitle: 'זיהוי אזורים בתמונה',
-      imageIdentificationDescription: '24 שאלות לפי דפי הלמידה: מבנים, מסילות וסולקוסים',
+      imageIdentificationDescription: '24 שאלות לזיהוי מבנים, גרעינים, מסילות וסולקוסים מתוך איורים אנטומיים.',
       lesson7Note: 'שיעור 7 לא נכלל: בסיכום הוא מסומן כשיעור חיפוש ב־fMRI שאינו רלוונטי לבחינה.',
       difficultyTitle: 'בחירת רמת קושי',
       difficultySubtitle: 'בחרי רמה לפי סוג החשיבה, או תרגלי את כל 33 השאלות של השיעור יחד.',
@@ -2999,18 +3123,40 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
     },
     en: {
       appTitle: 'Neuroanatomy Question Bank',
-      appSubtitle: 'Neuroanatomy practice by lesson and difficulty level, with general practice, clinical integration, image-based region identification, Hebrew/English switching, shuffled questions and answers, mistake review, and topic-level scoring.',
+      appSubtitle: 'An interactive study tool built from the course materials and unified study summary to help review key concepts, understand relationships between structures and pathways, and practice applying neuroanatomy knowledge before the exam.',
       languageTitle: 'Practice language',
       languageSubtitle: 'Choose whether to practice in Hebrew or English.',
+      introWhatTitle: 'What will you find here?',
+      introWhatBody: 'Practice is organized by lesson and difficulty level and includes knowledge questions, structure–function relationships, pathways, integration questions, clinical vignettes, and image-based identification. All 33 questions are available in each lesson, and practice is available in both Hebrew and English.',
+      introHowTitle: 'How should you use it?',
+      introHow1: 'Learning a new topic? Start with a lesson in Easy mode.',
+      introHow2: 'Want to connect structures, pathways, and mechanisms? Move to Medium.',
+      introHow3: 'Preparing for the exam? Try Hard mode or all 33 lesson questions.',
+      introHow4: 'Want broader retrieval practice? Use General Practice, Clinical Integration, or Image Identification.',
+      introIncludedTitle: 'What is included?',
+      feature1: '33 questions per lesson',
+      feature2: 'Three difficulty levels based on thinking demand',
+      feature3: 'Random general practice across complete lesson banks',
+      feature4: '30 clinical integration questions',
+      feature5: '24 image-identification questions',
+      feature6: 'Hebrew and English',
+      feature7: 'Shuffled questions and answers',
+      feature8: 'Mistake review',
+      feature9: 'Topic-level scoring',
+      feature10: 'Locally stored practice history',
+      feature11: 'Light and Dark mode',
+      courseAlignmentNote: 'This tool was created for study and practice based on the course materials and the unified summary by Iris and Yael. It is intended to support review and does not replace official course materials.',
+      startCueTitle: 'Not sure where to start?',
+      startCueBody: 'Choose the lesson you are currently studying and begin with Easy mode. Closer to the exam, move to General Practice or all 33 questions in the lesson.',
       lastResult: 'Last result',
       generalPracticeTitle: 'General practice',
-      generalPracticeDescription: '30 questions sampled afresh at random from the complete lesson banks',
+      generalPracticeDescription: '30 questions sampled at random from the complete lesson banks for broad retrieval practice before the exam.',
       clinicalIntegrationTitle: 'Clinical integration',
-      clinicalIntegrationDescription: '30 cases across three levels: psychological phenomenon, neural mechanism, and region/network',
+      clinicalIntegrationDescription: '30 cases that practice linking a phenomenon with a possible neural mechanism and relevant region or network.',
       clinicalDisclaimer: 'Clinical questions practice matching a phenomenon to a possible neural mechanism from the course material. They are not a diagnostic tool, and symptoms, disorders, and brain regions do not map one-to-one.',
       anatomicalImageAlt: 'Anatomical image with a highlighted region',
       imageIdentificationTitle: 'Image identification',
-      imageIdentificationDescription: '24 questions based on the study sheets: structures, tracts, and sulci',
+      imageIdentificationDescription: '24 questions for identifying structures, nuclei, tracts, and sulci from anatomical illustrations.',
       lesson7Note: 'Lesson 7 is not included: in the summary it is marked as an fMRI search lesson that is not relevant to the exam.',
       difficultyTitle: 'Choose difficulty',
       difficultySubtitle: 'Choose a level by thinking demand, or practice all 33 lesson questions together.',
@@ -3284,7 +3430,7 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
 
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', function() {
-      const migrationKey = 'neuroQuizCacheMigrationV43';
+      const migrationKey = 'neuroQuizCacheMigrationV44';
       if (localStorage.getItem(migrationKey) !== 'done') {
         Promise.all([
           navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -3312,7 +3458,7 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
         return;
       }
 
-      navigator.serviceWorker.register('./service-worker.js?v=43')
+      navigator.serviceWorker.register('./service-worker.js?v=44')
         .then(function(registration) { return registration.update(); })
         .catch(function() {});
     });
