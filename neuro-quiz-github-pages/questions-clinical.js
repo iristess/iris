@@ -1,11 +1,16 @@
 // Expanded clinical integration bank: each vignette starts with a psychological
 // phenomenon and asks the learner to connect it to a region, circuit, or network.
 (function () {
+  const difficultyById = {
+    22: 'hard', 23: 'hard', 24: 'hard', 25: 'hard', 26: 'medium',
+    27: 'hard', 28: 'hard', 29: 'medium', 30: 'hard'
+  };
+
   const q = function (id, topicHe, questionHe, answerHe, distractorsHe, explanationHe,
                       topicEn, questionEn, answerEn, distractorsEn, explanationEn) {
     return {
       id: id,
-      difficulty: id <= 10 ? 'easy' : id <= 20 ? 'medium' : 'hard',
+      difficulty: difficultyById[id] || 'hard',
       topic: topicHe,
       question: questionHe,
       options: [answerHe].concat(distractorsHe),
@@ -21,10 +26,6 @@
       }
     };
   };
-
-  questionBank.clinicalIntegration.forEach(function (question, index) {
-    question.difficulty = index < 10 ? 'easy' : index < 20 ? 'medium' : 'hard';
-  });
 
   const additions = [
     q(22, 'אינטגרציה קלינית · אנהדוניה',

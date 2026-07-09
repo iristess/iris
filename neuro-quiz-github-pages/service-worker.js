@@ -1,15 +1,38 @@
-const CACHE_NAME = 'neuro-quiz-v42-review-fixes';
+const CACHE_NAME = 'neuro-quiz-v43-full-qa';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=question-quality-v40',
-  './questions-en.js?v=question-quality-v40',
-  './questions-quality.js?v=question-quality-v40',
-  './questions-advanced.js?v=question-quality-v40',
-  './questions-clinical.js?v=question-quality-v40',
-  './questions-review-fixes.js?v=question-quality-v42',
+  './questions-new.js?v=question-quality-v43',
+  './questions-en.js?v=question-quality-v43',
+  './questions-advanced.js?v=question-quality-v43',
+  './questions-clinical.js?v=question-quality-v43',
+  './questions-quality.js?v=question-quality-v43',
   './manifest.json',
-  './icons/icon.svg'
+  './icons/icon.svg',
+  './brain-region-images/amygdala.webp',
+  './brain-region-images/arcuate-fasciculus.webp',
+  './brain-region-images/calcarine-sulcus.webp',
+  './brain-region-images/central-sulcus.webp',
+  './brain-region-images/cingulum.webp',
+  './brain-region-images/corpus-callosum.webp',
+  './brain-region-images/fornix.webp',
+  './brain-region-images/hippocampus.webp',
+  './brain-region-images/hypothalamus.webp',
+  './brain-region-images/lgn.webp',
+  './brain-region-images/limbic-system.webp',
+  './brain-region-images/longitudinal-fissure.webp',
+  './brain-region-images/mammillary-bodies.webp',
+  './brain-region-images/mgn.webp',
+  './brain-region-images/midbrain.webp',
+  './brain-region-images/pag.webp',
+  './brain-region-images/precentral-gyrus.webp',
+  './brain-region-images/reticular-nucleus.webp',
+  './brain-region-images/slf.webp',
+  './brain-region-images/sylvian-fissure.webp',
+  './brain-region-images/thalamus.webp',
+  './brain-region-images/uncinate-fasciculus.webp',
+  './brain-region-images/vpl.webp',
+  './brain-region-images/vpm.webp'
 ];
 
 self.addEventListener('install', event => {
