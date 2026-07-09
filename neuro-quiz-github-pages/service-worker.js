@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neuro-quiz-v40-clean-migration';
+const CACHE_NAME = 'neuro-quiz-v41-audit-fixes';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,8 +8,7 @@ const APP_SHELL = [
   './questions-advanced.js?v=question-quality-v40',
   './questions-clinical.js?v=question-quality-v40',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon.svg'
 ];
 
 self.addEventListener('install', event => {

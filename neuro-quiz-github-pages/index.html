@@ -9,9 +9,8 @@
   <meta name="apple-mobile-web-app-title" content="Neuro Quiz" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <link rel="manifest" href="./manifest.json" />
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
-  <link rel="shortcut icon" type="image/png" href="./icons/icon-192.png" />
-  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+  <link rel="shortcut icon" type="image/svg+xml" href="./icons/icon.svg" />
   <title>בנק שאלות נוירואנטומיה</title>
   <style>
     :root {
@@ -3173,7 +3172,10 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
       if (localStorage.getItem(migrationKey) !== 'done') {
         Promise.all([
           navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            return Promise.all(registrations.map(function(registration) {
+            const quizScope = new URL('./', window.location.href).href;
+            return Promise.all(registrations.filter(function(registration) {
+              return registration.scope === quizScope;
+            }).map(function(registration) {
               return registration.unregister();
             }));
           }),
@@ -3194,7 +3196,7 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
         return;
       }
 
-      navigator.serviceWorker.register('./service-worker.js?v=40')
+      navigator.serviceWorker.register('./service-worker.js?v=41')
         .then(function(registration) { return registration.update(); })
         .catch(function() {});
     });
