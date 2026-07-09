@@ -1,10 +1,12 @@
-const CACHE_NAME = 'neuro-quiz-v36-question-quality';
+const CACHE_NAME = 'neuro-quiz-v37-question-quality';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=question-quality-v36',
-  './questions-en.js?v=question-quality-v36',
-  './questions-quality.js?v=question-quality-v36',
+  './questions-new.js?v=question-quality-v37',
+  './questions-en.js?v=question-quality-v37',
+  './questions-quality.js?v=question-quality-v37',
+  './questions-advanced.js?v=question-quality-v37',
+  './questions-clinical.js?v=question-quality-v37',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
