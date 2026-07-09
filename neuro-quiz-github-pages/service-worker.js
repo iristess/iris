@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neuro-quiz-v41-audit-fixes';
+const CACHE_NAME = 'neuro-quiz-v42-review-fixes';
 const APP_SHELL = [
   './',
   './index.html',
@@ -7,6 +7,7 @@ const APP_SHELL = [
   './questions-quality.js?v=question-quality-v40',
   './questions-advanced.js?v=question-quality-v40',
   './questions-clinical.js?v=question-quality-v40',
+  './questions-review-fixes.js?v=question-quality-v42',
   './manifest.json',
   './icons/icon.svg'
 ];

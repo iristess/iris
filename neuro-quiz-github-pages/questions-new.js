@@ -205,9 +205,9 @@
     ]
   };
 
-  Object.entries(directedExamQuestions).forEach(([lessonKey, questions]) => {
-    questionBank[lessonKey].push(...questions);
-  });
+  // The lesson UI intentionally exposes exactly 30 questions (10 per level).
+  // Keep the former 31–33 candidates out of the runtime bank; integration and
+  // location practice now live in their dedicated banks instead.
 
   questionBank.clinicalIntegration = [
     q(1,'hard','אינטגרציה קלינית','לוקאס מתאר שהוא נכנס לקזינו ״רק לעשר דקות״ ונשאר שעות. גם אחרי הפסדים הוא מרגיש שהסיבוב הבא חייב להחזיר את הכסף, מתקשה לעצור, ומעדיף תגמול מיידי על פני נזק עתידי. איזה מנגנון מוחי מתאים ביותר?','הטיית מערכת תגמול דופמינרגית בסטריאטום הוונטרלי לצד בקרה חלשה של PFC/OFC','פגיעה ראשונית בקורטקס הראייתי שמונעת זיהוי קלפים','פעילות יתר של ה־SCN שמכוונת שינה','חסימה של הכורואיד פלקסוס שמפחיתה CSF','הימורים כפייתיים מערבים תגמול, חיזוק והרגלים. סטריאטום ונוקלאוס אקומבנס מגיבים לתגמול, ו־PFC/OFC עוזרים לשקול תוצאות ולעכב פעולה.'),
@@ -598,6 +598,7 @@
   Object.entries(optionOverrides).forEach(([lessonKey, overrides]) => {
     Object.entries(overrides).forEach(([id, options]) => {
       const item = questionBank[lessonKey].find(question => question.id === Number(id));
+      if (!item) return;
       item.options = options;
       item.correctAnswer = 0;
     });

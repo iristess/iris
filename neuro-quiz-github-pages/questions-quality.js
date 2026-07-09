@@ -12,14 +12,6 @@
     });
   });
 
-  // The lesson picker promises 30 questions. Location-identification items are
-  // already available in their own image practice, so keep them out of lessons.
-  Object.keys(questionBank).filter(function (key) {
-    return /^lesson\d+$/.test(key);
-  }).forEach(function (key) {
-    questionBank[key] = questionBank[key].slice(0, 30);
-  });
-
   const revisions = {
     1: {
       he: ['מדוע הבשלה מאוחרת של ה־PFC חשובה להבנת התנהגות בגיל ההתבגרות?',
