@@ -2850,11 +2850,11 @@ const questionBank = {
 };
 window.questionBank = questionBank;
 </script>
-<script src="./questions-new.js?v=question-quality-v37"></script>
-<script src="./questions-en.js?v=question-quality-v37"></script>
-<script src="./questions-quality.js?v=question-quality-v37"></script>
-<script src="./questions-advanced.js?v=question-quality-v37"></script>
-<script src="./questions-clinical.js?v=question-quality-v37"></script>
+<script src="./questions-new.js?v=question-quality-v40"></script>
+<script src="./questions-en.js?v=question-quality-v40"></script>
+<script src="./questions-quality.js?v=question-quality-v40"></script>
+<script src="./questions-advanced.js?v=question-quality-v40"></script>
+<script src="./questions-clinical.js?v=question-quality-v40"></script>
 <script>
 const lesson1Questions = questionBank.lesson1;
 const lesson2Questions = questionBank.lesson2;
@@ -3168,15 +3168,33 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
   checkBtn.addEventListener('click', checkAnswer); nextBtn.addEventListener('click', nextQuestion); backBtn.addEventListener('click', goToMenu); menuFromResultsBtn.addEventListener('click', goToMenu); retryWrongBtn.addEventListener('click', function() { beginQuestionSession(state.wrongQuestions, t('retryWrong'), t('wrongMode') + ' · ' + state.sessionTitle, 'wrongOnly'); }); applyLanguage(currentLanguage);
 
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-    const hadServiceWorkerController = Boolean(navigator.serviceWorker.controller);
-    let reloadingForUpdate = false;
-    navigator.serviceWorker.addEventListener('controllerchange', function() {
-      if (!hadServiceWorkerController || reloadingForUpdate) return;
-      reloadingForUpdate = true;
-      window.location.reload();
-    });
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./service-worker.js')
+      const migrationKey = 'neuroQuizCacheMigrationV40';
+      if (localStorage.getItem(migrationKey) !== 'done') {
+        Promise.all([
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            return Promise.all(registrations.map(function(registration) {
+              return registration.unregister();
+            }));
+          }),
+          caches.keys().then(function(keys) {
+            return Promise.all(keys.filter(function(key) {
+              return key.indexOf('neuro-quiz-') === 0;
+            }).map(function(key) {
+              return caches.delete(key);
+            }));
+          })
+        ]).then(function() {
+          localStorage.setItem(migrationKey, 'done');
+          window.location.reload();
+        }).catch(function() {
+          localStorage.setItem(migrationKey, 'done');
+          window.location.reload();
+        });
+        return;
+      }
+
+      navigator.serviceWorker.register('./service-worker.js?v=40')
         .then(function(registration) { return registration.update(); })
         .catch(function() {});
     });

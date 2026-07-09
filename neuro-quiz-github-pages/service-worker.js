@@ -1,12 +1,12 @@
-const CACHE_NAME = 'neuro-quiz-v39-auto-refresh';
+const CACHE_NAME = 'neuro-quiz-v40-clean-migration';
 const APP_SHELL = [
   './',
   './index.html',
-  './questions-new.js?v=question-quality-v37',
-  './questions-en.js?v=question-quality-v37',
-  './questions-quality.js?v=question-quality-v37',
-  './questions-advanced.js?v=question-quality-v37',
-  './questions-clinical.js?v=question-quality-v37',
+  './questions-new.js?v=question-quality-v40',
+  './questions-en.js?v=question-quality-v40',
+  './questions-quality.js?v=question-quality-v40',
+  './questions-advanced.js?v=question-quality-v40',
+  './questions-clinical.js?v=question-quality-v40',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
