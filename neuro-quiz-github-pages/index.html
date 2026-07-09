@@ -35,6 +35,10 @@
       --warning-soft: #f5f0ff;
       --option-bg: #ffffff;
       --option-hover-bg: #fdfbff;
+      --option-text: #2d2440;
+      --option-selected-text: #2d2440;
+      --option-correct-text: #314d98;
+      --option-wrong-text: #84385b;
       --correct-text: #314d98;
       --wrong-text: #84385b;
       --secondary-bg: #f0eafd;
@@ -70,6 +74,10 @@
       --warning-soft: #31254b;
       --option-bg: #271f3b;
       --option-hover-bg: #33264f;
+      --option-text: #f5efff;
+      --option-selected-text: #ffffff;
+      --option-correct-text: #dce9ff;
+      --option-wrong-text: #ffe1ee;
       --correct-text: #dce9ff;
       --wrong-text: #ffe1ee;
       --secondary-bg: #33274e;
@@ -128,7 +136,7 @@
     .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 14px; }
     .intro-panel {
       margin: 0 0 24px;
-      padding: 20px;
+      padding: 18px;
       border: 1px solid var(--line);
       border-radius: 16px;
       background: linear-gradient(135deg, var(--surface-soft), color-mix(in srgb, var(--primary-soft) 55%, var(--surface)));
@@ -150,14 +158,6 @@
       color: var(--text);
       font-size: 0.9rem;
       font-weight: 700;
-    }
-    .start-cue {
-      margin: 18px 0 16px;
-      padding: 13px 15px;
-      border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
-      border-radius: 14px;
-      background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
-      color: var(--text);
     }
     .language-bar {
       display: flex;
@@ -352,6 +352,7 @@
       cursor: pointer;
       transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
       background: var(--option-bg);
+      color: var(--option-text);
       text-align: right;
       font: inherit;
       font-size: 1rem;
@@ -360,23 +361,29 @@
     .option:hover {
       border-color: rgba(139, 111, 216, 0.40);
       background: var(--option-hover-bg);
+      color: var(--option-text);
       box-shadow: 0 8px 20px rgba(65, 48, 105, 0.08);
       transform: translateY(-1px);
     }
     .option.selected {
       border-color: var(--primary);
       background: var(--primary-soft);
+      color: var(--option-selected-text);
       box-shadow: inset 4px 0 0 var(--primary);
     }
     .option.correct {
       border-color: rgba(95, 130, 216, 0.55);
       background: var(--success-soft);
-      color: var(--correct-text);
+      color: var(--option-correct-text);
     }
     .option.wrong {
       border-color: rgba(198, 91, 137, 0.55);
       background: var(--danger-soft);
-      color: var(--wrong-text);
+      color: var(--option-wrong-text);
+    }
+    .option:disabled {
+      color: var(--option-text);
+      opacity: 1;
     }
     button {
       border: none;
@@ -468,7 +475,17 @@
       .card { padding: 20px; border-radius: 16px; }
       h1 { font-size: 1.65rem; }
       h2 { font-size: 1.28rem; }
-      .subtitle { font-size: 0.98rem; }
+      .subtitle { font-size: 0.95rem; margin-bottom: 16px; }
+      .intro-panel { padding: 12px; margin-bottom: 16px; }
+      .intro-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .intro-section h2 { font-size: 0.96rem; margin-bottom: 5px; }
+      .intro-section p,
+      .guide-list,
+      .small-muted { font-size: 0.86rem; line-height: 1.45; }
+      .guide-list { padding-right: 14px; }
+      html[dir="ltr"] .guide-list { padding-left: 14px; }
+      .feature-grid { gap: 6px; margin-top: 0; }
+      .feature-chip { min-height: 0; padding: 5px 8px; font-size: 0.78rem; }
       .menu-grid { grid-template-columns: 1fr; }
       .language-bar { align-items: stretch; flex-direction: column; }
       .language-toggle { width: 100%; }
@@ -506,47 +523,35 @@
     </div>
 
     <h1 data-i18n="appTitle">בנק שאלות נוירואנטומיה</h1>
-    <p class="subtitle" data-i18n="appSubtitle">תרגול נוירואנטומיה לפי שיעורים ורמות קושי, עם תרגול כללי, אינטגרציה קלינית, זיהוי אזורים בתמונה, מעבר בין עברית לאנגלית, ערבוב שאלות ותשובות, חזרה על טעויות ופירוט ציון לפי נושא.</p>
+    <p class="subtitle" data-i18n="appSubtitle">כלי תרגול אינטראקטיבי שנבנה על בסיס חומרי הקורס והסיכום המאוחד, כדי לעזור לחזור על מושגים, להבין קשרים בין מבנים ומסלולים ולתרגל יישום של הידע לקראת המבחן.</p>
 
     <section class="intro-panel" aria-labelledby="introWhatTitle">
       <div class="intro-grid">
         <div class="intro-section">
           <h2 id="introWhatTitle" data-i18n="introWhatTitle">מה תמצאו כאן?</h2>
-          <p data-i18n="introWhatBody">התרגול מחולק לפי שיעורים ורמות קושי, וכולל שאלות ידע, קשרים ומסלולים, שאלות אינטגרציה, מקרים קליניים וזיהוי מבנים בתמונות. בכל שיעור זמינות כל 33 השאלות, ואפשר לתרגל בעברית או באנגלית.</p>
+          <p data-i18n="introWhatBody">התרגול מחולק לפי שיעורים ורמות קושי וכולל שאלות ידע, קשרים ומסלולים, אינטגרציה, מקרים קליניים וזיהוי מבנים בתמונות. בכל שיעור זמינות כל 33 השאלות, בעברית או באנגלית.</p>
         </div>
         <div class="intro-section">
           <h2 data-i18n="introHowTitle">איך כדאי להשתמש בתרגול?</h2>
           <ul class="guide-list">
-            <li data-i18n="introHow1">לומדים נושא חדש? התחילו בתרגול לפי שיעור וברמה קלה.</li>
+            <li data-i18n="introHow1">לומדים נושא חדש? התחילו ברמה קלה.</li>
             <li data-i18n="introHow2">רוצים לחבר בין מושגים ומסלולים? עברו לרמה בינונית.</li>
-            <li data-i18n="introHow3">מתכוננים למבחן? נסו את הרמה הקשה או את כל 33 השאלות.</li>
-            <li data-i18n="introHow4">רוצים לבדוק שליפה רחבה? השתמשו בתרגול הכללי, באינטגרציה הקלינית או בזיהוי תמונות.</li>
+            <li data-i18n="introHow3">מתכוננים למבחן? נסו רמה קשה, את כל 33 השאלות או תרגול כללי.</li>
           </ul>
         </div>
       </div>
-      <div class="intro-section" style="margin-top: 16px;">
-        <h2 data-i18n="introIncludedTitle">מה הכלי כולל?</h2>
+      <div class="intro-section" style="margin-top: 14px;">
         <div class="feature-grid" aria-label="Quiz features">
           <span class="feature-chip" data-i18n="feature1">33 שאלות בכל שיעור</span>
-          <span class="feature-chip" data-i18n="feature2">שלוש רמות קושי לפי סוג החשיבה</span>
-          <span class="feature-chip" data-i18n="feature3">תרגול כללי אקראי מכל מאגרי השיעורים</span>
-          <span class="feature-chip" data-i18n="feature4">30 שאלות אינטגרציה קלינית</span>
-          <span class="feature-chip" data-i18n="feature5">24 שאלות זיהוי מבנים בתמונות</span>
-          <span class="feature-chip" data-i18n="feature6">עברית ואנגלית</span>
-          <span class="feature-chip" data-i18n="feature7">ערבוב שאלות ותשובות</span>
-          <span class="feature-chip" data-i18n="feature8">חזרה על טעויות</span>
-          <span class="feature-chip" data-i18n="feature9">ציון לפי נושא</span>
-          <span class="feature-chip" data-i18n="feature10">שמירת היסטוריית תרגול מקומית בדפדפן</span>
-          <span class="feature-chip" data-i18n="feature11">מצב בהיר וכהה</span>
+          <span class="feature-chip" data-i18n="feature2">3 רמות קושי</span>
+          <span class="feature-chip" data-i18n="feature3">אינטגרציה קלינית</span>
+          <span class="feature-chip" data-i18n="feature4">זיהוי אזורים בתמונה</span>
+          <span class="feature-chip" data-i18n="feature5">עברית ואנגלית</span>
+          <span class="feature-chip" data-i18n="feature6">חזרה על טעויות וציון לפי נושא</span>
         </div>
       </div>
-      <p class="small-muted" style="margin: 16px 0 0;" data-i18n="courseAlignmentNote">הכלי נבנה לצורכי תרגול מתוך חומרי הקורס והסיכום המאוחד של איריס ויעל. הוא מיועד לחזרה וללמידה ואינו תחליף לחומר הרשמי של הקורס.</p>
+      <p class="small-muted" style="margin: 16px 0 0;" data-i18n="courseAlignmentNote">הכלי נבנה לצורכי למידה ותרגול על בסיס חומרי הקורס והסיכום המאוחד של איריס ויעל. הוא אינו תחליף לחומר הרשמי של הקורס.</p>
     </section>
-
-    <div class="start-cue">
-      <strong data-i18n="startCueTitle">לא בטוחים מאיפה להתחיל?</strong>
-      <span data-i18n="startCueBody">בחרו שיעור שאתם לומדים עכשיו והתחילו ברמה קלה. לקראת המבחן, עברו לתרגול כללי או לכל 33 השאלות בשיעור.</span>
-    </div>
 
     <div id="lastSessionBox" class="stat hidden session-box">
       <strong data-i18n="lastResult">תוצאה אחרונה</strong>
@@ -3036,31 +3041,22 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
   const copy = {
     he: {
       appTitle: 'בנק שאלות נוירואנטומיה',
-      appSubtitle: 'כלי תרגול אינטראקטיבי שנבנה מתוך חומרי הקורס והסיכום המאוחד, כדי לעזור לחזור על מושגים, להבין קשרים בין מבנים ומסלולים, ולתרגל יישום של הידע לפני המבחן.',
+      appSubtitle: 'כלי תרגול אינטראקטיבי שנבנה על בסיס חומרי הקורס והסיכום המאוחד, כדי לעזור לחזור על מושגים, להבין קשרים בין מבנים ומסלולים ולתרגל יישום של הידע לקראת המבחן.',
       languageTitle: 'שפת תרגול',
       languageSubtitle: 'בחרי אם לתרגל בעברית או באנגלית.',
       introWhatTitle: 'מה תמצאו כאן?',
-      introWhatBody: 'התרגול מחולק לפי שיעורים ורמות קושי, וכולל שאלות ידע, קשרים ומסלולים, שאלות אינטגרציה, מקרים קליניים וזיהוי מבנים בתמונות. בכל שיעור זמינות כל 33 השאלות, ואפשר לתרגל בעברית או באנגלית.',
+      introWhatBody: 'התרגול מחולק לפי שיעורים ורמות קושי וכולל שאלות ידע, קשרים ומסלולים, אינטגרציה, מקרים קליניים וזיהוי מבנים בתמונות. בכל שיעור זמינות כל 33 השאלות, בעברית או באנגלית.',
       introHowTitle: 'איך כדאי להשתמש בתרגול?',
-      introHow1: 'לומדים נושא חדש? התחילו בתרגול לפי שיעור וברמה קלה.',
+      introHow1: 'לומדים נושא חדש? התחילו ברמה קלה.',
       introHow2: 'רוצים לחבר בין מושגים ומסלולים? עברו לרמה בינונית.',
-      introHow3: 'מתכוננים למבחן? נסו את הרמה הקשה או את כל 33 השאלות.',
-      introHow4: 'רוצים לבדוק שליפה רחבה? השתמשו בתרגול הכללי, באינטגרציה הקלינית או בזיהוי תמונות.',
-      introIncludedTitle: 'מה הכלי כולל?',
+      introHow3: 'מתכוננים למבחן? נסו רמה קשה, את כל 33 השאלות או תרגול כללי.',
       feature1: '33 שאלות בכל שיעור',
-      feature2: 'שלוש רמות קושי לפי סוג החשיבה',
-      feature3: 'תרגול כללי אקראי מכל מאגרי השיעורים',
-      feature4: '30 שאלות אינטגרציה קלינית',
-      feature5: '24 שאלות זיהוי מבנים בתמונות',
-      feature6: 'עברית ואנגלית',
-      feature7: 'ערבוב שאלות ותשובות',
-      feature8: 'חזרה על טעויות',
-      feature9: 'ציון לפי נושא',
-      feature10: 'שמירת היסטוריית תרגול מקומית בדפדפן',
-      feature11: 'מצב בהיר וכהה',
-      courseAlignmentNote: 'הכלי נבנה לצורכי תרגול מתוך חומרי הקורס והסיכום המאוחד של איריס ויעל. הוא מיועד לחזרה וללמידה ואינו תחליף לחומר הרשמי של הקורס.',
-      startCueTitle: 'לא בטוחים מאיפה להתחיל?',
-      startCueBody: 'בחרו שיעור שאתם לומדים עכשיו והתחילו ברמה קלה. לקראת המבחן, עברו לתרגול כללי או לכל 33 השאלות בשיעור.',
+      feature2: '3 רמות קושי',
+      feature3: 'אינטגרציה קלינית',
+      feature4: 'זיהוי אזורים בתמונה',
+      feature5: 'עברית ואנגלית',
+      feature6: 'חזרה על טעויות וציון לפי נושא',
+      courseAlignmentNote: 'הכלי נבנה לצורכי למידה ותרגול על בסיס חומרי הקורס והסיכום המאוחד של איריס ויעל. הוא אינו תחליף לחומר הרשמי של הקורס.',
       lastResult: 'תוצאה אחרונה',
       generalPracticeTitle: 'תרגול כללי',
       generalPracticeDescription: '30 שאלות שנדגמות באקראי מכל מאגרי השיעורים המלאים, לתרגול שליפה רחב לפני המבחן.',
@@ -3127,27 +3123,18 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
       languageTitle: 'Practice language',
       languageSubtitle: 'Choose whether to practice in Hebrew or English.',
       introWhatTitle: 'What will you find here?',
-      introWhatBody: 'Practice is organized by lesson and difficulty level and includes knowledge questions, structure–function relationships, pathways, integration questions, clinical vignettes, and image-based identification. All 33 questions are available in each lesson, and practice is available in both Hebrew and English.',
+      introWhatBody: 'Practice is organized by lesson and difficulty level and includes knowledge questions, pathways, integration, clinical vignettes, and image-based identification. All 33 questions are available in each lesson in Hebrew or English.',
       introHowTitle: 'How should you use it?',
-      introHow1: 'Learning a new topic? Start with a lesson in Easy mode.',
-      introHow2: 'Want to connect structures, pathways, and mechanisms? Move to Medium.',
-      introHow3: 'Preparing for the exam? Try Hard mode or all 33 lesson questions.',
-      introHow4: 'Want broader retrieval practice? Use General Practice, Clinical Integration, or Image Identification.',
-      introIncludedTitle: 'What is included?',
+      introHow1: 'Learning a new topic? Start with Easy mode.',
+      introHow2: 'Want to connect concepts and pathways? Move to Medium.',
+      introHow3: 'Preparing for the exam? Try Hard mode, all 33 questions, or General Practice.',
       feature1: '33 questions per lesson',
-      feature2: 'Three difficulty levels based on thinking demand',
-      feature3: 'Random general practice across complete lesson banks',
-      feature4: '30 clinical integration questions',
-      feature5: '24 image-identification questions',
-      feature6: 'Hebrew and English',
-      feature7: 'Shuffled questions and answers',
-      feature8: 'Mistake review',
-      feature9: 'Topic-level scoring',
-      feature10: 'Locally stored practice history',
-      feature11: 'Light and Dark mode',
-      courseAlignmentNote: 'This tool was created for study and practice based on the course materials and the unified summary by Iris and Yael. It is intended to support review and does not replace official course materials.',
-      startCueTitle: 'Not sure where to start?',
-      startCueBody: 'Choose the lesson you are currently studying and begin with Easy mode. Closer to the exam, move to General Practice or all 33 questions in the lesson.',
+      feature2: '3 difficulty levels',
+      feature3: 'Clinical integration',
+      feature4: 'Image identification',
+      feature5: 'Hebrew and English',
+      feature6: 'Mistake review and topic scoring',
+      courseAlignmentNote: 'This tool was created for study and practice based on the course materials and the unified summary by Iris and Yael. It does not replace official course materials.',
       lastResult: 'Last result',
       generalPracticeTitle: 'General practice',
       generalPracticeDescription: '30 questions sampled at random from the complete lesson banks for broad retrieval practice before the exam.',
@@ -3430,7 +3417,7 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
 
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', function() {
-      const migrationKey = 'neuroQuizCacheMigrationV44';
+      const migrationKey = 'neuroQuizCacheMigrationV45';
       if (localStorage.getItem(migrationKey) !== 'done') {
         Promise.all([
           navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -3458,7 +3445,7 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
         return;
       }
 
-      navigator.serviceWorker.register('./service-worker.js?v=44')
+      navigator.serviceWorker.register('./service-worker.js?v=45')
         .then(function(registration) { return registration.update(); })
         .catch(function() {});
     });
