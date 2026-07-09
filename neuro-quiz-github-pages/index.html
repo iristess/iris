@@ -309,7 +309,7 @@
       font-size: 0.94rem;
       line-height: 1.5;
     }
-    .creator-credit span {
+    .creator-credit .credit-row {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -321,6 +321,18 @@
       background: rgba(255, 255, 255, 0.62);
       box-shadow: 0 8px 24px rgba(65, 48, 105, 0.08);
       backdrop-filter: blur(8px);
+    }
+    .creator-credit .credit-meta {
+      margin-top: 8px;
+      font-size: 0.88rem;
+    }
+    .creator-credit a {
+      color: var(--primary-dark);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .creator-credit a:hover {
+      text-decoration: underline;
     }
     .creator-credit .credit-source {
       color: #766894;
@@ -466,11 +478,16 @@
   </div>
 
   <footer class="creator-credit">
-    <span>
+    <div class="credit-row">
       <span class="credit-source" data-i18n="creditSource">השאלות נלקחו מהסיכום המאוחד של איריס ויעל</span>
       <span class="credit-divider">|</span>
       <span class="credit-name" data-i18n-html="creditName">הוכן ונבנה לצורך תרגול על ידי <strong>איריס טסלר</strong></span>
-    </span>
+    </div>
+    <div class="credit-row credit-meta">
+      <span data-i18n="lastUpdated">עודכן לאחרונה: 09.07.2026</span>
+      <span class="credit-divider">|</span>
+      <a href="mailto:iristeslerr@gmail.com" data-i18n="contactEmail">לשאלות: iristeslerr@gmail.com</a>
+    </div>
   </footer>
 
 </div>
@@ -2912,6 +2929,8 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
       imageBadge: 'איורים לפי דפי הלמידה · מבנים, מסילות וסולקוסים',
       creditSource: 'השאלות נלקחו מהסיכום המאוחד של איריס ויעל',
       creditName: 'הוכן ונבנה לצורך תרגול על ידי <strong>איריס טסלר</strong>',
+      lastUpdated: 'עודכן לאחרונה: 09.07.2026',
+      contactEmail: 'לשאלות: iristeslerr@gmail.com',
     },
     en: {
       appTitle: 'Neuroanatomy Question Bank',
@@ -2968,6 +2987,8 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
       imageBadge: 'Study-sheet illustrations · structures, tracts, and sulci',
       creditSource: 'Questions are based on the unified summary by Iris and Yael',
       creditName: 'Prepared and built for practice by <strong>Iris Tesler</strong>',
+      lastUpdated: 'Last updated: July 9, 2026',
+      contactEmail: 'Questions: iristeslerr@gmail.com',
     }
   };
 
