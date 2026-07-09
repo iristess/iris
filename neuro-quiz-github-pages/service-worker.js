@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neuro-quiz-v38-contact-footer';
+const CACHE_NAME = 'neuro-quiz-v39-auto-refresh';
 const APP_SHELL = [
   './',
   './index.html',

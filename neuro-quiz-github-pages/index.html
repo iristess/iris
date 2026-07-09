@@ -3168,8 +3168,17 @@ const brainRegionImageQuestions = questionBank.brainRegionImages || [];
   checkBtn.addEventListener('click', checkAnswer); nextBtn.addEventListener('click', nextQuestion); backBtn.addEventListener('click', goToMenu); menuFromResultsBtn.addEventListener('click', goToMenu); retryWrongBtn.addEventListener('click', function() { beginQuestionSession(state.wrongQuestions, t('retryWrong'), t('wrongMode') + ' · ' + state.sessionTitle, 'wrongOnly'); }); applyLanguage(currentLanguage);
 
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+    const hadServiceWorkerController = Boolean(navigator.serviceWorker.controller);
+    let reloadingForUpdate = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      if (!hadServiceWorkerController || reloadingForUpdate) return;
+      reloadingForUpdate = true;
+      window.location.reload();
+    });
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./service-worker.js').catch(function() {});
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(function(registration) { return registration.update(); })
+        .catch(function() {});
     });
   }
 })();
